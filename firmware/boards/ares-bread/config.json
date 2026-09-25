@@ -1,0 +1,12 @@
+{
+    "type": "ares-bread",
+    "target": "esp32s3",
+    "builds": [
+        {
+            "name": "ares-bread",
+            "sdkconfig_append": [
+                "CONFIG_OTA_URL=\"http://<IP-LAN-SERVER>:8000/xiaozhi/ota/\""
+            ]
+        }
+    ]
+}
