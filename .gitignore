@@ -1,3 +1,4 @@
 xiaozhi-esp32/
 .DS_Store
 build/
+.playwright-mcp/
