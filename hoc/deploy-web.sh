@@ -1,5 +1,5 @@
 #!/bin/sh
-# Xuất bản tĩnh + PDF của web tự học rồi đẩy lên https://hoc.talesofascension.com
+# Xuất bản tĩnh + PDF của web tự học rồi đẩy lên https://bibaplay.com
 # PDF lên R2 bucket ban-rap-hoc (quá lớn cho static assets), trang lên worker ban-rap-hoc.
 set -e
 cd "$(dirname "$0")"

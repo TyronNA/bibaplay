@@ -3,10 +3,10 @@
 Giáo trình tự học điện tử cho dân phần mềm: từ pin + điện trở trên breadboard, qua ESP32-S3, tới robot 2 bánh.
 Mỗi bài có hình breadboard từng bước (chân nào cắm lỗ nào), bước đo Ω trước khi cấp nguồn, và chỗ dễ chập/cháy.
 
-- Web: https://hoc.talesofascension.com — PDF cả bộ: https://hoc.talesofascension.com/ban-rap.pdf
-- Mô phỏng ghép mạch ngay trên web: https://hoc.talesofascension.com/#/mo-phong — cắm linh kiện, lắp pin, cầm que đo;
+- Web: https://bibaplay.com — PDF cả bộ: https://bibaplay.com/ban-rap.pdf
+- Mô phỏng ghép mạch ngay trên web: https://bibaplay.com/#/mo-phong — cắm linh kiện, lắp pin, cầm que đo;
   nối sai thì báo nóng / bốc khói. Mô hình gần đúng, chưa có ESP32 (dùng [Wokwi](https://wokwi.com) cho phần đó).
-- Chia sẻ miễn phí, không bán.
+- Chia sẻ miễn phí. Nút "Mua trên Shopee" (nếu có) là link affiliate.
 
 > **Do AI soạn.** Nội dung, hình vẽ và code do AI (Claude của Anthropic) soạn theo datasheet (nguồn ở
 > `notes/datasheet-robot.md`). Phần lớn bài **chưa được ráp thử**. Luôn đo trước khi cấp nguồn; pin lithium cháy thật.

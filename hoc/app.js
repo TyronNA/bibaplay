@@ -35,6 +35,9 @@
   // Bản web: "có" theo danh sách người xem tự tick; món không có trong thư viện linh kiện → null (không biết).
   const coMon = (tim, l) => (LUU.web ? (l ? LUU.doCo().has(l.id) : null) : coTim(tim));
 
+  // Nút mua (link affiliate trong mua.js); rel=sponsored theo quy định của Google cho link có hoa hồng.
+  const nutMua = id => (window.MUA && MUA[id] ? `<a class="mua" href="${esc(MUA[id])}" target="_blank" rel="sponsored nofollow noopener">Mua trên Shopee ↗</a>` : '');
+
   const tatCaBai = () => S.gt.chuong.flatMap(c => c.bai.map(b => ({ ...b, chuong: c })));
 
   function taiBai(id) {
@@ -125,7 +128,7 @@
     const tatCa = tatCaBai();
     const tenBai = id => { const b = tatCa.find(x => x.id === id); return b ? `<a href="#/bai/${id}">${id} ${dong(b.ten)}</a>` : id; };
     const the = l => `<article class="lk-the to${l.id === chon ? ' chon' : ''}" id="lk-${l.id}">
-      <header><h3>${l.ten}</h3>${coLK(l) ? '<span class="pill ok">có</span>' : `${l.mua ? `<span class="pill mo">${l.mua}</span>` : ''}<span class="pill xau">chưa có</span>`}</header>
+      <header><h3>${l.ten}</h3>${coLK(l) ? '<span class="pill ok">có</span>' : `${l.mua ? `<span class="pill mo">${l.mua}</span>` : ''}<span class="pill xau">chưa có</span>`}${nutMua(l.id)}</header>
       <div class="lk-hinh${l.kh ? '' : ' mot'}"><figure>${l.anh}<figcaption>Hình minh hoạ</figcaption></figure>${l.kh ? `<figure>${l.kh}<figcaption>Ký hiệu trên sơ đồ</figcaption></figure>` : ''}</div>
       <dl class="lk-tt">
         <div><dt>Nhận chân / cực</dt><dd><ul>${l.chan.map(x => `<li>${x}</li>`).join('')}</ul></dd></div>
@@ -217,7 +220,7 @@
     const can = (bai.can || []).map(c => {
       const l = c.lk ? LINHKIEN.theoId(c.lk) : LINHKIEN.tim(c.tim), co = coMon(c.tim, l);
       const chu = `<span class="can-chu"><span>${c.ten}${c.sl ? ` <span class="mo">× ${c.sl}</span>` : ''}</span><span class="pill ${co === null ? 'mo' : co ? 'ok' : 'xau'}">${co === null ? 'tự kiểm' : co ? 'có' : 'thiếu'}</span></span>`;
-      return l ? `<li><a href="#/linh-kien/${l.id}" title="Xem ${l.ten} trong thư viện">${l.anh}${chu}</a></li>` : `<li><div class="can-o"><span class="khong-hinh">chưa có hình</span>${chu}</div></li>`;
+      return l ? `<li><a href="#/linh-kien/${l.id}" title="Xem ${l.ten} trong thư viện">${l.anh}${chu}</a>${nutMua(l.id)}</li>` : `<li><div class="can-o"><span class="khong-hinh">chưa có hình</span>${chu}</div></li>`;
     }).join('');
 
     const soBuoc = bai.phan.reduce((t, p) => t + p.buoc.length, 0);
@@ -291,6 +294,20 @@
       app.innerHTML = `<section class="alarm"><h2>Lỗi tải trang</h2><p>${esc(e.message || e)}</p></section>`;
     }
   }
+  // Lượt xem (chỉ bản web, worker.js + D1): mỗi phiên trình duyệt cộng 1 lần, các trang sau chỉ đọc số.
+  function demXem() {
+    const o = document.getElementById('luot-xem');
+    if (!o || !LUU.web) return;
+    let daDem = false;
+    try { daDem = sessionStorage.getItem('banrap.da-dem') === '1'; } catch (_) { /* không có sessionStorage: đếm mỗi lần tải */ }
+    fetch('api/xem', { method: daDem ? 'GET' : 'POST' }).then(r => (r.ok ? r.json() : Promise.reject())).then(d => {
+      try { sessionStorage.setItem('banrap.da-dem', '1'); } catch (_) { /* bỏ qua */ }
+      o.querySelector('b').textContent = d.n.toLocaleString('vi-VN');
+      o.title = `${d.n.toLocaleString('vi-VN')} lượt xem`;
+      o.hidden = false;
+    }).catch(() => {});
+  }
+  demXem();
   addEventListener('hashchange', dinhTuyen);
   dinhTuyen();
 })();
