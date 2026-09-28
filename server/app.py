@@ -6,6 +6,7 @@ Hai endpoint trên cùng một cổng:
 
 Có GEMINI_API_KEY: mỗi kết nối thiết bị = một phiên Gemini Live (nghe + nghĩ + nói trong một model).
 Không có key: chế độ ECHO — thu câu bạn nói, hết câu thì phát lại (để test đường truyền).
+Tool MCP (mail, Jira, Slack…): mcp_hub.py. Trace lượt/tool/token/chi phí vào SQLite: tracing.py.
 
   GEMINI_API_KEY=... .venv/bin/python app.py [--port 8000]
 """
@@ -24,6 +25,9 @@ import aiohttp
 import opuslib
 from aiohttp import WSMsgType, web
 
+from mcp_hub import McpHub
+from tracing import Tracer
+
 log = logging.getLogger("server")
 
 IN_RATE = 16000         # thiết bị luôn gửi 16 kHz mono (GetHelloMessage)
@@ -35,6 +39,7 @@ GEMINI_RATE = 24000     # Live API luôn trả PCM 24 kHz
 SPEECH_RMS = 500        # biên độ int16; tiếng ồn phòng thường < 200
 END_SILENCE_MS = 700    # im lặng bấy lâu sau khi đã có tiếng nói = hết câu
 MAX_UTTERANCE_MS = 15000
+RESULT_MAX = 6000       # ký tự kết quả tool gửi lại Gemini; dài hơn chỉ tốn token, robot đọc không hết
 
 GEMINI_WS = ("wss://generativelanguage.googleapis.com/ws/"
              "google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent")
@@ -45,6 +50,12 @@ SYSTEM_PROMPT = os.environ.get("ARES_PROMPT", (
     "Bạn là ARES, một robot trợ lý nhỏ trên bàn làm việc. Luôn trả lời bằng tiếng Việt, "
     "ngắn gọn 1-3 câu, giọng thân thiện, hơi tinh nghịch. "
     "Mỗi lượt trả lời, gọi hàm set_emotion MỘT lần để đổi nét mặt cho hợp với câu trả lời."))
+# Chỉ nối vào prompt khi có tool MCP. Model không phân biệt được tool đọc hay ghi nên phải dặn.
+TOOL_RULES = (
+    "Bạn có các tool nối vào mail, Jira, Slack… của chủ nhân. Khi được hỏi, gọi tool để lấy dữ liệu thật, "
+    "rồi chỉ nói lại ý chính (vài mục quan trọng nhất), không đọc nguyên danh sách. "
+    "Trước khi gọi tool làm thay đổi dữ liệu (gửi, trả lời, comment, tạo, sửa, xoá), phải đọc lại "
+    "nội dung sẽ làm và chờ chủ nhân nói đồng ý rõ ràng. Tool báo lỗi thì nói thật là lỗi.")
 # phải khớp tên trong firmware/boards/ares-bread/robot_face.c
 EMOTIONS = ["neutral", "happy", "sad", "angry", "surprised", "thinking", "sleepy", "winking", "confused"]
 
@@ -189,9 +200,19 @@ class GeminiSession(Session):
     out_rate = GEMINI_RATE
     OUT_SAMPLES = GEMINI_RATE * FRAME_MS // 1000
 
-    def __init__(self, ws, http: aiohttp.ClientSession, key: str, url: str):
+    def __init__(self, ws, http: aiohttp.ClientSession, key: str, url: str, hub: McpHub, tracer: Tracer):
         super().__init__(ws)
         self.http, self.key, self.url = http, key, url
+        self.hub, self.tracer = hub, tracer
+        self.conn = 0                       # số lần đã mở phiên Gemini (goAway -> mở lại)
+        self.turn_id = None                 # lượt đang trace; mở lười khi có sự kiện đầu tiên
+        self.last_turn = None               # usageMetadata có thể tới sau turnComplete
+        self.t_user = self.t_model = ""     # transcript đủ của lượt, khác heard/said là bộ đệm hiển thị
+        self.tool_tasks: dict[asyncio.Task, set] = {}   # task tool đang chạy -> id các call trong đó
+        # ms audio đã gửi lên / nhận về Gemini: cả phiên, và phần chưa gán cho lượt nào.
+        # Mic gửi liên tục cả lúc im lặng, nên phần im lặng trước một lượt tính vào lượt đó.
+        self.in_ms = self.out_ms = 0
+        self.turn_in_ms = self.turn_out_ms = 0
         self.encoder = opuslib.Encoder(GEMINI_RATE, 1, opuslib.APPLICATION_VOIP)
         self.gws = None                     # WebSocket tới Gemini
         self.reader = None
@@ -209,13 +230,16 @@ class GeminiSession(Session):
             if self.gws is not None and not self.gws.closed:
                 return
             self.gws = await self.http.ws_connect(f"{self.url}?key={self.key}", heartbeat=20)
+            self.conn += 1
+            mcp_tools = self.hub.declarations()
+            prompt = SYSTEM_PROMPT + ("\n" + TOOL_RULES if mcp_tools else "")
             await self.gws.send_str(json.dumps({"setup": {
                 "model": f"models/{GEMINI_MODEL}",
                 "generationConfig": {
                     "responseModalities": ["AUDIO"],
                     "speechConfig": {"voiceConfig": {"prebuiltVoiceConfig": {"voiceName": GEMINI_VOICE}}},
                 },
-                "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]},
+                "systemInstruction": {"parts": [{"text": prompt}]},
                 "inputAudioTranscription": {},
                 "outputAudioTranscription": {},
                 "tools": [{"functionDeclarations": [{
@@ -223,7 +247,7 @@ class GeminiSession(Session):
                     "description": "Đổi nét mặt robot trên màn hình.",
                     "parameters": {"type": "OBJECT", "properties": {
                         "emotion": {"type": "STRING", "enum": EMOTIONS}}, "required": ["emotion"]},
-                }]}],
+                }] + mcp_tools}],
             }}))
             first = await asyncio.wait_for(self.gws.receive(), 15)
             msg = {}
@@ -234,7 +258,8 @@ class GeminiSession(Session):
                 await self.gws.close()
                 self.gws = None
                 raise RuntimeError(f"Gemini setup thất bại: {str(why)[:300]}")
-            log.info("[%s] Gemini Live sẵn sàng (%s, giọng %s)", self.id, GEMINI_MODEL, GEMINI_VOICE)
+            log.info("[%s] Gemini Live sẵn sàng (%s, giọng %s, %d tool MCP)", self.id, GEMINI_MODEL,
+                     GEMINI_VOICE, len(mcp_tools))
             self.reader = asyncio.create_task(self.read_loop(self.gws))
 
     async def on_listen_start(self):
@@ -255,6 +280,8 @@ class GeminiSession(Session):
         if not self.listening or self.gws is None or self.gws.closed:
             return
         pcm = self.decoder.decode(frame, IN_SAMPLES)
+        self.in_ms += FRAME_MS
+        self.turn_in_ms += FRAME_MS
         await self.gws.send_str(json.dumps({"realtimeInput": {"audio": {
             "data": base64.b64encode(pcm).decode(), "mimeType": f"audio/pcm;rate={IN_RATE}"}}}))
 
@@ -278,47 +305,102 @@ class GeminiSession(Session):
         if log.isEnabledFor(logging.DEBUG):
             sc = msg.get("serverContent") or {}
             log.debug("[%s] gemini <- %s %s", self.id, list(msg), list(sc) if sc else "")
+        if "usageMetadata" in msg:
+            self.tracer.llm_usage(self.id, self.turn_id or self.last_turn, self.conn, GEMINI_MODEL,
+                                  msg["usageMetadata"])
         if "toolCall" in msg:
-            await self.on_tool_call(msg["toolCall"])
+            # chạy riêng task: read_loop phải đọc tiếp được toolCallCancellation khi người nói chen ngang
+            calls = msg["toolCall"].get("functionCalls", [])
+            self.begin_turn()
+            task = asyncio.create_task(self.on_tool_call(calls, self.turn_id))
+            self.tool_tasks[task] = {fc.get("id") for fc in calls}
+            task.add_done_callback(self.tool_tasks.pop)
+        if "toolCallCancellation" in msg:
+            ids = set(msg["toolCallCancellation"].get("ids") or [])
+            for task, own in list(self.tool_tasks.items()):
+                if own & ids:
+                    log.info("[%s] huỷ tool call %s", self.id, own & ids)
+                    task.cancel()
         if "goAway" in msg:
             log.info("[%s] Gemini sắp đóng phiên: %s", self.id, msg["goAway"])
         sc = msg.get("serverContent")
         if not sc:
             return
         if "inputTranscription" in sc:
-            self.heard += sc["inputTranscription"].get("text", "")
+            text = sc["inputTranscription"].get("text", "")
+            self.heard += text
+            self.begin_turn()
+            self.t_user += text
         if sc.get("interrupted"):           # người nói chen ngang: bỏ phần chưa phát
             log.info("[%s] bị ngắt lời", self.id)
+            self.end_turn(interrupted=True)
             await self.cut_speech()
             return
+        if sc.get("modelTurn"):
+            self.begin_turn()
         for part in (sc.get("modelTurn") or {}).get("parts", []):
             data = (part.get("inlineData") or {}).get("data")
             if data:
                 await self.on_model_audio(base64.b64decode(data))
         if "outputTranscription" in sc:
-            self.said += sc["outputTranscription"].get("text", "")
+            text = sc["outputTranscription"].get("text", "")
+            self.said += text
+            self.t_model += text
             await self.flush_sentences(final=False)
         if sc.get("turnComplete"):
+            self.end_turn(interrupted=False)
             await self.flush_sentences(final=True)
             self.flush_pcm(pad=True)
             self.turn_open = False
             await self.out.put(("stop", None))
 
-    async def on_tool_call(self, call: dict):
-        responses = []
-        for fc in call.get("functionCalls", []):
-            ok = False
-            if fc.get("name") == "set_emotion":
-                emo = (fc.get("args") or {}).get("emotion", "neutral")
+    def begin_turn(self):
+        if self.turn_id is None:
+            self.turn_id = self.tracer.turn_start(self.id)
+
+    def end_turn(self, interrupted: bool):
+        if self.turn_id is not None:
+            self.tracer.turn_end(self.turn_id, self.t_user, self.t_model, interrupted,
+                                 GEMINI_MODEL, self.turn_in_ms, self.turn_out_ms)
+            self.last_turn, self.turn_id = self.turn_id, None
+            self.turn_in_ms = self.turn_out_ms = 0
+        self.t_user = self.t_model = ""
+
+    async def on_tool_call(self, calls: list[dict], turn_id):
+        async def one(fc: dict) -> dict:
+            name, args, t0 = fc.get("name", ""), fc.get("args") or {}, time.time()
+            if name == "set_emotion":
+                emo = args.get("emotion", "neutral")
                 ok = emo in EMOTIONS
                 log.info("[%s] set_emotion %s", self.id, emo)
                 await self.send(type="llm", emotion=emo if ok else "neutral")
-            responses.append({"id": fc.get("id"), "name": fc.get("name"),
-                              "response": {"result": "ok" if ok else "unknown"}})
+                text, err = ("ok" if ok else "unknown"), not ok
+                response = {"result": text}
+            elif self.hub.owns(name):
+                log.info("[%s] tool %s %s", self.id, name, json.dumps(args, ensure_ascii=False)[:200])
+                try:
+                    text, err = await self.hub.call(name, args)
+                except asyncio.CancelledError:
+                    self.tracer.tool_call(self.id, turn_id, fc.get("id"), name, args, "(bị huỷ)", True, t0)
+                    raise
+                log.info("[%s] tool %s -> %s%d ký tự", self.id, name, "LỖI " if err else "", len(text))
+                clipped = text[:RESULT_MAX] + ("\n…(đã cắt)" if len(text) > RESULT_MAX else "")
+                response = {"error": clipped} if err else {"result": clipped}
+            else:
+                text, err = f"không có tool {name}", True
+                response = {"error": text}
+            self.tracer.tool_call(self.id, turn_id, fc.get("id"), name, args, text, err, t0)
+            return {"id": fc.get("id"), "name": name, "response": response}
+
+        # gửi chung một toolResponse cho mọi call của cùng một toolCall
+        responses = await asyncio.gather(*(one(fc) for fc in calls))
         if responses and self.gws is not None and not self.gws.closed:
-            await self.gws.send_str(json.dumps({"toolResponse": {"functionResponses": responses}}))
+            await self.gws.send_str(json.dumps({"toolResponse": {"functionResponses": list(responses)}}))
 
     async def on_model_audio(self, pcm: bytes):
+        ms = len(pcm) * 1000 // (2 * GEMINI_RATE)   # tính cả phần sau này bị cắt vì ngắt lời: Gemini đã sinh ra
+        self.out_ms += ms
+        self.turn_out_ms += ms
         if not self.turn_open:
             self.turn_open = True
             if self.heard.strip():
@@ -383,6 +465,9 @@ class GeminiSession(Session):
             log.exception("[%s] gửi xuống chip lỗi", self.id)
 
     async def close(self):
+        self.end_turn(interrupted=self.speaking)
+        for task in list(self.tool_tasks):
+            task.cancel()
         self.sender.cancel()
         if self.gws is not None:
             await self.gws.close()
@@ -400,9 +485,11 @@ async def websocket(request: web.Request) -> web.WebSocketResponse:
     ws = web.WebSocketResponse(heartbeat=30)
     await ws.prepare(request)
     if app["gemini_key"]:
-        s = GeminiSession(ws, app["http"], app["gemini_key"], app["gemini_url"])
+        s = GeminiSession(ws, app["http"], app["gemini_key"], app["gemini_url"], app["hub"], app["tracer"])
     else:
         s = EchoSession(ws)
+    app["tracer"].session_start(s.id, request.headers.get("Device-Id"), type(s).__name__,
+                                GEMINI_MODEL if app["gemini_key"] else None)
     log.info("[%s] connect device=%s protocol=%s mode=%s", s.id, request.headers.get("Device-Id"),
              request.headers.get("Protocol-Version"), type(s).__name__)
     try:
@@ -416,6 +503,10 @@ async def websocket(request: web.Request) -> web.WebSocketResponse:
                 await s.on_audio(m.data)
     finally:
         await s.close()
+        if isinstance(s, GeminiSession):
+            app["tracer"].session_end(s.id, GEMINI_MODEL, s.in_ms, s.out_ms)
+        else:
+            app["tracer"].session_end(s.id)
         log.info("[%s] disconnect", s.id)
     return ws
 
@@ -427,7 +518,12 @@ def make_app(public_host: str, token: str, gemini_key: str = "", gemini_url: str
 
     async def http_ctx(app):
         app["http"] = aiohttp.ClientSession()
+        app["tracer"] = Tracer()
+        log.info("trace -> %s", app["tracer"].path)
+        app["hub"] = McpHub()
+        await app["hub"].start(wait=float(os.environ.get("ARES_MCP_WAIT", "0")))
         yield
+        await app["hub"].close()
         await app["http"].close()
     app.cleanup_ctx.append(http_ctx)
     app.router.add_post("/xiaozhi/ota/", ota)

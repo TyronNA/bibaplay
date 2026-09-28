@@ -13,6 +13,9 @@ cd /opt/ares-server
 mkdir -p ~/.config/ares && chmod 700 ~/.config/ares
 [ -f ~/.config/ares/gemini.env ] || { printf "# Dán key từ https://aistudio.google.com/apikey rồi: sudo systemctl restart ares-server\nGEMINI_API_KEY=\n" > ~/.config/ares/gemini.env; }
 chmod 600 ~/.config/ares/gemini.env
+# cấu hình MCP chứa token dịch vụ -> cũng 600; rỗng = không có tool MCP
+[ -f ~/.config/ares/mcp.json ] || printf "{\"mcpServers\": {}}\n" > ~/.config/ares/mcp.json
+chmod 600 ~/.config/ares/mcp.json
 sudo -n cp ares-server.service /etc/systemd/system/
 sudo -n systemctl daemon-reload
 sudo -n systemctl enable ares-server >/dev/null 2>&1
