@@ -15,6 +15,8 @@ HOC = ROOT / "hoc"
 KET_QUA = HOC / "ket-qua"
 PORT = 4300
 MA_BAI = re.compile(r"^/api/ket-qua/(\d+\.\d+)$")
+# Route của app.js (đường dẫn thật, không hash) — không có file tương ứng → trả index.html cho app.js tự vẽ.
+ROUTE = re.compile(r"^/hoc/(do|bai/\d+\.\d+|linh-kien(/[\w-]+)?|mo-phong(/.*)?)/?$")
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -47,6 +49,8 @@ class Handler(SimpleHTTPRequestHandler):
         if m:
             f = KET_QUA / (m.group(1) + ".json")
             return self._json(200, json.loads(f.read_text()) if f.exists() else {})
+        if ROUTE.match(path):
+            self.path = "/hoc/index.html"
         super().do_GET()
 
     def do_POST(self):

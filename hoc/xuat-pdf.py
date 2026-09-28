@@ -57,7 +57,8 @@ def in_trang(goc, tam, i_route):
     pr = subprocess.Popen([CHROME, "--headless=new", "--disable-gpu", "--no-first-run", "--disable-background-networking",
                            "--disable-component-update", "--no-pdf-header-footer", "--hide-scrollbars",
                            f"--user-data-dir={tam}/p{i}", f"--print-to-pdf={ra}", "--virtual-time-budget=15000",
-                           f"{goc}/index.html#/{route}"],
+                           # trang tĩnh xuat-web.py đã render sẵn ở <route>/index.html
+                           f"{goc}/{route + '/' if route else ''}"],
                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
     try:
         truoc, het = -1, time.time() + 180

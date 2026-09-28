@@ -8,7 +8,8 @@
   "compatibility_date": "2026-09-28",
   // binding ASSETS: thiếu thì worker nuốt mọi request, trang tĩnh chết
   // run_worker_first: không có thì file tĩnh được phát thẳng, redirect www/domain cũ trong worker.js không chạy
-  "assets": { "directory": "../build/hoc-web", "binding": "ASSETS", "run_worker_first": true },
+  // not_found_handling: đường dẫn lạ → 404.html (mã 404) thay vì trang trắng; route thật đều có <route>/index.html
+  "assets": { "directory": "../build/hoc-web", "binding": "ASSETS", "run_worker_first": true, "not_found_handling": "404-page" },
   "r2_buckets": [{ "binding": "PDF", "bucket_name": "ban-rap-hoc" }],
   // Bảng đếm tạo một lần: wrangler d1 execute ban-rap-hoc --remote --command
   //   "CREATE TABLE IF NOT EXISTS dem (k TEXT PRIMARY KEY, n INTEGER NOT NULL); INSERT OR IGNORE INTO dem VALUES ('xem', 0)"

@@ -5,3 +5,4 @@ build/
 sandbox/esp32-bai/sdkconfig
 sandbox/esp32-bai/sdkconfig.old
 __pycache__/
+.wrangler/

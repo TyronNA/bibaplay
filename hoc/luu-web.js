@@ -7,6 +7,7 @@
   const ghi = (k, v) => { tam[k] = v; try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } };
   window.LUU = {
     web: true,
+    goc: '/',
     url: p => p,
     dsBai: () => fetch('bai/ds.json').then(r => r.json()).catch(() => []),
     docKq: id => Promise.resolve(doc('banrap.kq.' + id) || {}),

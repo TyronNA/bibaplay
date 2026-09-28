@@ -4,7 +4,7 @@ Giáo trình tự học điện tử cho dân phần mềm: từ pin + điện t
 Mỗi bài có hình breadboard từng bước (chân nào cắm lỗ nào), bước đo Ω trước khi cấp nguồn, và chỗ dễ chập/cháy.
 
 - Web: https://bibaplay.com — PDF cả bộ: https://bibaplay.com/ban-rap.pdf
-- Mô phỏng ghép mạch ngay trên web: https://bibaplay.com/#/mo-phong — cắm linh kiện, lắp pin, cầm que đo;
+- Mô phỏng ghép mạch ngay trên web: https://bibaplay.com/mo-phong/ — cắm linh kiện, lắp pin, cầm que đo;
   nối sai thì báo nóng / bốc khói. Mô hình gần đúng, chưa có ESP32 (dùng [Wokwi](https://wokwi.com) cho phần đó).
 - Chia sẻ miễn phí.
 

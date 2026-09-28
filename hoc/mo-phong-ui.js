@@ -1,4 +1,4 @@
-// Trang #/mo-phong: ghép mạch trên breadboard (vẽ bằng Board.ve), giải bằng MoPhong (mo-phong.js).
+// Trang /mo-phong/: ghép mạch trên breadboard (vẽ bằng Board.ve), giải bằng MoPhong (mo-phong.js).
 // Mạch đang ghép lưu localStorage của người xem; chia sẻ bằng link chứa cả mạch trong hash.
 (function () {
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -302,7 +302,7 @@
         case 'mp-cauchi': sim.boChay('dh:cauchi'); return doi(true);
         case 'mp-xoa': S.items = []; S.dh.do_ = S.dh.den = null; S.cho = []; sim = MoPhong.tao([]); return doi();
         case 'mp-link': {
-          const url = location.href.split('#')[0] + '#/mo-phong/m/' + b64.ma({ items: S.items, dh: S.dh, cot: S.cot });
+          const url = location.origin + LUU.goc + 'mo-phong/m/' + b64.ma({ items: S.items, dh: S.dh, cot: S.cot }) + '/';
           const bao = t => { $('mp-tb').textContent = t; };
           (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(() => bao('Đã chép link. Ai mở link sẽ thấy đúng mạch này.'), () => bao(url));
           return;

@@ -1,0 +1,6 @@
+{
+  "_ghi_chu": "Để trống = không hiện. Sửa xong chạy lại deploy-web.sh. ung_ho.qr = tên file ảnh đặt trong hoc/. cf_beacon = token Cloudflare Web Analytics. gsc = mã meta google-site-verification.",
+  "ung_ho": { "chu": "", "nhan": "", "link": "", "qr": "" },
+  "cf_beacon": "",
+  "gsc": ""
+}

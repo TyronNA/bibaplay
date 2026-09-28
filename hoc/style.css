@@ -78,7 +78,7 @@ b,strong{font-weight:600}
 .luot-xem svg{fill:none;stroke:currentColor;stroke-width:1.8}
 .luot-xem[hidden]{display:none}
 .luot-xem .an-chu{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.gh{color:var(--ink);display:flex} .gh svg{fill:currentColor} .gh:hover{color:var(--accent)}
+
 /* màn hẹp: logo một hàng, nav xuống hàng dưới và tự xuống dòng thay vì gãy chữ trong từng mục */
 @media (max-width:640px){.top{grid-template-columns:1fr auto}.top nav{grid-column:1/-1;grid-row:2}.top .du-an{display:none}.top>*+*{border-left:0;border-top:1px solid var(--line-dam)}
   .top nav{flex-wrap:wrap}.top>.top-phu{border-top:0;border-left:1px solid var(--line-dam)}.top nav a{flex:1 1 auto;height:auto;justify-content:center;white-space:nowrap;padding:12px 10px;border-bottom:1px solid var(--line);margin-bottom:-1px}}
@@ -159,6 +159,9 @@ svg.lk-kh{display:block;width:100%;max-width:200px;height:auto;margin:auto;color
 .lk-dac{fill:currentColor} .lk-chu-kh{fill:currentColor;font:600 14px var(--mono)}
 .lk-luoi{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,470px),1fr));gap:28px}
 .lk-the{display:flex;flex-direction:column;scroll-margin-top:20px}
+.lk-the h3 a{color:inherit;text-decoration:none}.lk-the h3 a:hover{text-decoration:underline}
+.lk-mot{max-width:760px}
+.lk-lien{display:flex;flex-wrap:wrap;gap:8px 18px;padding:0;list-style:none}
 .lk-the.chon{box-shadow:0 0 0 3px var(--moi)}
 .lk-the header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 16px;border-bottom:1px solid var(--line-dam)}
 .lk-the h3{margin:0;font-size:16px;flex:1 1 12em}
@@ -314,6 +317,7 @@ pre.code{font-variant-ligatures:none;margin:0;padding:14px 16px;overflow-x:auto;
 /* nút mua (link affiliate, mua.js) */
 .mua{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:#fff;background:#EE4D2D;padding:6px 8px;text-decoration:none;border-radius:2px;white-space:nowrap}
 .lk-the header .mua{margin-left:auto}
+.do-chu .mua{align-self:flex-start;margin-top:6px}
 .can li>.mua{align-self:flex-start;margin:0 12px 8px 108px}
 .mua:hover{filter:brightness(1.1)} .mua:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
@@ -395,3 +399,4 @@ line.mp-thong{stroke:var(--accent);stroke-width:12;stroke-opacity:.18;stroke-lin
 /* chân trang bản web chia sẻ (xuat-web.py chèn vào): nói rõ nội dung do AI soạn, chưa kiểm hết */
 .ghi-ai{max-width:1100px;margin:0 auto 40px;padding:12px 16px;font-size:13.5px;line-height:1.55;color:var(--muted)}
 .ghi-ai b{color:var(--ink)} .ghi-ai p{margin:0 0 4px;max-width:95ch} .ghi-ai p:last-child{margin:0}
+.qr-ung-ho{display:block;margin-top:8px;background:#fff;padding:6px;border-radius:6px}

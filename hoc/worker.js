@@ -1,4 +1,4 @@
-// Worker chạy trước mọi request (run_worker_first): gộp domain phụ về bibaplay.com, đếm lượt xem (D1),
+// Worker chạy trước mọi request (run_worker_first): gộp domain phụ về bibaplay.com, đếm lượt xem + click mua (D1),
 // phát ban-rap.pdf từ R2 (PDF ~57MB vượt giới hạn 25 MiB/file của Workers Static Assets); còn lại là file tĩnh.
 const PDF = '/ban-rap.pdf';
 const CHINH = 'bibaplay.com';
@@ -14,8 +14,25 @@ async function luotXem(request, env) {
   return Response.json({ n: row ? row.n : 0 }, { headers: { 'cache-control': 'no-store' } });
 }
 
+// /mua/<id>?tu=<trang>: đếm click rồi 302 sang link Shopee affiliate trong mua.json (xuat-web.py sinh từ mua.js).
+// Bảng tạo một lần: wrangler d1 execute ban-rap-hoc --remote --command
+//   "CREATE TABLE IF NOT EXISTS bam (ngay TEXT NOT NULL, id TEXT NOT NULL, tu TEXT NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (ngay, id, tu))"
+// Xem số: hoc/thong-ke.sh.
+async function mua(request, env, ctx, id) {
+  const url = new URL(request.url);
+  const ds = await env.ASSETS.fetch(new URL('/mua.json', url)).then(r => (r.ok ? r.json() : {}));
+  const dich = ds[id];
+  if (!dich) return Response.redirect(new URL(`/linh-kien/${id}/`, url).toString(), 302);
+  const tu = (url.searchParams.get('tu') || '').slice(0, 60);
+  // ngày theo giờ VN; ghi D1 sau khi đã trả redirect — lỗi đếm (chưa tạo bảng…) không được chặn người mua
+  const ngay = new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
+  ctx.waitUntil(env.DB.prepare('INSERT INTO bam (ngay, id, tu, n) VALUES (?1, ?2, ?3, 1) ON CONFLICT (ngay, id, tu) DO UPDATE SET n = n + 1')
+    .bind(ngay, id, tu).run().catch(e => console.error('dem mua', e)));
+  return new Response(null, { status: 302, headers: { location: dich, 'cache-control': 'no-store', 'x-robots-tag': 'noindex' } });
+}
+
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     // www.bibaplay.com và domain cũ hoc.talesofascension.com → bibaplay.com, giữ path + hash (hash do trình duyệt giữ).
     if (url.hostname !== CHINH && url.hostname !== 'localhost' && url.hostname !== '127.0.0.1') {
@@ -23,6 +40,11 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
     if (url.pathname === '/api/xem') return luotXem(request, env);
+    const m = /^\/mua\/([\w-]+)\/?$/.exec(url.pathname);
+    if (m) return mua(request, env, ctx, m[1]);
+    // Link chia sẻ mạch (/mo-phong/m/<mã>/) và "thử trên mô phỏng" (/mo-phong/bai/…) không có file tĩnh:
+    // phát trang /mo-phong/ đã render sẵn, app.js đọc đường dẫn rồi nạp mạch.
+    if (/^\/mo-phong\/.+/.test(url.pathname)) return env.ASSETS.fetch(new Request(new URL('/mo-phong/', url), request));
     if (url.pathname !== PDF) return env.ASSETS.fetch(request);
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       return new Response('Method Not Allowed', { status: 405, headers: { allow: 'GET, HEAD' } });

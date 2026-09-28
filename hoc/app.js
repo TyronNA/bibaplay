@@ -2,7 +2,25 @@
 (function () {
   const { esc, dong } = MD;
   const app = document.getElementById('app');
-  const S = { gt: null, soan: [], doText: '', bai: {} };
+  const S = { gt: null, soan: [], doText: '', bai: {}, route: '' };
+
+  // Route là đường dẫn thật (/bai/2.3/), không phải hash: Google chỉ index được URL không có #.
+  // LUU.goc: '/' trên web, '/hoc/' khi chạy local (server.py); <base href> trong index.html khớp với nó.
+  const R = r => LUU.goc + (r ? r.replace(/\/?$/, '/') : '');
+  const routeCua = pathname => decodeURIComponent(pathname.startsWith(LUU.goc) ? pathname.slice(LUU.goc.length) : pathname.replace(/^\//, '')).replace(/\/+$/, '');
+  const LA_ROUTE = /^(|do|bai\/\d+\.\d+|linh-kien(\/[\w-]+)?|mo-phong(\/.*)?)$/;
+
+  // title + description + canonical + og: xuat-web.py chụp DOM sau khi render → mỗi trang tĩnh mang meta riêng.
+  const bo = s => String(s).replace(/<[^>]*>/g, '').replace(/[*`]/g, '').replace(/\s+/g, ' ').trim();
+  const cat = (s, n = 160) => (s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s);
+  function datMeta(tieuDe, moTa) {
+    const url = (LUU.web ? 'https://bibaplay.com' : location.origin) + R(S.route);
+    const dat = (sel, v) => { const el = document.head.querySelector(sel); if (el) el.setAttribute(el.tagName === 'LINK' ? 'href' : 'content', v); };
+    document.title = tieuDe;
+    moTa = cat(bo(moTa));
+    dat('meta[name="description"]', moTa); dat('meta[property="og:description"]', moTa);
+    dat('meta[property="og:title"]', tieuDe); dat('meta[property="og:url"]', url); dat('link[rel="canonical"]', url);
+  }
 
   window.BAI = { dangKy: b => { S.bai[b.id] = b; } };
 
@@ -36,7 +54,9 @@
   const coMon = (tim, l) => (LUU.web ? (l ? LUU.doCo().has(l.id) : null) : coTim(tim));
 
   // Nút mua (link affiliate trong mua.js); rel=sponsored theo quy định của Google cho link có hoa hồng.
-  const nutMua = id => (window.MUA && MUA[id] ? `<a class="mua" href="${esc(MUA[id])}" target="_blank" rel="sponsored nofollow noopener">Mua trên Shopee ↗</a>` : '');
+  // Bản web đi qua /mua/<id> (worker.js đếm click vào D1 rồi chuyển sang Shopee); tu = trang bấm, để biết bài nào ra đơn.
+  const linkMua = id => (LUU.web ? `${LUU.goc}mua/${id}?tu=${encodeURIComponent(S.route || 'chu')}` : MUA[id]);
+  const nutMua = id => (window.MUA && MUA[id] ? `<a class="mua" href="${esc(linkMua(id))}" target="_blank" rel="sponsored nofollow noopener">Mua trên Shopee ↗</a>` : '');
 
   const tatCaBai = () => S.gt.chuong.flatMap(c => c.bai.map(b => ({ ...b, chuong: c })));
 
@@ -63,7 +83,7 @@
   }
 
   function trangChu() {
-    document.title = 'Bàn Ráp';
+    datMeta('Bàn Ráp · học điện tử, robot, ESP32 trên breadboard', 'Giáo trình điện miễn phí bằng tiếng Việt cho người mới: đo đạc, định luật Ohm, tụ, diode, transistor, ESP32, motor, pin lithium tới robot. Mỗi bài có hình breadboard từng bước và bước đo Ω trước khi cấp điện.');
     app.innerHTML = `
       <section class="dau"><p class="eyebrow">Giáo trình điện · nghiêng về robot + nhúng</p>
       <h1>Học điện trên breadboard</h1>
@@ -76,7 +96,7 @@
         <div class="chuong to"><div class="dm-dau"><span class="so">${String(c.so).padStart(2, '0')}</span><h3>${dong(c.ten)}</h3>
           <span class="dem">${c.bai.filter(b => b.xong).length}/${c.bai.length} xong</span></div>
         <ol class="ds">${c.bai.map(b => `
-          <li><a href="#/bai/${b.id}" class="${b.dangO ? 'dang-o' : ''}">
+          <li><a href="${R(`bai/${b.id}`)}" class="${b.dangO ? 'dang-o' : ''}">
             <span class="id">${b.id}</span><span class="ten">${dong(b.ten)}</span>${trangThai(b)}
           </a></li>`).join('')}</ol></div>`).join('')}</div></section>`).join('')}`;
   }
@@ -87,18 +107,18 @@
     .map(d => d.split('|').slice(1, -1).map(c => c.trim())).filter(c => c[0] && c[0].toLowerCase().includes(tim.toLowerCase()));
 
   function trangDo() {
-    document.title = 'Đồ đang có · Bàn Ráp';
+    datMeta('Đồ cần có để học điện tử · Bàn Ráp', 'Danh sách linh kiện và dụng cụ để học điện trên breadboard: tick món đang có, trang bài tự báo còn thiếu gì.');
     if (LUU.web) return trangDoWeb();
     fetch(LUU.url('notes/do-dang-co.md')).then(r => r.text()).then(t => {
       datDo(t);
       const co = LINHKIEN.ds.filter(coLK);
       app.innerHTML = `<section class="dau"><p class="eyebrow">Đọc thẳng từ notes/do-dang-co.md</p><h1>Đồ đang có</h1>
-        <p class="lede">${co.length} loại đồ, mỗi món có hình. Bấm vào để xem cách nhận chân, giới hạn và bẫy trong <a href="#/linh-kien">thư viện linh kiện</a>.</p></section>
+        <p class="lede">${co.length} loại đồ, mỗi món có hình. Bấm vào để xem cách nhận chân, giới hạn và bẫy trong <a href="${R(`linh-kien`)}">thư viện linh kiện</a>.</p></section>
         <section><h2>Hình từng món</h2><ul class="do-luoi">${co.map(l => {
           let dong = dongBang(t, l.tim);
           // món không nằm trong bảng (dụng cụ, nguồn): lấy nguyên câu chứa nó trong file md
           if (!dong.length) { const c = t.split('\n').find(d => d.toLowerCase().includes(l.tim.toLowerCase())); if (c) dong = [[c.replace(/^[-*]\s*/, '')]]; }
-          return `<li><a class="to" href="#/linh-kien/${l.id}"><figure>${l.anh}</figure>
+          return `<li><a class="to" href="${R(`linh-kien/${l.id}`)}"><figure>${l.anh}</figure>
             <div class="do-chu"><b>${l.ten}</b>${dong.map(c => `<span class="mo">${MD.dong(c[0])}${c[1] ? ` · <b class="sl">${MD.dong(c[1])}</b>` : ''}</span>`).join('')}</div></a></li>`;
         }).join('')}</ul></section>
         <section><h2>Bản gốc</h2><article class="md to">${MD.khoi(t)}</article></section>`;
@@ -108,12 +128,12 @@
   function trangDoWeb() {
     const co = LUU.doCo(), kitGoc = LINHKIEN.ds.filter(l => coTim(l.tim)).map(l => l.id);
     app.innerHTML = `<section class="dau"><p class="eyebrow">Lưu trong trình duyệt của bạn</p><h1>Đồ đang có</h1>
-      <p class="lede">Tick món bạn đang có. Trang bài dựa vào đây để báo <b>có / thiếu</b> ở mục "Đồ cần". Danh sách chỉ nằm trên máy này, không gửi đi đâu.</p>
+      <p class="lede">Tick món bạn đang có. Trang bài dựa vào đây để báo <b>có / thiếu</b> ở mục "Đồ cần". Danh sách chỉ nằm trên máy này, không gửi đi đâu.${window.MUA && Object.values(MUA).some(Boolean) ? ' Món chưa có thì bấm "Mua trên Shopee" ngay tại đây.' : ''}</p>
       <p class="do-nut"><button type="button" id="do-kit">Chọn theo bộ kit gốc (${kitGoc.length} món)</button> <button type="button" id="do-xoa">Bỏ hết</button> <span class="mo" id="do-dem"></span></p></section>
       ${Object.entries(LINHKIEN.nhom).map(([k, ten]) => `<section><h2>${ten}</h2><ul class="do-luoi">${LINHKIEN.ds.filter(l => l.nhom === k).map(l => `
         <li><label class="to do-chon" for="co-${l.id}"><figure>${l.anh}</figure>
           <div class="do-chu"><span><input type="checkbox" id="co-${l.id}" data-id="${l.id}"${co.has(l.id) ? ' checked' : ''}> <b>${l.ten}</b></span>
-          <a href="#/linh-kien/${l.id}" class="mo">cách nhận chân →</a></div></label></li>`).join('')}</ul></section>`).join('')}
+          <a href="${R(`linh-kien/${l.id}`)}" class="mo">cách nhận chân →</a>${nutMua(l.id)}</div></label></li>`).join('')}</ul></section>`).join('')}
       <section><h2>Bộ kit gốc</h2><p class="mo">Bộ đồ giáo trình này được soạn theo. Mua giống vậy thì các bài khớp số.</p><article class="md to">${MD.khoi(S.doMd)}</article></section>`;
     const hop = [...app.querySelectorAll('.do-chon input')];
     const luu = () => { const s = new Set(hop.filter(i => i.checked).map(i => i.dataset.id)); LUU.datDoCo(s); document.getElementById('do-dem').textContent = `Đang có ${s.size} món.`; };
@@ -124,11 +144,10 @@
   }
 
   function trangLinhKien(chon) {
-    document.title = 'Thư viện linh kiện · Bàn Ráp';
     const tatCa = tatCaBai();
-    const tenBai = id => { const b = tatCa.find(x => x.id === id); return b ? `<a href="#/bai/${id}">${id} ${dong(b.ten)}</a>` : id; };
+    const tenBai = id => { const b = tatCa.find(x => x.id === id); return b ? `<a href="${R(`bai/${id}`)}">${id} ${dong(b.ten)}</a>` : id; };
     const the = l => `<article class="lk-the to${l.id === chon ? ' chon' : ''}" id="lk-${l.id}">
-      <header><h3>${l.ten}</h3>${coLK(l) ? '<span class="pill ok">có</span>' : `${l.mua ? `<span class="pill mo">${l.mua}</span>` : ''}<span class="pill xau">chưa có</span>`}${nutMua(l.id)}</header>
+      <header><h3>${l.id === chon ? l.ten : `<a href="${R(`linh-kien/${l.id}`)}">${l.ten}</a>`}</h3>${coLK(l) ? '<span class="pill ok">có</span>' : `${l.mua ? `<span class="pill mo">${l.mua}</span>` : ''}<span class="pill xau">chưa có</span>`}${nutMua(l.id)}</header>
       <div class="lk-hinh${l.kh ? '' : ' mot'}"><figure>${l.anh}<figcaption>Hình minh hoạ</figcaption></figure>${l.kh ? `<figure>${l.kh}<figcaption>Ký hiệu trên sơ đồ</figcaption></figure>` : ''}</div>
       <dl class="lk-tt">
         <div><dt>Nhận chân / cực</dt><dd><ul>${l.chan.map(x => `<li>${x}</li>`).join('')}</ul></dd></div>
@@ -136,10 +155,22 @@
         ${l.bay ? `<div class="bay-lk"><dt>Bẫy</dt><dd>${l.bay}</dd></div>` : ''}
         <div><dt>Dùng ở bài</dt><dd>${l.bai === null ? 'mọi bài' : l.bai.length ? l.bai.map(tenBai).join(' · ') : 'chưa có bài'}</dd></div>
       </dl></article>`;
+    // /linh-kien/<id>/ là trang riêng của một món (mỗi món một URL để search ra), không phải cả thư viện cuộn tới món đó.
+    const l = chon && LINHKIEN.theoId(chon);
+    if (l) {
+      const cungNhom = LINHKIEN.ds.filter(x => x.nhom === l.nhom && x.id !== l.id);
+      datMeta(`${bo(l.ten)}: cách nhận chân, giới hạn, bẫy · Bàn Ráp`, `${l.ten}: ${l.chan.join(' ')}`);
+      app.innerHTML = `<section class="dau"><p class="eyebrow"><a href="${R('linh-kien')}">Thư viện linh kiện</a> · ${LINHKIEN.nhom[l.nhom]}</p><h1>${l.ten}</h1>
+        <p class="lede">Hình minh hoạ có chú thích chân, ký hiệu trên sơ đồ, cách nhận chân và bẫy. Chỗ nào ghi <b>đo mới biết</b> thì phải đo trước khi ráp.</p></section>
+        <div class="lk-luoi lk-mot">${the(l)}</div>
+        ${cungNhom.length ? `<section><h2>Cùng nhóm</h2><ul class="lk-lien">${cungNhom.map(x => `<li><a href="${R(`linh-kien/${x.id}`)}">${x.ten}</a></li>`).join('')}</ul></section>` : ''}
+        <p><a href="${R('linh-kien')}">← Toàn bộ thư viện linh kiện</a></p>`;
+      return;
+    }
+    datMeta('Thư viện linh kiện điện tử: nhận chân, ký hiệu, bẫy · Bàn Ráp', `${LINHKIEN.ds.length} linh kiện cho người mới học điện tử và robot: hình minh hoạ có chú thích chân, ký hiệu trên sơ đồ, giới hạn và bẫy hay gặp.`);
     app.innerHTML = `<section class="dau"><p class="eyebrow">Thư viện linh kiện · ${LINHKIEN.ds.length} món</p><h1>Linh kiện</h1>
       <p class="lede">Mỗi món có hình minh hoạ với chú thích chân, ký hiệu trên sơ đồ mạch, cách nhận chân và bẫy. Chỗ nào ghi <b>đo mới biết</b> là chỗ hình không dám vẽ chắc: phải đo trước khi ráp.</p></section>
-      ${Object.entries(LINHKIEN.nhom).map(([k, ten]) => `<section><h2>${ten}</h2><div class="lk-luoi">${LINHKIEN.ds.filter(l => l.nhom === k).map(the).join('')}</div></section>`).join('')}`;
-    if (chon) { const el = document.getElementById('lk-' + chon); if (el) el.scrollIntoView({ block: 'start' }); }
+      ${Object.entries(LINHKIEN.nhom).map(([k, ten]) => `<section><h2>${ten}</h2><div class="lk-luoi">${LINHKIEN.ds.filter(x => x.nhom === k).map(the).join('')}</div></section>`).join('')}`;
   }
 
   // Trạng thái breadboard sau từng bước: bước sau kế thừa bước trước. Phần mới ráp lại từ đầu,
@@ -178,7 +209,7 @@
       <h4><span class="tag" title="Bước ${n} của phần ${pi + 1}"><b>${n}</b><i>P${pi + 1}</i></span>${b.cap_dien ? '<span class="pill canh">cấp điện</span>' : ''}${b.kiem_truoc ? '<span class="pill kiem">đo trước khi cấp điện</span>' : ''} ${b.ten}</h4>
       <div class="buoc-noidung">
         <div class="buoc-chu">${(b.lam || []).map(x => `<p>${x}</p>`).join('')}${kiem}</div>
-        ${b.board ? `<figure><div class="cuon">${Board.ve(bd, b.mo_ta || b.ten)}</div><figcaption><span class="so-hinh">Hình ${so}</span><span>Breadboard sau bước ${n} · khung vàng = vừa cắm thêm${bd.items.some(i => i.loai === 'esp') ? ' · board ESP32 vẽ tách ra, chỉ các chân bài dùng, nối bằng dây đực–cái' : ''}${moPhongDuoc(bd) ? ` · <a class="mp-mo" href="#/mo-phong/bai/${id}/${pi}/${n - 1}">Thử mạch này trên mô phỏng →</a>` : ''}</span></figcaption></figure>`
+        ${b.board ? `<figure><div class="cuon">${Board.ve(bd, b.mo_ta || b.ten)}</div><figcaption><span class="so-hinh">Hình ${so}</span><span>Breadboard sau bước ${n} · khung vàng = vừa cắm thêm${bd.items.some(i => i.loai === 'esp') ? ' · board ESP32 vẽ tách ra, chỉ các chân bài dùng, nối bằng dây đực–cái' : ''}${moPhongDuoc(bd) ? ` · <a class="mp-mo" href="${R(`mo-phong/bai/${id}/${pi}/${n - 1}`)}">Thử mạch này trên mô phỏng →</a>` : ''}</span></figcaption></figure>`
     : b.hinh ? `<figure><div class="cuon phac">${b.hinh}</div><figcaption><span class="so-hinh">Hình ${so}</span><span>Phác thảo bước ${n}</span></figcaption></figure>` : ''}
       </div></li>`;
   }
@@ -196,9 +227,8 @@
   async function trangBai(id) {
     const ds = tatCaBai(), i = ds.findIndex(b => b.id === id), gt = ds[i];
     if (!gt) { app.innerHTML = '<p>Không có bài này trong giáo trình.</p>'; return; }
-    document.title = `${id} ${gt.ten.replace(/[*`]/g, '')} · Bàn Ráp`;
     const truoc = ds[i - 1], sau = ds[i + 1];
-    const dieuHuong = `<nav class="dh-bai">${truoc ? `<a href="#/bai/${truoc.id}">← ${truoc.id} ${dong(truoc.ten)}</a>` : '<span></span>'}${sau ? `<a href="#/bai/${sau.id}">${sau.id} ${dong(sau.ten)} →</a>` : ''}</nav>`;
+    const dieuHuong = `<nav class="dh-bai">${truoc ? `<a href="${R(`bai/${truoc.id}`)}">← ${truoc.id} ${dong(truoc.ten)}</a>` : '<span></span>'}${sau ? `<a href="${R(`bai/${sau.id}`)}">${sau.id} ${dong(sau.ten)} →</a>` : ''}</nav>`;
     const ph = S.gt.phan[gt.chuong.phan], danPhan = gt.chuong.phan > 1 ? ph.dan : [];
     const danChuong = [...danPhan, ...(gt.chuong.dan || [])];
     const dau = `<section class="dau"><p class="eyebrow">Phần ${gt.chuong.phan} · Chương ${gt.chuong.so} · ${dong(gt.chuong.ten)}</p>
@@ -209,18 +239,21 @@
       <div><dt>Bài</dt><dd>${id}</dd></div><div><dt>Chương</dt><dd>${gt.chuong.so}</dd></div>
       <div><dt>Trạng thái</dt><dd>${trangThai(gt)}</dd></div><div><dt>Nguồn</dt><dd>${nguon || (gt.chuong.phan > 1 ? 'USB 5V · GPIO 3.3V' : '3×AAA · đo 4.78 V')}</dd></div>${them}</dl>`;
 
+    const tieuDe = `Bài ${id}: ${bo(gt.ten)} · ${bo(gt.chuong.ten)} · Bàn Ráp`;
     if (!S.soan.includes(id)) {
+      datMeta(tieuDe, `${gt.lam} ${gt.thay}`);
       app.innerHTML = `${dau}${khungTen()}<section class="khung to"><p><b>Làm gì:</b> ${dong(gt.lam)}</p><p><b>Đo / thấy gì:</b> ${dong(gt.thay)}</p>
         <p class="mo">${LUU.web ? 'Bài này chưa có hướng dẫn từng bước. Đừng tự ráp theo 2 dòng trên: chờ hướng dẫn có hình và bước đo Ω trước khi cấp điện.' : `Bài này chưa có hướng dẫn từng bước. Nhờ Claude soạn <code>hoc/bai/${id}.js</code> trước khi ráp.`}</p></section>${khungAnToan()}${dieuHuong}`;
       return;
     }
     const bai = await taiBai(id);
+    datMeta(tieuDe, bai.muc_tieu || `${gt.lam} ${gt.thay}`);
     nguon = bai.nguon || '';
     const kq = await LUU.docKq(id);
     const can = (bai.can || []).map(c => {
       const l = c.lk ? LINHKIEN.theoId(c.lk) : LINHKIEN.tim(c.tim), co = coMon(c.tim, l);
       const chu = `<span class="can-chu"><span>${c.ten}${c.sl ? ` <span class="mo">× ${c.sl}</span>` : ''}</span><span class="pill ${co === null ? 'mo' : co ? 'ok' : 'xau'}">${co === null ? 'tự kiểm' : co ? 'có' : 'thiếu'}</span></span>`;
-      return l ? `<li><a href="#/linh-kien/${l.id}" title="Xem ${l.ten} trong thư viện">${l.anh}${chu}</a>${nutMua(l.id)}</li>` : `<li><div class="can-o"><span class="khong-hinh">chưa có hình</span>${chu}</div></li>`;
+      return l ? `<li><a href="${R(`linh-kien/${l.id}`)}" title="Xem ${l.ten} trong thư viện">${l.anh}${chu}</a>${nutMua(l.id)}</li>` : `<li><div class="can-o"><span class="khong-hinh">chưa có hình</span>${chu}</div></li>`;
     }).join('');
 
     const soBuoc = bai.phan.reduce((t, p) => t + p.buoc.length, 0);
@@ -228,7 +261,7 @@
       ${khungTen(`<div><dt>Phần · bước</dt><dd>${bai.phan.length} phần · ${soBuoc} bước</dd></div>${bai.poster ? `<div><dt>Poster 30 bài</dt><dd>bài ${bai.poster.join(', ')}</dd></div>` : ''}`)}
       <section class="khung to"><p class="lede">${bai.muc_tieu}</p>
         ${bai.poster ? `<p class="mo">Hình trên poster có chỗ sai, đã ghi trong <code>notes/poster-30-bai.md</code>. Ráp theo hình ở trang này.</p>` : ''}</section>
-      <section><h2>Đồ cần</h2><ul class="can">${can}</ul><p class="mo">Đối chiếu với trang <a href="#/do">Đồ đang có</a>. Bấm vào hình để xem cách nhận chân trong <a href="#/linh-kien">thư viện linh kiện</a>.</p></section>
+      <section><h2>Đồ cần</h2><ul class="can">${can}</ul><p class="mo">Đối chiếu với trang <a href="${R(`do`)}">Đồ đang có</a>. Bấm vào hình để xem cách nhận chân trong <a href="${R(`linh-kien`)}">thư viện linh kiện</a>.</p></section>
       ${bai.kien_thuc ? `<section><h2>Hiểu trước khi ráp</h2><div class="khung to">${bai.kien_thuc}</div></section>` : ''}
       ${bai.so_do ? `<section><h2>Sơ đồ</h2><div class="sd-luoi">${bai.so_do.map(s => `<figure class="sd-hinh to">${s.nhan ? `<span class="pill ${s.xau ? 'xau' : 'ok'}">${s.nhan}</span>` : ''}${s.svg}<figcaption>${s.chu}</figcaption></figure>`).join('')}</div></section>` : ''}
       ${bai.du_doan ? `<section><h2>Đoán trước</h2><div class="khung to">${bai.du_doan}</div></section>` : ''}
@@ -262,7 +295,7 @@
   }
 
   async function trangMoPhong(h) {
-    document.title = 'Mô phỏng · Bàn Ráp';
+    datMeta('Mô phỏng ghép mạch breadboard · Bàn Ráp', 'Ghép mạch trên breadboard ảo: pin, điện trở, LED, tụ, diode, transistor. Tính áp, dòng, báo nối tắt và linh kiện quá tải trước khi ráp thật.');
     const [, kieu, ...con] = h.split('/');
     let vao = null;
     if (kieu === 'm') {
@@ -272,13 +305,15 @@
       const [id, pi, k] = con, bai = await taiBai(id), bd = cacPhan(bai)[+pi][+k];
       vao = { ...MoPhongTrang.tuBai(bd.items), cot: bd.cot, nguon: `bài ${id}, phần ${+pi + 1}, bước ${+k + 1}` };
     }
-    // Mở từ link rồi thì về #/mo-phong: tải lại trang giữ mạch đang sửa (localStorage), không nạp lại bản gốc.
-    if (vao) history.replaceState(null, '', '#/mo-phong');
+    // Mở từ link rồi thì về /mo-phong/: tải lại trang giữ mạch đang sửa (localStorage), không nạp lại bản gốc.
+    if (vao) { S.route = 'mo-phong'; history.replaceState(null, '', R('mo-phong')); }
     MoPhongTrang.mo(app, vao);
   }
 
   async function dinhTuyen() {
-    const h = location.hash.replace(/^#\/?/, '');
+    // Link cũ dạng #/bai/2.3 (đã gửi anh em, link chia sẻ mô phỏng) → đổi sang đường dẫn thật, không tải lại trang.
+    if (location.hash.startsWith('#/')) history.replaceState(null, '', R(location.hash.slice(2)));
+    const h = S.route = routeCua(location.pathname);
     window.scrollTo(0, 0);
     const muc = h.split('/')[0];
     document.querySelectorAll('.top nav a').forEach(a => a.toggleAttribute('aria-current', a.dataset.r === (['do', 'linh-kien', 'mo-phong'].includes(muc) ? muc : '')));
@@ -308,6 +343,16 @@
     }).catch(() => {});
   }
   demXem();
-  addEventListener('hashchange', dinhTuyen);
+  // Bấm link nội bộ → pushState, không tải lại trang (giữ giáo trình đã tải). Ctrl/⌘-click, target, download: để trình duyệt lo.
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href]');
+    if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target || a.hasAttribute('download')) return;
+    const u = new URL(a.href, location.href);
+    if (u.origin !== location.origin || !u.pathname.startsWith(LUU.goc) || !LA_ROUTE.test(routeCua(u.pathname))) return;
+    e.preventDefault();
+    if (u.pathname !== location.pathname) history.pushState(null, '', u.pathname);
+    dinhTuyen();
+  });
+  addEventListener('popstate', dinhTuyen);
   dinhTuyen();
 })();

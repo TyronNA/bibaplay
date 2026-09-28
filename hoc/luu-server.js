@@ -2,6 +2,7 @@
 // tiến độ + đồ đang có đọc thẳng từ notes/*.md. Bản web publish dùng luu-web.js thay file này.
 window.LUU = {
   web: false,
+  goc: '/hoc/',
   url: p => '/' + p,
   dsBai: () => fetch('/api/bai').then(r => r.json()).catch(() => []),
   docKq: id => fetch(`/api/ket-qua/${id}`).then(r => r.json()).catch(() => ({})),
