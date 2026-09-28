@@ -4,3 +4,4 @@ build/
 .playwright-mcp/
 sandbox/esp32-bai/sdkconfig
 sandbox/esp32-bai/sdkconfig.old
+__pycache__/

@@ -37,3 +37,24 @@ Giỏ đã chốt: `xiaozhi-bom.md`. Thêm dây jumper **đực–cái** (module
 
 ## Đợt 3 — mua khi tới Phần 2 / robot
 Logic analyzer 8 kênh 24MHz, module ổn áp AMS1117 3.3V, driver motor + khung robot (chọn lúc tới bước 5 — chọn motor/driver trước rồi mới chọn pin).
+
+## Đợt 4 — Phần 3 robot (chương 14–17)
+Số liệu và nguồn từng món: `datasheet-robot.md`. Chưa kiểm giá/shop.
+
+| Món | Chọn loại nào | Vì sao |
+|---|---|---|
+| Công tắc hành trình KW11-3Z × 2 | Loại có cần gạt (lá hoặc bánh xe nhỏ), 3 chân COM/NO/NC | Cản va trước robot (14.1) |
+| Module hồng ngoại tránh vật FC-51 × 2 | 3 chân VCC/GND/OUT, có biến trở xanh | 14.2; chạy được 3.3V |
+| Cảm biến siêu âm HC-SR04 × 1 | Bản thường (5V); bản "HC-SR04P" / 3.3–5V cũng được | 14.3 |
+| Module TCRT5000 × 2 | 4 chân VCC/GND/DO/AO | Chống rơi mép bàn/cầu thang (14.4) |
+| Servo SG90 × 1 | Loại bánh răng nhựa là đủ | 15.1 |
+| Khung robot 2WD | Bộ có sẵn 2 motor TT 1:48 + 2 bánh + bánh mắt trâu + **2 đĩa encoder 20 lỗ** + đế pin | 15.2, 17.1 — mua bộ thì motor/bánh khớp nhau |
+| Cảm biến tốc độ khe quang × 2 | Module LM393 khe 5mm (FC-03 / "speed sensor"); ghi rõ 3.3V thì tốt, loại chỉ 5V thì cần cầu phân áp | 15.2 |
+| Module GY-521 (MPU-6050) × 1 | | 15.3 |
+| Module driver **DRV8833** × 1 | 2 kênh; hỏi shop chip vỏ HTSSOP (1.5A/kênh) — vỏ TSSOP chỉ 0.5A/kênh | Thay "driver motor" chung ở chương 13; chạy từ 2.7V |
+| Cell 18650 × 2 (+1 dự phòng) | **Hàng hãng** (Samsung / LG / Sony-Murata / Molicel) từ shop uy tín; cùng loại, cùng đợt | Cell không rõ hãng thường ghi dung lượng ảo, không rõ dòng xả |
+| Module TP4056 **6 chân** (có DW01A + 8205A) × 1 | Có 2 cọc OUT+/OUT− ngoài B+/B−; cổng Type-C | 16.1 — loại 4 chân không có bảo vệ xả |
+| Đế pin 18650 1 ô × 1 + hộp 2 ô nối tiếp × 1 | Có dây đỏ/đen; hộp 2 ô có công tắc thì tốt | 16.1, 16.2 |
+| Mạch bảo vệ BMS **2S** × 1 | Có cọc B−, BM, B+, P−, P+; dòng ≥ 3A | 16.2 — không dùng BMS 3S/4S cho pack 2S |
+| Module hạ áp LM2596 × 1 | Loại có biến trở chỉnh (ADJ) | 16.3 |
+| Điện trở 20k (nếu kit thiếu) | | Cầu đo pin 2S (16.3) |

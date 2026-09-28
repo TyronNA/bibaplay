@@ -1,0 +1,13 @@
+// Web tự học bản tĩnh ở https://hoc.talesofascension.com — Workers Static Assets + worker nhỏ phát PDF từ R2.
+// Thư mục assets do hoc/xuat-web.py sinh ra (build/ đã gitignore); deploy bằng hoc/deploy-web.sh.
+// custom_domain: Cloudflare tự tạo DNS + SSL lúc deploy lần đầu. Gỡ route ở đây KHÔNG tự xoá domain
+// trên Cloudflare — phải xoá tay ở Workers → Settings → Domains.
+{
+  "name": "ban-rap-hoc",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-28",
+  // binding ASSETS: thiếu thì worker nuốt mọi request, trang tĩnh chết
+  "assets": { "directory": "../build/hoc-web", "binding": "ASSETS" },
+  "r2_buckets": [{ "binding": "PDF", "bucket_name": "ban-rap-hoc" }],
+  "routes": [{ "pattern": "hoc.talesofascension.com", "custom_domain": true }]
+}

@@ -38,5 +38,21 @@ menu "Bai hoc"
             bool "13.2 Cau H + PWM: 2 chieu x 3 toc do"
         config BAI_13_3
             bool "13.3 Nhieu motor: nhay LED luc khoi dong + tang toc motor"
+        config BAI_14_2
+            bool "14.2 FC-51: GPIO8 bao co vat"
+        config BAI_14_3
+            bool "14.3 HC-SR04: Trig 17, Echo 18 (qua cau 10k/20k)"
+        config BAI_14_4
+            bool "14.4 TCRT5000: DO GPIO21 + AO GPIO2"
+        config BAI_15_1
+            bool "15.1 Servo SG90 GPIO14: 1 / 1.5 / 2ms"
+        config BAI_15_2
+            bool "15.2 Dem xung khe quang GPIO11 (PCNT) + motor DRV8833"
+        config BAI_15_3
+            bool "15.3 MPU-6050: cong don gyro Z ra goc"
+        config BAI_16_3
+            bool "16.3 Do pin 2S GPIO1 (x3) + LED trang thai GPIO13"
+        config BAI_17_1
+            bool "17.1 Robot tranh vat"
     endchoice
 endmenu

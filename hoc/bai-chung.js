@@ -39,6 +39,24 @@
       esp: () => ({ ten: 'Board ESP32-S3 N16R8', tim: 'ESP32-S3', lk: 'esp32-s3', sl: 1 }),
       usb: () => ({ ten: 'Cáp USB-C có data', tim: 'USB-C có data', lk: 'cap-usbc', sl: 1 }),
       ducCai: (sl = 4) => ({ ten: 'Dây nhảy đực–cái', tim: 'đực–cái', lk: 'day-duc-cai', sl }),
+      // Phần 3 (robot) — số liệu: notes/datasheet-robot.md
+      kw11: (sl = 1) => ({ ten: 'Công tắc hành trình KW11-3Z', tim: 'KW11', lk: 'cong-tac-ht', sl }),
+      fc51: (sl = 1) => ({ ten: 'Module hồng ngoại FC-51', tim: 'FC-51', lk: 'fc51', sl }),
+      sr04: () => ({ ten: 'Cảm biến siêu âm HC-SR04', tim: 'HC-SR04', lk: 'hc-sr04', sl: 1 }),
+      tcrt: () => ({ ten: 'Module TCRT5000', tim: 'TCRT5000', lk: 'tcrt5000', sl: 1 }),
+      sg90: () => ({ ten: 'Servo SG90', tim: 'SG90', lk: 'sg90', sl: 1 }),
+      motorTT: (sl = 1) => ({ ten: 'Motor TT 1:48 + bánh', tim: 'motor TT', lk: 'motor-tt', sl }),
+      kheQuang: () => ({ ten: 'Cảm biến khe quang + đĩa 20 lỗ', tim: 'khe quang', lk: 'khe-quang', sl: 1 }),
+      gy521: () => ({ ten: 'Module GY-521 (MPU-6050)', tim: 'GY-521', lk: 'gy521', sl: 1 }),
+      drv8833: () => ({ ten: 'Module DRV8833', tim: 'DRV8833', lk: 'drv8833', sl: 1 }),
+      cell: (sl = 1) => ({ ten: 'Cell 18650 hàng hãng', tim: '18650', lk: 'cell-18650', sl }),
+      tp4056: () => ({ ten: 'Module TP4056 6 chân (có bảo vệ)', tim: 'TP4056', lk: 'tp4056', sl: 1 }),
+      de18650: (o = 1) => ({ ten: `Đế pin 18650 ${o} ô${o > 1 ? ' nối tiếp' : ''}`, tim: 'đế pin 18650', lk: 'de-18650', sl: 1 }),
+      bms2s: () => ({ ten: 'Mạch bảo vệ BMS 2S', tim: 'BMS 2S', lk: 'bms-2s', sl: 1 }),
+      lm2596: () => ({ ten: 'Module hạ áp LM2596', tim: 'LM2596', lk: 'lm2596', sl: 1 }),
+      khung: () => ({ ten: 'Khung robot 2WD', tim: 'khung 2WD', lk: 'khung-2wd', sl: 1 }),
+      sac5v: () => ({ ten: 'Cục sạc điện thoại 5V ≥ 1A + cáp khớp cổng module', tim: 'cục sạc', sl: 1 }),
+      moHan: () => ({ ten: 'Mỏ hàn + thiếc (đồ nghề đợt 1)', tim: 'mỏ hàn', lk: 'mo-han', sl: 1 }),
     },
     // Đồ luôn cần ở Phần 1 / Phần 2
     coBan: (soDay = 6) => [K.can.bb(), K.can.day(soDay), K.can.pin(), K.can.dh(), K.can.kep()],
@@ -80,6 +98,13 @@
       ten, cap_dien: true, lam: ['Cắm cáp USB từ máy tính vào cổng USB của board (cổng ghi <code>USB</code> hoặc <code>COM</code> đều được, dùng một cổng cho cả bài).', ...lam],
       board: { ...(board || {}), sua: { esp: { usb: true }, ...((board || {}).sua || {}) } },
       kiem,
+    }),
+    // Phần 3: module cảm biến cấp nguồn xong, CHƯA nối GPIO — đo chân OUT phải ≤ 3.3V mới được nối.
+    doOut: (ten, lam, do_, den, hien, thay) => ({
+      ten, cap_dien: true, kiem_truoc: true,
+      lam: ['Cắm USB (board chưa có dây nào vào chân OUT của module). Núm <code>DCV 20</code>.', ...lam],
+      board: { sua: { esp: { usb: true } }, them: [K.dh('DCV 20', do_, den, hien)] },
+      kiem: { thay, neu_khong: '<b>Trên 3.4V: không nối GPIO.</b> Module đang cấp 5V hoặc kéo lên 5V — rút USB, kiểm dây VCC có đúng 3V3 không. Không đổi mức khi thử: module chưa chạy, kiểm VCC/GND.' },
     }),
     rutUsb: (lam, board) => ({
       ten: 'Rút USB', lam: ['Rút cáp USB trước khi rút hay cắm bất cứ dây nào.', ...(lam || [])],

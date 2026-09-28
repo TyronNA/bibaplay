@@ -152,6 +152,45 @@ Chỉ dùng chân ADC1 (GPIO1–10); ADC2 bị WiFi chiếm. Áp vào chân ADC 
 Mua thêm khi tới Phần 2: **logic analyzer** 8 kênh 24MHz (rẻ, nhìn được I2C/I2S), máy hiện sóng giá rẻ (vd kit DSO138 — kiêm bài tập hàn),
 ổn áp AMS1117, module driver motor. IC 555 / op-amp LM358: chỉ khi muốn đào sâu analog.
 
+## Phần 3 — Robot: cảm biến, chuyển động, pin (khi có đồ trong `can-mua.md` đợt 4)
+
+Mục tiêu: robot 2 bánh kiểu robot hút bụi tự tránh vật. Số liệu từng linh kiện đã đối chiếu datasheet: `datasheet-robot.md`.
+Quy tắc mới cho mọi module cảm biến: **đo áp chân OUT bằng đồng hồ trước khi nối vào GPIO** — phải ≤ 3.3V. Module cấp 5V thì chân OUT thường cũng lên 5V.
+Từ chương 16 có **pin lithium**: nối tắt = hàng chục ampe, cháy thật. Đọc `pin-lithium.md` trước, làm trên mặt bàn không có đồ dễ cháy, không bỏ đi khi đang sạc.
+
+## 14. Cảm biến tránh vật
+
+| # | Bài | Làm gì | Đo / thấy gì |
+|---|---|---|---|
+| 14.1 | Công tắc va chạm | Công tắc hành trình 3 chân (COM/NO/NC): dò chân bằng thang thông mạch, rồi COM → GND, NO → GPIO12 bật pull-up nội | NO thông COM chỉ khi nhấn. Đây là "cản va" phía trước robot hút bụi |
+| 14.2 | Hồng ngoại tránh vật | Module FC-51 cấp **3V3**, đo OUT lúc có/không có tay chắn, rồi mới nối GPIO8; vặn biến trở chỉnh tầm | OUT ≈ 3.3V khi trống, ≈ 0V khi có vật. Vật màu đen, nắng chiếu → bắt kém |
+| 14.3 | Siêu âm HC-SR04 | VCC 5V, TRIG ← GPIO17, ECHO → cầu 10k/20k (9.5) → GPIO18; in khoảng cách | `cm = µs / 58`. Tường 20cm → xung ≈ 1160µs. Vật mềm/xiên → đo sai |
+| 14.4 | Chống rơi TCRT5000 | Module TCRT5000 cấp 3V3 úp xuống bàn: DO → GPIO21, AO → GPIO2 (ADC); đưa ra mép bàn | Mặt bàn sáng: AO thấp, DO = 0; nhấc lên / mép bàn: AO cao, DO = 1. Robot hút bụi dùng cách này để không lăn xuống cầu thang |
+
+## 15. Chuyển động có phản hồi
+
+| # | Bài | Làm gì | Đo / thấy gì |
+|---|---|---|---|
+| 15.1 | Servo SG90 | Nguồn servo từ hộp 3×AAA, GND chung, dây cam ← GPIO14; PWM 50Hz, xung 1 / 1.5 / 2ms | Servo đứng ở 3 góc và **giữ** góc đó khi bị đẩy nhẹ: bên trong có biến trở đo góc + mạch tự chỉnh |
+| 15.2 | Đếm vòng bánh xe | Motor TT + đĩa 20 lỗ + cảm biến khe quang (đo OUT trước) → GPIO11, đếm bằng PCNT; motor chạy qua DRV8833 | Xung/giây ÷ 20 × 60 = vòng/phút. Pin 4.5V không tải ≈ 185 vòng/phút ≈ 62 xung/s |
+| 15.3 | Quay đúng góc bằng IMU | GY-521 (MPU-6050) chung bus I2C với OLED (41/42), đọc gyro Z, cộng dồn ra góc | Xoay board 90° trên bàn → in ≈ 90°. Để yên lâu → góc trôi dần: sai số cộng dồn |
+
+## 16. Pin lithium cho robot
+
+| # | Bài | Làm gì | Đo / thấy gì |
+|---|---|---|---|
+| 16.1 | Cell 18650 + sạc TP4056 | Đo áp cell trước (< 2.5V hoặc phồng → bỏ). Module TP4056 loại **6 chân có bảo vệ**, cell trong đế 1 ô, sạc bằng cục sạc điện thoại 5V | Đèn đỏ = đang sạc, xanh = đầy; đầy đo 4.14–4.26V. Không để qua đêm, không bỏ đi khi đang sạc |
+| 16.2 | Pack 2S + mạch bảo vệ | 2 cell lệch nhau ≤ 0.1V, hộp 2×18650 nối tiếp + BMS 2S (B−, BM, B+, P−, P+); đo từng cell và cả pack | Pack = tổng 2 cell (~7.4V, đầy 8.4V). Sạc: tháo từng cell ra sạc riêng bằng 16.1 — **không** sạc 2S bằng TP4056 |
+| 16.3 | Hạ áp LM2596 → 5V | Chỉnh biến trở module cho ra 5.0V **khi chưa nối tải**, rồi mới nối chân 5V board (rút USB); đo pin qua ADC (cầu 20k/10k) | Hạ áp xung hiệu suất ~80%, không nóng như AMS1117 (8.2). Pin cạn ~6V: đầu ra tụt dưới 5V vì LM2596 cần dư ~1.5V |
+
+## 17. Ghép robot
+
+| # | Bài | Làm gì | Đo / thấy gì |
+|---|---|---|---|
+| 17.1 | Robot tự tránh vật | Khung 2WD: DRV8833 + 2 motor TT từ pack 2S, LM2596 → 5V board, HC-SR04 + FC-51 + công tắc va chạm; chạy thử khi **bánh nhấc khỏi mặt bàn** | Gặp vật / chạm → dừng, lùi, quay rồi đi tiếp. Pin dưới 6.6V (3.3V/cell) → tự dừng |
+
+Mua thêm (đợt 4): danh sách + lý do trong `can-mua.md`.
+
 ## Sách đọc kèm
 - *Lessons in Electric Circuits* (Tony Kuphaldt) — miễn phí, trên allaboutcircuits.com; tập I (DC) khớp chương 1–3.
 - *Make: Electronics* (Charles Platt) — học bằng cách ráp rồi đo, cùng kiểu với giáo trình này.

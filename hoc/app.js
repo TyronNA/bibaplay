@@ -8,11 +8,18 @@
 
   async function taiChung() {
     const [gt, soan, doText] = await Promise.all([
-      fetch('/notes/giao-trinh-dien.md').then(r => r.text()),
-      fetch('/api/bai').then(r => r.json()).catch(() => []),
-      fetch('/notes/do-dang-co.md').then(r => r.text()),
+      fetch(LUU.url('notes/giao-trinh-dien.md')).then(r => r.text()),
+      LUU.dsBai(),
+      fetch(LUU.url('notes/do-dang-co.md')).then(r => r.text()),
     ]);
-    S.gt = MD.giaoTrinh(gt); S.soan = soan; datDo(doText);
+    S.gt = MD.giaoTrinh(gt); S.soan = soan; datDo(doText); apTienDo();
+  }
+
+  // Bản web: ✅ / "đang ở đây" trong giáo trình là tiến độ của chủ repo → bỏ, lấy tiến độ riêng của người xem.
+  function apTienDo() {
+    if (!LUU.web) return;
+    const td = LUU.tienDo();
+    S.gt.chuong.forEach(c => c.bai.forEach(b => { b.xong = td[b.id] === 'xong'; b.dangO = td[b.id] === 'dang'; }));
   }
 
   // "Có" chỉ tính chỗ liệt kê đồ: cột Món của bảng + dòng "Dụng cụ:/Nguồn:/Khác:". Ghi chú kiểu
@@ -25,6 +32,8 @@
     }).join('\n').toLowerCase();
   }
   const coTim = tim => S.doText.includes(String(tim).toLowerCase());
+  // Bản web: "có" theo danh sách người xem tự tick; món không có trong thư viện linh kiện → null (không biết).
+  const coMon = (tim, l) => (LUU.web ? (l ? LUU.doCo().has(l.id) : null) : coTim(tim));
 
   const tatCaBai = () => S.gt.chuong.flatMap(c => c.bai.map(b => ({ ...b, chuong: c })));
 
@@ -32,7 +41,7 @@
     if (S.bai[id]) return Promise.resolve(S.bai[id]);
     return new Promise((ok, loi) => {
       const s = document.createElement('script');
-      s.src = `bai/${id}.js?t=${Date.now()}`;
+      s.src = LUU.web ? `bai/${id}.js` : `bai/${id}.js?t=${Date.now()}`;
       s.onload = () => ok(S.bai[id]);
       s.onerror = loi;
       document.head.appendChild(s);
@@ -69,14 +78,15 @@
           </a></li>`).join('')}</ol></div>`).join('')}</div></section>`).join('')}`;
   }
 
-  const coLK = l => coTim(l.tim);
+  const coLK = l => coMon(l.tim, l);
   // Các dòng bảng trong do-dang-co.md có cột "Món" chứa chuỗi tìm của linh kiện → [món, số lượng, ghi chú].
   const dongBang = (md, tim) => md.split('\n').filter(d => /^\|/.test(d) && !/^\|\s*-/.test(d))
     .map(d => d.split('|').slice(1, -1).map(c => c.trim())).filter(c => c[0] && c[0].toLowerCase().includes(tim.toLowerCase()));
 
   function trangDo() {
     document.title = 'Đồ đang có · Bàn Ráp';
-    fetch('/notes/do-dang-co.md').then(r => r.text()).then(t => {
+    if (LUU.web) return trangDoWeb();
+    fetch(LUU.url('notes/do-dang-co.md')).then(r => r.text()).then(t => {
       datDo(t);
       const co = LINHKIEN.ds.filter(coLK);
       app.innerHTML = `<section class="dau"><p class="eyebrow">Đọc thẳng từ notes/do-dang-co.md</p><h1>Đồ đang có</h1>
@@ -90,6 +100,24 @@
         }).join('')}</ul></section>
         <section><h2>Bản gốc</h2><article class="md to">${MD.khoi(t)}</article></section>`;
     });
+  }
+
+  function trangDoWeb() {
+    const co = LUU.doCo(), kitGoc = LINHKIEN.ds.filter(l => coTim(l.tim)).map(l => l.id);
+    app.innerHTML = `<section class="dau"><p class="eyebrow">Lưu trong trình duyệt của bạn</p><h1>Đồ đang có</h1>
+      <p class="lede">Tick món bạn đang có. Trang bài dựa vào đây để báo <b>có / thiếu</b> ở mục "Đồ cần". Danh sách chỉ nằm trên máy này, không gửi đi đâu.</p>
+      <p class="do-nut"><button type="button" id="do-kit">Chọn theo bộ kit gốc (${kitGoc.length} món)</button> <button type="button" id="do-xoa">Bỏ hết</button> <span class="mo" id="do-dem"></span></p></section>
+      ${Object.entries(LINHKIEN.nhom).map(([k, ten]) => `<section><h2>${ten}</h2><ul class="do-luoi">${LINHKIEN.ds.filter(l => l.nhom === k).map(l => `
+        <li><label class="to do-chon" for="co-${l.id}"><figure>${l.anh}</figure>
+          <div class="do-chu"><span><input type="checkbox" id="co-${l.id}" data-id="${l.id}"${co.has(l.id) ? ' checked' : ''}> <b>${l.ten}</b></span>
+          <a href="#/linh-kien/${l.id}" class="mo">cách nhận chân →</a></div></label></li>`).join('')}</ul></section>`).join('')}
+      <section><h2>Bộ kit gốc</h2><p class="mo">Bộ đồ giáo trình này được soạn theo. Mua giống vậy thì các bài khớp số.</p><article class="md to">${MD.khoi(S.doMd)}</article></section>`;
+    const hop = [...app.querySelectorAll('.do-chon input')];
+    const luu = () => { const s = new Set(hop.filter(i => i.checked).map(i => i.dataset.id)); LUU.datDoCo(s); document.getElementById('do-dem').textContent = `Đang có ${s.size} món.`; };
+    hop.forEach(i => i.addEventListener('change', luu));
+    document.getElementById('do-kit').onclick = () => { hop.forEach(i => { i.checked = kitGoc.includes(i.dataset.id); }); luu(); };
+    document.getElementById('do-xoa').onclick = () => { hop.forEach(i => { i.checked = false; }); luu(); };
+    document.getElementById('do-dem').textContent = `Đang có ${co.size} món.`;
   }
 
   function trangLinhKien(chon) {
@@ -168,15 +196,15 @@
 
     if (!S.soan.includes(id)) {
       app.innerHTML = `${dau}${khungTen()}<section class="khung to"><p><b>Làm gì:</b> ${dong(gt.lam)}</p><p><b>Đo / thấy gì:</b> ${dong(gt.thay)}</p>
-        <p class="mo">Bài này chưa có hướng dẫn từng bước. Nhờ Claude soạn <code>hoc/bai/${id}.js</code> trước khi ráp.</p></section>${khungAnToan()}${dieuHuong}`;
+        <p class="mo">${LUU.web ? 'Bài này chưa có hướng dẫn từng bước. Đừng tự ráp theo 2 dòng trên: chờ hướng dẫn có hình và bước đo Ω trước khi cấp điện.' : `Bài này chưa có hướng dẫn từng bước. Nhờ Claude soạn <code>hoc/bai/${id}.js</code> trước khi ráp.`}</p></section>${khungAnToan()}${dieuHuong}`;
       return;
     }
     const bai = await taiBai(id);
     nguon = bai.nguon || '';
-    const kq = await fetch(`/api/ket-qua/${id}`).then(r => r.json()).catch(() => ({}));
+    const kq = await LUU.docKq(id);
     const can = (bai.can || []).map(c => {
-      const co = coTim(c.tim), l = c.lk ? LINHKIEN.theoId(c.lk) : LINHKIEN.tim(c.tim);
-      const chu = `<span class="can-chu"><span>${c.ten}${c.sl ? ` <span class="mo">× ${c.sl}</span>` : ''}</span><span class="pill ${co ? 'ok' : 'xau'}">${co ? 'có' : 'thiếu'}</span></span>`;
+      const l = c.lk ? LINHKIEN.theoId(c.lk) : LINHKIEN.tim(c.tim), co = coMon(c.tim, l);
+      const chu = `<span class="can-chu"><span>${c.ten}${c.sl ? ` <span class="mo">× ${c.sl}</span>` : ''}</span><span class="pill ${co === null ? 'mo' : co ? 'ok' : 'xau'}">${co === null ? 'tự kiểm' : co ? 'có' : 'thiếu'}</span></span>`;
       return l ? `<li><a href="#/linh-kien/${l.id}" title="Xem ${l.ten} trong thư viện">${l.anh}${chu}</a></li>` : `<li><div class="can-o"><span class="khong-hinh">chưa có hình</span>${chu}</div></li>`;
     }).join('');
 
@@ -196,21 +224,26 @@
           <ol class="cac-buoc">${p.buoc.map((b, k) => veBuoc(b, tt[k], k + 1, pi, id)).join('')}</ol></section>`;
       }).join(''); })()}
       ${bai.code ? `<section><h2>Code</h2><p class="mo">Đọc thẳng từ <code>${bai.code}</code> — build + nạp: <code>sandbox/esp32-bai/README.md</code>.</p><div class="cuon"><pre class="code" id="code">đang tải…</pre></div></section>` : ''}
-      ${bai.bang_do ? `<section><h2>Ghi số đo</h2><p class="mo">Gõ số vào là tự lưu vào <code>hoc/ket-qua/${id}.json</code>, Claude đọc được file đó. <span id="luu"></span></p>${bangDo(bai, kq)}</section>` : ''}
+      ${bai.bang_do ? `<section><h2>Ghi số đo</h2><p class="mo">${LUU.noiLuu(id)} <span id="luu"></span></p>${bangDo(bai, kq)}</section>` : ''}
       ${bai.bay ? `<section class="bay to"><h2>Bẫy của bài này</h2><ul>${bai.bay.map(x => `<li>${x}</li>`).join('')}</ul></section>` : ''}
-      <section class="alarm to"><h2>Khi có khói, mùi khét hoặc thấy nóng</h2><p>${gt.chuong.phan > 1 ? 'Rút cáp USB (và tháo pin nếu bài có hộp pin) ngay.' : 'Tháo pin khỏi hộp ngay.'} Không sờ vào linh kiện đó cho tới khi nguội hẳn. Linh kiện đã bốc khói thì bỏ đi, kể cả khi còn chạy. Tìm ra chỗ nối sai rồi mới ráp lại.</p></section>
+      <section class="alarm to"><h2>Khi có khói, mùi khét hoặc thấy nóng</h2><p>${bai.khoi ? bai.khoi : gt.chuong.phan > 1 ? 'Rút cáp USB (và tháo pin nếu bài có hộp pin) ngay.' : 'Tháo pin khỏi hộp ngay.'} Không sờ vào linh kiện đó cho tới khi nguội hẳn. Linh kiện đã bốc khói thì bỏ đi, kể cả khi còn chạy. Tìm ra chỗ nối sai rồi mới ráp lại.</p></section>
+      ${LUU.web ? `<section class="tien-do"><h2>Tiến độ của bạn</h2><p class="do-nut"><button type="button" data-td="dang"${gt.dangO ? ' aria-pressed="true"' : ''}>Đang học bài này</button> <button type="button" data-td="xong"${gt.xong ? ' aria-pressed="true"' : ''}>Đã xong</button> <button type="button" data-td="">Bỏ đánh dấu</button></p><p class="mo">Lưu trong trình duyệt của bạn, hiện ở danh sách bài.</p></section>` : ''}
       ${bai.robot ? `<section><h2>Dùng ở đâu trong robot</h2><ul>${bai.robot.map(x => `<li>${x}</li>`).join('')}</ul></section>` : ''}
       ${dieuHuong}`;
 
-    if (bai.code) fetch('/' + bai.code).then(r => (r.ok ? r.text() : Promise.reject(new Error(r.status)))).then(t => { document.getElementById('code').textContent = t; })
+    app.querySelectorAll('[data-td]').forEach(n => n.addEventListener('click', () => {
+      const v = n.dataset.td;
+      // "đang học" chỉ 1 bài một lúc, như "← đang ở đây" trong giáo trình
+      if (v === 'dang') tatCaBai().forEach(b => { if (b.dangO && b.id !== id) LUU.datTienDo(b.id, null); });
+      LUU.datTienDo(id, v || null); apTienDo(); trangBai(id);
+    }));
+    if (bai.code) fetch(LUU.url(bai.code)).then(r => (r.ok ? r.text() : Promise.reject(new Error(r.status)))).then(t => { document.getElementById('code').textContent = t; })
       .catch(e => { document.getElementById('code').textContent = `Không tải được ${bai.code} (${e.message}).`; });
     let hen;
     app.querySelectorAll('.bang-do input').forEach(inp => inp.addEventListener('input', () => {
       kq[inp.dataset.k] = inp.value;
       clearTimeout(hen);
-      hen = setTimeout(() => fetch(`/api/ket-qua/${id}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(kq) })
-        .then(r => { document.getElementById('luu').textContent = r.ok ? 'Đã lưu.' : 'Lưu không được, server báo lỗi.'; })
-        .catch(() => { document.getElementById('luu').textContent = 'Lưu không được: server không chạy.'; }), 500);
+      hen = setTimeout(() => LUU.ghiKq(id, kq).then(t => { document.getElementById('luu').textContent = t; }), 500);
     }));
   }
 
