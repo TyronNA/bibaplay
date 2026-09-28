@@ -347,7 +347,8 @@
     return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(moTa || 'Hình breadboard')}" style="min-width:${Math.min(W, 560)}px">${s}</svg>`;
   }
 
-  window.Board = { ve };
+  // lo/chan/diem cho trang mô phỏng dò lỗ dưới con trỏ; diem('pin±') theo vị trí hộp pin của lần ve() gần nhất.
+  window.Board = { ve, lo, chan, diem, HANG, THANH, PIN: () => PIN };
 })();
 
 // Sơ đồ nguyên lý vẽ tay bằng vài khối cơ bản; mọi nét theo currentColor nên ăn theo theme.

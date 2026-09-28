@@ -71,7 +71,9 @@ b,strong{font-weight:600}
 .top nav a{font:600 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;text-decoration:none;color:var(--ink);padding:0 16px;height:100%;display:flex;align-items:center}
 .top nav a+a{border-left:1px solid var(--line)}
 .top nav a:hover,.top nav a[aria-current]{background:var(--ink);color:var(--panel)}
-@media (max-width:640px){.top{grid-template-columns:1fr auto}.top .du-an{display:none}.top nav a{padding:0 10px}}
+/* màn hẹp: logo một hàng, nav xuống hàng dưới và tự xuống dòng thay vì gãy chữ trong từng mục */
+@media (max-width:640px){.top{grid-template-columns:1fr}.top .du-an{display:none}.top>*+*{border-left:0;border-top:1px solid var(--line-dam)}
+  .top nav{flex-wrap:wrap}.top nav a{flex:1 1 auto;height:auto;justify-content:center;white-space:nowrap;padding:12px 10px;border-bottom:1px solid var(--line);margin-bottom:-1px}}
 
 main{max-width:1100px;margin:0 auto;padding-block:36px 80px;display:flex;flex-direction:column;gap:40px}
 h1{font-size:34px;line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.015em}
@@ -124,7 +126,7 @@ code{font-family:var(--mono);font-size:.86em;background:var(--accent-bg);padding
 .nhan-dan{font:600 10.5px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent)}
 
 /* Tờ giấy sáng cho mọi hình vẽ: ở nền blueprint (tối) hình vẫn nằm trên giấy trắng, màu linh kiện thật dễ nhìn. */
-:is(.lk-hinh,.do-luoi figure,.can li,.buoc-noidung>figure,.sd-hinh){
+:is(.lk-hinh,.do-luoi figure,.can li,.buoc-noidung>figure,.sd-hinh,.mp-ban){
   color-scheme:light;
   --bg:#F3F1EA; --panel:#FFFFFF; --ink:#1B2533; --muted:#5B6573; --line:#C9CED4; --line-dam:#1B2533;
   --accent:#1F4E8C; --accent-bg:#E1E8F2;
@@ -301,6 +303,59 @@ tbody th{font-weight:600}
 pre.code{font-variant-ligatures:none;margin:0;padding:14px 16px;overflow-x:auto;font:13px/1.5 var(--mono);background:var(--panel);border:1px solid var(--line-dam);white-space:pre}
 .bb-to92-chu-ngoai{fill:var(--ink);font:600 8.5px var(--mono);paint-order:stroke;stroke:var(--board);stroke-width:3px}
 
+/* trang mô phỏng (mo-phong-ui.js): board bên trái, pin + đồng hồ + cảnh báo bên phải */
+.mp{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px 22px;align-items:start}
+.mp-cu,.mp-tham{grid-column:1/-1}
+.mp-cu{display:flex;flex-wrap:wrap;padding:8px;gap:6px}
+.mp-cu button,.mp-go button,.mp-nho{font:600 12px/1 var(--mono);letter-spacing:.04em;padding:8px 10px;cursor:pointer;background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.mp-cu button[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.mp-cu button:focus-visible,.mp-nho:focus-visible,.mp-go button:focus-visible,.mp select:focus-visible,.mp input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mp-tham{display:flex;gap:14px;min-height:30px;align-items:center;font-size:14px}
+.mp select,.mp-go input{font:13px var(--mono);padding:5px 6px;background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.mp-ban{padding:10px;min-width:0}
+.mp-ban svg{display:block;width:100%;height:auto;cursor:crosshair;touch-action:manipulation}
+.mp-goi{margin:8px 4px 0;font-size:14px;min-height:1.6em}
+.mp-go{display:flex;gap:8px;align-items:center;margin:8px 4px 0;font-size:13px;color:var(--muted)}
+.mp-go input{width:12em}
+.mp-ben{display:flex;flex-direction:column;gap:18px}
+.mp-khoi{padding:12px 14px}
+.mp-khoi h3{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.1em;margin:0 0 8px;color:var(--muted)}
+.mp-khoi p{margin:0 0 8px;font-size:14px}
+.mp-lcd{font:600 30px/1 var(--mono);background:#CFE3C8;color:#1C2A18;padding:10px 12px;text-align:right;border:1px solid var(--line-dam);margin-bottom:10px;min-height:52px}
+.mp-hang{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:13px;margin-bottom:10px}
+.mp-khoi .do-nut{gap:6px;margin:0}
+.mp-khoi .do-nut button{padding:8px 9px;font-size:11px}
+.mp-canh,.mp-ds{list-style:none;margin:0;padding:0;font-size:14px;display:flex;flex-direction:column;gap:6px}
+.mp-canh li{padding:6px 8px;border-left:4px solid var(--line)}
+.mp-canh .mp-chay{background:var(--bad-bg);border-color:var(--bad)} .mp-canh .mp-nong{background:var(--warn-bg);border-color:var(--warn)}
+.mp-canh .mp-tin{color:var(--muted)}
+#mp-canh-khung.co-chay{box-shadow:inset 5px 0 0 var(--bad)}
+.mp-ds li{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:space-between;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.mp-ds li>div{flex:1 1 180px}
+.mp-truot{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);flex:1 1 100%}
+.mp-truot input{flex:1}
+.mp-nho{padding:6px 8px;font-size:11px}
+.mp-nho[aria-pressed="true"]{background:var(--moi);color:#1B2533;border-color:var(--moi)}
+.mp-hoi{background:var(--warn-bg);padding:8px 10px;margin-bottom:8px}
+.xau-chu{color:var(--bad)}
+.mp-cho{fill:none;stroke:var(--moi);stroke-width:3}
+.mp-thong{fill:rgba(31,78,140,.14);stroke:var(--accent);stroke-width:1.5}
+line.mp-thong{stroke:var(--accent);stroke-width:12;stroke-opacity:.18;stroke-linecap:round}
+.mp-tro{fill:none;stroke:var(--accent);stroke-width:2}
+.mp-lop{pointer-events:none}
+.mp-nong{fill:none;stroke:#E07020;stroke-width:3}
+.mp-khoi-hinh circle{fill:#8A8F96;opacity:.7}
+.mp-khoi-chu{fill:#B42318;font:700 12px var(--mono)}
+.mp-quay-net{fill:none;stroke:#2E9E5B;stroke-width:3}
+@media (prefers-reduced-motion:no-preference){
+  .mp-nong{animation:nhay 0.8s ease-in-out infinite}
+  .mp-khoi-hinh circle{animation:khoi 1.4s ease-out infinite} .mp-khoi-hinh circle:nth-child(2){animation-delay:.45s} .mp-khoi-hinh circle:nth-child(3){animation-delay:.9s}
+  .mp-quay{animation:quay .6s linear infinite}
+}
+@keyframes khoi{from{transform:translateY(0);opacity:.8}to{transform:translateY(-18px);opacity:0}}
+@keyframes quay{to{transform:rotate(360deg)}}
+@media (max-width:900px){.mp{grid-template-columns:minmax(0,1fr)}}
+
 /* In / xuất PDF (hoc/xuat-pdf.py): nền trắng, bỏ phần bấm được, giữ màu dây/linh kiện vì màu mang nghĩa (+/−).
    "có / thiếu" là đồ của người xem → không in. Bước ráp không bị cắt đôi qua 2 trang. */
 @media print{
@@ -309,7 +364,7 @@ pre.code{font-variant-ligatures:none;margin:0;padding:14px 16px;overflow-x:auto;
   html,body{background:#fff}
   body{background-image:none;padding:0;font-size:13px}
   .top{margin:0 0 10px}
-  .top nav,.dh-bai,.do-nut,.tien-do,.can-chu .pill,.lk-the header .pill,p:has(>#luu){display:none}
+  .top nav,.dh-bai,.do-nut,.tien-do,.can-chu .pill,.lk-the header .pill,p:has(>#luu),.mp-mo{display:none}
   main{max-width:none;padding-block:0;gap:22px}
   .lede{font-size:14px}
   .buoc-noidung{grid-template-columns:minmax(220px,1fr) minmax(0,1.5fr)}

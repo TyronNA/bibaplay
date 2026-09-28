@@ -154,6 +154,18 @@
     });
   }
 
+  // Mỗi phần → danh sách trạng thái board theo bước; phần ke_thua nối tiếp mạch cuối của phần trước.
+  function cacPhan(bai) {
+    let cuoi = [], cot = 24;
+    return bai.phan.map(p => {
+      const tt = cacTrangThai(p, p.ke_thua ? cuoi : [], cot);
+      if (tt.length) { cuoi = tt[tt.length - 1].items; cot = tt[0].cot; }
+      return tt;
+    });
+  }
+  // Link mô phỏng chỉ cho mạch toàn linh kiện rời: ESP32/module chưa mô phỏng.
+  const moPhongDuoc = bd => bd.items.some(i => i.loai === 'pin') && !bd.items.some(i => ['esp', 'mod'].includes(i.loai) || (i.loai === 'ngoai' && i.kieu === 'hop'));
+
   function veBuoc(b, bd, n, pi, id) {
     const kiem = b.kiem ? `<div class="gate">
       <b class="y">Phải thấy</b><span>${b.kiem.thay}</span>
@@ -163,7 +175,7 @@
       <h4><span class="tag" title="Bước ${n} của phần ${pi + 1}"><b>${n}</b><i>P${pi + 1}</i></span>${b.cap_dien ? '<span class="pill canh">cấp điện</span>' : ''}${b.kiem_truoc ? '<span class="pill kiem">đo trước khi cấp điện</span>' : ''} ${b.ten}</h4>
       <div class="buoc-noidung">
         <div class="buoc-chu">${(b.lam || []).map(x => `<p>${x}</p>`).join('')}${kiem}</div>
-        ${b.board ? `<figure><div class="cuon">${Board.ve(bd, b.mo_ta || b.ten)}</div><figcaption><span class="so-hinh">Hình ${so}</span><span>Breadboard sau bước ${n} · khung vàng = vừa cắm thêm${bd.items.some(i => i.loai === 'esp') ? ' · board ESP32 vẽ tách ra, chỉ các chân bài dùng, nối bằng dây đực–cái' : ''}</span></figcaption></figure>`
+        ${b.board ? `<figure><div class="cuon">${Board.ve(bd, b.mo_ta || b.ten)}</div><figcaption><span class="so-hinh">Hình ${so}</span><span>Breadboard sau bước ${n} · khung vàng = vừa cắm thêm${bd.items.some(i => i.loai === 'esp') ? ' · board ESP32 vẽ tách ra, chỉ các chân bài dùng, nối bằng dây đực–cái' : ''}${moPhongDuoc(bd) ? ` · <a class="mp-mo" href="#/mo-phong/bai/${id}/${pi}/${n - 1}">Thử mạch này trên mô phỏng →</a>` : ''}</span></figcaption></figure>`
     : b.hinh ? `<figure><div class="cuon phac">${b.hinh}</div><figcaption><span class="so-hinh">Hình ${so}</span><span>Phác thảo bước ${n}</span></figcaption></figure>` : ''}
       </div></li>`;
   }
@@ -217,9 +229,8 @@
       ${bai.kien_thuc ? `<section><h2>Hiểu trước khi ráp</h2><div class="khung to">${bai.kien_thuc}</div></section>` : ''}
       ${bai.so_do ? `<section><h2>Sơ đồ</h2><div class="sd-luoi">${bai.so_do.map(s => `<figure class="sd-hinh to">${s.nhan ? `<span class="pill ${s.xau ? 'xau' : 'ok'}">${s.nhan}</span>` : ''}${s.svg}<figcaption>${s.chu}</figcaption></figure>`).join('')}</div></section>` : ''}
       ${bai.du_doan ? `<section><h2>Đoán trước</h2><div class="khung to">${bai.du_doan}</div></section>` : ''}
-      ${(() => { let cuoi = [], cot = 24; return bai.phan.map((p, pi) => {
-        const tt = cacTrangThai(p, p.ke_thua ? cuoi : [], cot);
-        if (tt.length) { cuoi = tt[tt.length - 1].items; cot = tt[0].cot; }
+      ${(() => { const moi = cacPhan(bai); return bai.phan.map((p, pi) => {
+        const tt = moi[pi];
         return `<section class="phan"><div class="phan-dau"><span class="chu-phan">${pi + 1}</span><h2>${p.ten}</h2></div>${p.gioi_thieu ? `<p class="lede">${p.gioi_thieu}</p>` : ''}
           <ol class="cac-buoc">${p.buoc.map((b, k) => veBuoc(b, tt[k], k + 1, pi, id)).join('')}</ol></section>`;
       }).join(''); })()}
@@ -247,17 +258,34 @@
     }));
   }
 
+  async function trangMoPhong(h) {
+    document.title = 'Mô phỏng · Bàn Ráp';
+    const [, kieu, ...con] = h.split('/');
+    let vao = null;
+    if (kieu === 'm') {
+      try { vao = MoPhongTrang.b64.giai(con.join('/')); } catch (_) { app.innerHTML = '<section class="alarm"><h2>Link hỏng</h2><p>Không đọc được mạch trong link này.</p></section>'; return; }
+      vao.nguon = 'mạch từ link chia sẻ';
+    } else if (kieu === 'bai') {
+      const [id, pi, k] = con, bai = await taiBai(id), bd = cacPhan(bai)[+pi][+k];
+      vao = { ...MoPhongTrang.tuBai(bd.items), cot: bd.cot, nguon: `bài ${id}, phần ${+pi + 1}, bước ${+k + 1}` };
+    }
+    // Mở từ link rồi thì về #/mo-phong: tải lại trang giữ mạch đang sửa (localStorage), không nạp lại bản gốc.
+    if (vao) history.replaceState(null, '', '#/mo-phong');
+    MoPhongTrang.mo(app, vao);
+  }
+
   async function dinhTuyen() {
     const h = location.hash.replace(/^#\/?/, '');
     window.scrollTo(0, 0);
     const muc = h.split('/')[0];
-    document.querySelectorAll('.top nav a').forEach(a => a.toggleAttribute('aria-current', a.dataset.r === (['do', 'linh-kien'].includes(muc) ? muc : '')));
+    document.querySelectorAll('.top nav a').forEach(a => a.toggleAttribute('aria-current', a.dataset.r === (['do', 'linh-kien', 'mo-phong'].includes(muc) ? muc : '')));
     try {
       if (!S.gt) await taiChung();
       const m = /^bai\/(\d+\.\d+)$/.exec(h);
       if (m) await trangBai(m[1]);
       else if (h === 'do') trangDo();
       else if (muc === 'linh-kien') trangLinhKien(h.split('/')[1]);
+      else if (muc === 'mo-phong') await trangMoPhong(h);
       else trangChu();
     } catch (e) {
       app.innerHTML = `<section class="alarm"><h2>Lỗi tải trang</h2><p>${esc(e.message || e)}</p></section>`;

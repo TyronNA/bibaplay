@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 HOC = ROOT / "hoc"
-JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "luu-web.js", "app.js"]
+JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mo-phong.js", "mo-phong-ui.js", "luu-web.js", "app.js"]
 NOTES = ["notes/giao-trinh-dien.md", "notes/do-dang-co.md"]
 # Bản chia sẻ cho người khác: nói rõ ai soạn và mức đã kiểm, vì hướng dẫn ráp sai là cháy đồ thật.
 GHI_AI = """<footer class="ghi-ai to">
