@@ -22,6 +22,17 @@
       <p>Mạch nhiều dây: ráp theo từng nhóm, mỗi nhóm đối chiếu hình rồi mới làm nhóm sau.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Hai nửa đối xứng, nối chéo qua 2 tụ.' }],
     du_doan: '<p>Mỗi LED sáng ~0.3s rồi tắt ~0.3s, luân phiên. Thay 47k bằng 100k → chậm gấp đôi.</p>',
+    sau: `<h3>Hằng số 0.69 từ đâu, và vì sao ở đây là ~0.75</h3>
+      <p>Lúc Q1 vừa dẫn, C1 sụt từ ~4.7V về ~0.1V. Tụ không đổi áp tức thì, nên chân B2 bị kéo từ 0.65V xuống ≈ <code>0.65 − 4.6 ≈ −4V</code>. Sau đó 47k nạp B2 tiến về +4.78V:</p>
+      <p><code>u_B2(t) = 4.78 − (4.78 + 4.0)·e^(−t/RC)</code></p>
+      <p>Q2 dẫn lại khi u_B2 = 0.65V: <code>e^(−t/RC) = 4.13/8.78</code> → <code>t = RC·ln(2.13) ≈ 0.75·RC</code> ≈ 0.35s. Công thức sách <code>0.69·RC = ln2·RC</code> là khi coi U_BE và U_CE bằng 0 (tỉ số thành U/2U). Nguồn càng cao so với 0.65V thì càng gần 0.69.</p>
+      <h3>Điều kiện để mạch chạy</h3>
+      <p>Mỗi transistor phải bão hoà được qua 47k: <code>R_B &lt; hFE · R_C</code> → 47k &lt; 200 × 1k. Và phía C phải nạp lại nhanh hơn phía B nhiều (1k·10µF = 10ms ≪ 47k·10µF = 0.47s), để cạnh xung vuông gọn.</p>`,
+    hoi: [
+      ['Thay 2 con 47k bằng 100k. Nửa chu kỳ mới khoảng bao nhiêu? Tần số nháy?', '≈ 0.75 × 100k × 10µF ≈ <b>0.75s</b>; chu kỳ 1.5s → ~0.67Hz.'],
+      ['Tụ 10µF ±20%. Hai nửa chu kỳ có bằng nhau không?', 'Không chắc: mỗi nửa do một tụ quyết định, 2 tụ lệch nhau tới 40% → LED này sáng lâu hơn LED kia.'],
+      ['Vì sao phải có R_B &lt; hFE · R_C?', 'Để dòng qua R_B đủ đẩy transistor vào bão hoà (Ib ≥ Ic/hFE). Không bão hoà thì cú sụt ở C nhỏ, không đủ lật con kia.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Ráp theo nhóm', cot: 30,
       buoc: [

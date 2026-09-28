@@ -17,6 +17,24 @@
       <p>Nút nhấn chỉ nối chân B xuống −, không bao giờ nối + với −. Cột 2/4 và 26/28 phải đo lại như 6.1 (nhả: không thông; nhấn: thông).</p>
       <p>LED bên "tắt" có thể le lói rất mờ: dòng giữ chân B của transistor kia đi qua nó (~0.2mA).</p>`,
     du_doan: '<p>Lắp pin: một trong 2 LED sáng (ngẫu nhiên). S1 → LED2 sáng; S2 → LED1 sáng. Nhả nút không đổi gì.</p>',
+    so_do: [{ nhan: 'Flip-flop 2 transistor', svg: SD.svg(340, 250, SD.pin(20, 130) + SD.chu(30, 20, '4.78V', 'sd-mo') + SD.day('20,130 20,30 280,30')
+      + SD.day('120,30 120,34') + SD.tro(120, 34, 40, '1k') + SD.day('120,74 120,76') + SD.led(120, 76) + SD.day('120,116 120,130') + SD.cham(120, 122) + SD.chu(128, 126, 'C1', 'sd-mo')
+      + SD.day('280,30 280,34') + SD.tro(280, 34, 40, '1k') + SD.day('280,74 280,76') + SD.led(280, 76) + SD.day('280,116 280,130') + SD.cham(280, 122) + SD.chu(288, 126, 'C2', 'sd-mo')
+      + SD.npn(110, 160) + SD.npn(270, 160) + SD.day('120,190 120,225') + SD.day('280,190 280,225')
+      + SD.troNgang(36, 160, 38) + SD.chu(55, 146, '10k', 'sd-chu', 'middle') + SD.chu(46, 184, '← C2', 'sd-mo', 'middle') + SD.day('74,160 80,160') + SD.cham(77, 160) + SD.day('77,160 77,170') + SD.nut(77, 170, 50, 'S1')
+      + SD.troNgang(180, 160, 50, '10k') + SD.chu(195, 184, '← C1', 'sd-mo', 'middle') + SD.day('230,160 240,160') + SD.cham(236, 160) + SD.day('236,160 236,170') + SD.nut(236, 170, 50, 'S2')
+      + SD.day('20,140 20,225 280,225'),
+      'Flip-flop: C1 nối qua 10k sang B2, C2 nối qua 10k sang B1, mỗi chân B có nút kéo xuống cực âm'), chu: 'Nhãn "← C2": đầu trái 10k nối về điểm C2 (vẽ tách cho khỏi rối dây chéo).' }],
+    sau: `<h3>Phản hồi dương tự giữ</h3>
+      <p>Hai tầng đảo (NOT) nối vòng: ra con này vào con kia. Một tầng đảo lật dấu, hai tầng lật lại → vòng khuếch đại <b>cùng dấu</b> và hệ số lớn hơn 1. Nhiễu nhỏ đẩy lệch một chút là vòng khuếch đại tiếp tới khi một con bão hoà hẳn, con kia tắt hẳn. Chỉ có 2 trạng thái đứng yên được: đó là 1 bit.</p>
+      <p>Lúc vừa cấp điện, 2 bên gần như cân bằng, bên nào dẫn trước là do lệch hFE và nhiễu: vì vậy trạng thái đầu "ngẫu nhiên".</p>
+      <h3>Từ đây tới RAM</h3>
+      <p>Một ô nhớ SRAM trong chip ESP32 là đúng ý tưởng này: 2 cổng đảo CMOS nối vòng (4 transistor) + 2 transistor để đọc/ghi = 6 transistor mỗi bit. ESP32-S3 có 512KB SRAM ≈ 4 triệu bit, tức cỡ 25 triệu transistor chỉ cho bộ nhớ. PSRAM ngoài (8MB trên N16R8) dùng tụ nhỏ thay vòng giữ, rẻ hơn nhưng phải làm tươi liên tục.</p>`,
+    hoi: [
+      ['Vì sao mạch này giữ trạng thái còn mạch 6.3 thì tự lật?', '6.3 nối chéo qua <b>tụ</b>: chỉ truyền cú đổi, rồi tụ nạp lại làm con kia dẫn trở lại. 6.4 nối chéo qua <b>điện trở</b>: truyền cả mức một chiều, nên giữ mãi.'],
+      ['Mạch đang ở trạng thái Q1 dẫn. Nhấn S2 (kéo B2 xuống) có đổi gì không?', 'Không. Q2 vốn đã tắt; kéo B2 xuống chỉ giữ nó tắt thêm.'],
+      ['Ước lượng dòng mạch ăn khi đứng yên.', 'Bên dẫn: (4.78 − 2 − 0.1)/1k ≈ 2.7mA qua LED; cộng dòng giữ B ~0.3–0.4mA → <b>~3mA</b>.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Ráp theo nhóm', cot: 30,
       buoc: [

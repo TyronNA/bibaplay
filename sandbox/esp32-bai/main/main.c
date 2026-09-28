@@ -5,7 +5,7 @@ void bai_8_3(void); void bai_8_4(void); void bai_9_1(void); void bai_9_3(void); 
 void bai_10_1(void); void bai_10_2(void); void bai_10_3(void); void bai_11_1(void); void bai_11_2(void); void bai_11_3(void);
 void bai_12_1(void); void bai_12_2(void); void bai_12_3(void); void bai_13_1(void); void bai_13_2(void); void bai_13_3(void);
 void bai_14_2(void); void bai_14_3(void); void bai_14_4(void); void bai_15_1(void); void bai_15_2(void); void bai_15_3(void);
-void bai_16_3(void); void bai_17_1(void);
+void bai_16_3(void); void bai_17_1(void); void bai_9_7(void); void bai_9_8(void); void bai_11_4(void); void bai_15_4(void);
 
 void app_main(void)
 {
@@ -61,5 +61,13 @@ void app_main(void)
     bai_16_3();
 #elif CONFIG_BAI_17_1
     bai_17_1();
+#elif CONFIG_BAI_9_7
+    bai_9_7();
+#elif CONFIG_BAI_9_8
+    bai_9_8();
+#elif CONFIG_BAI_11_4
+    bai_11_4();
+#elif CONFIG_BAI_15_4
+    bai_15_4();
 #endif
 }

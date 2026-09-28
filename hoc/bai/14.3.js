@@ -21,16 +21,30 @@
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Chỉ nối GPIO18 sau khi đo Ω cầu phân áp đúng.' }],
     code: 'sandbox/esp32-bai/main/bai_14_3.c',
     du_doan: '<p>Tường cách 20cm: xung Echo ≈ 20 × 58 = 1160µs, in ≈ 20cm. 50cm → ≈ 2900µs.</p>',
+    sau: `<h3>Hằng số 58 đến từ đâu</h3>
+      <p>Âm đi rồi về: <code>2d = v·t</code> → <code>d(cm) = t(µs) × v / 2 / 10⁴</code>. Với v = 343m/s (20°C): d = t / 58.3. Tốc độ âm tăng theo nhiệt độ: <code>v ≈ 331.3 + 0.606·T(°C)</code> m/s. Phòng 32°C: v ≈ 350.7 → hằng số 57.0. Dùng 58 cho mọi nhiệt độ thì lệch ~2% — 1m đo thành 98cm. Robot cần chính xác hơn thì đọc nhiệt độ rồi sửa.</p>
+      <h3>Vì sao gần quá thì "mù"</h3>
+      <p>Sau khi phát 8 chu kỳ 40kHz (200µs), màng loa còn rung thêm một lúc. Tiếng vang về trước khi màng im thì module không phân biệt được: khoảng dưới ~2cm (≈ 120µs) là vùng mù.</p>
+      <h3>Góc chùm và vật xiên</h3>
+      <p>Góc ~15° nghĩa là ở 1m chùm rộng cỡ ±26cm: module báo khoảng cách tới vật gần nhất trong vùng đó, không nhất thiết là vật thẳng trước mặt. Mặt phẳng nghiêng thì sóng dội đi chỗ khác như gương: đo ra rất xa hoặc hết giờ.</p>`,
+    hoi: [
+      ['Echo dài 2320µs ở 20°C. Khoảng cách?', '2320/58.3 ≈ <b>39.8cm</b>.'],
+      ['Đo mỗi 60ms thì mỗi giây được mấy lần? Robot chạy 0.5m/s đi được bao xa giữa 2 lần đo?', '~<b>16 lần/giây</b>; 0.5 × 0.06 = <b>3cm</b>.'],
+      ['Vì sao Echo cần cầu 10k/20k còn Trig thì không?', 'Echo là ngõ ra 5V của module đi vào chip 3.3V (quá áp). Trig là ngõ ra 3.3V của chip đi vào module — module hiểu 3.3V là mức cao.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Module + cầu phân áp, chưa nối GPIO', cot: 24,
         buoc: [
           { ten: 'Cắm HC-SR04, đọc chữ in', kiem_truoc: true, lam: ['USB rút. Cắm 4 chân vào 10a–13a, 2 ống tròn hướng ra ngoài mép board. Đọc chữ in: phải là VCC · Trig · Echo · GND từ cột 10 tới 13.'], board: { them: [SR] },
             kiem: { thay: 'Cột 10 = VCC, 11 = Trig, 12 = Echo, 13 = GND.', neu_khong: 'Thứ tự khác: vẫn cắm vào 10–13 nhưng ghi lại cột nào là chân nào, rồi đổi số lỗ ở mọi bước sau theo tên chân.' } },
-          { ten: 'Cầu phân áp cho Echo', lam: ['10k (nâu-đen-cam) từ <b>12d → 16d</b>. 20k (đỏ-đen-cam) vắt qua rãnh <b>16e → 16f</b>. Dây đen <b>16j → thanh −</b>. Dây đen <b>13e → thanh −</b> (GND module).'], board: { them: [R1, R2, D2, DG] } },
+          { ten: 'Cầu phân áp cho Echo', lam: ['Đo Ω con 10k và con 20k rời trước khi cắm (bài 1.3), ghi lại: R1 = ?, R2 = ?', '10k (nâu-đen-cam) từ <b>12d → 16d</b>. 20k (đỏ-đen-cam) vắt qua rãnh <b>16e → 16f</b>. Dây đen <b>16j → thanh −</b>. Dây đen <b>13e → thanh −</b> (GND module).'], board: { them: [R1, R2, D2, DG] } },
           { ten: 'Dây 5V và GND từ board', lam: ['<code>5V</code> → <b>10c</b> (cột VCC, không phải thanh +). <code>GND</code> → thanh − dưới (cột 3). Chưa nối Trig/Echo vào GPIO.'], board: { them: [ESP0] } },
           { ten: 'Đo trước khi cắm USB', kiem_truoc: true, lam: ['Núm <code>Ω 200k</code>. (1) Que đỏ 10b (5V), que đen thanh −. (2) Que đỏ 16b, que đen thanh −. (3) Que đỏ 12b, que đen 16b.'], board: { them: [K.dh('Ω 200k', '16b', 'B-:18', '≤ 20')] },
             kiem: { thay: '(1) không dưới 100Ω. (2) ≤ 20k (20k song song với phía module). (3) ≈ 10k.', neu_khong: '(1) gần 0: 5V chạm GND. (2) gần 0: dây đen 16j sai lỗ. (3) gần 0: 10k chưa cắm, Echo nối thẳng cột 16.' } },
+          K.camUsb('Cắm USB, đo 5V, tính áp Echo', ['Chưa nối Trig/Echo vào GPIO. <code>DCV 20</code>: que đỏ 10b (5V), que đen thanh −.', 'Xung Echo lên cao bằng VCC module, ngắn quá đồng hồ không bắt được, nên tính: <code>U_Echo = U_5V × R2 / (R1 + R2)</code> với R1, R2 vừa đo. Phải ≤ 3.45V.'], { them: [K.dh('DCV 20', '10b', 'B-:18', '≈ 5.0')] },
+            { thay: 'U_5V 4.8–5.1V → U_Echo tính ra ≈ 3.2–3.4V, không quá 3.45V.', neu_khong: '<b>Trên 3.45V: không nối GPIO18.</b> Rút USB, thay 20k bằng con nhỏ hơn (15k–18k) hoặc thêm 2.2k nối tiếp con 10k, tính lại.' }),
+          K.rutUsb(),
         ],
       },
       {

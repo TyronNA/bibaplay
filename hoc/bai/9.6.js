@@ -16,6 +16,19 @@
       <p>ADC: chỉ ADC1 (GPIO1–10) dùng được khi bật WiFi; ADC2 (GPIO11–20) bị WiFi dùng chung.</p>`,
     code: 'sandbox/esp32-bai/main/bai_9_6.c',
     du_doan: '<p>GPIO0 ≈ 3.3V (pull-up), GPIO45/46 ≈ 0V. Giữ BOOT (GPIO0 = 0) rồi nhấn RST → chip vào chế độ chờ nạp, không chạy code.</p>',
+    so_do: [{ nhan: 'Chân strapping GPIO0', svg: SD.svg(320, 190, SD.khoi(20, 40, 90, 'ESP32-S3', [], ['GPIO0', 'GPIO45', 'GPIO46', 'GND']) + SD.chu(20, 176, 'GPIO0 có pull-up yếu bên trong', 'sd-mo')
+      + SD.day('122,60 220,60') + SD.cham(220, 60) + SD.nut(220, 60, 60, 'BOOT') + SD.day('220,120 220,140 150,140 150,120 122,120') + SD.chu(135, 84, '↓ pull-down', 'sd-mo') + SD.chu(135, 104, '↓ pull-down', 'sd-mo'),
+      'GPIO0 có pull-up yếu và nút BOOT nối xuống GND; GPIO45, 46 có pull-down'), chu: 'Lúc reset chip đọc GPIO0: 1 = chạy code trong flash, 0 = chờ nạp.' }],
+    sau: `<h3>Strapping: đọc một lần, lúc khởi động</h3>
+      <p>Ngay khi thoát reset, chip chốt mức các chân strapping để chọn cách khởi động, rồi trả chúng về làm GPIO thường. Với ESP32-S3: <b>GPIO0 = 1</b> → khởi động từ flash (chạy code); <b>GPIO0 = 0 và GPIO46 = 0</b> → chế độ nạp qua USB/UART. GPIO45 chọn áp cho flash/PSRAM (0 = 3.3V). GPIO3 chọn nguồn JTAG.</p>
+      <p>Nên mạch ngoài nối vào các chân này chỉ được "nhẹ tay": không kéo sai mức lúc cấp điện. Một cảm biến có OUT = 0 khi không có vật nối vào GPIO0 sẽ làm board vào chế độ nạp mỗi lần bật — nhìn như board chết.</p>
+      <h3>Vì sao flash/PSRAM chiếm nhiều chân</h3>
+      <p>PSRAM octal (8 đường dữ liệu) chạy nhanh gấp 2 lần quad (4 đường) để chip truy cập 8MB RAM ngoài đủ nhanh cho âm thanh và màn hình. Cái giá là thêm 4 chân (33–37) bị giữ. Board N8 (không R) thì các chân đó rảnh.</p>`,
+    hoi: [
+      ['Board "không chạy code" sau khi nối một nút vào GPIO0. Nghi gì đầu tiên?', 'Nút/mạch kéo GPIO0 xuống 0 lúc cấp điện → chip vào chế độ nạp.'],
+      ['Vì sao board N16R8 phải tránh GPIO33–37?', 'Bản R8 dùng PSRAM octal, các chân đó nối vào PSRAM bên trong module.'],
+      ['Dùng GPIO19/20 làm GPIO thường thì mất gì?', 'Cổng USB native của chip (D−/D+).'],
+    ],
     phan: [{
       ten: 'Phần 1 · Nhìn chân strapping',
       buoc: [

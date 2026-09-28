@@ -18,6 +18,18 @@
       <p>Dây vàng <b>2c → thanh +</b> là công tắc tải: rút ra thì pin không nối gì (đo U_hở), cắm vào thì 5 điện trở ăn điện. Chỉ cắm/rút dây này khi hộp pin <b>rỗng</b>.</p>`,
     so_do: [{ nhan: 'Mô hình pin', svg: soDo, chu: 'U_tải thấp hơn U_hở một khoảng I·r.' }],
     du_doan: '<p>AAA kiềm mới cỡ 0.15–0.3Ω mỗi viên → hộp ~0.5–1Ω. Với I ≈ 0.24A: áp tụt 0.1–0.25V. Pin càng yếu r càng lớn.</p>',
+    sau: `<h3>Mô hình Thevenin: pin = nguồn lý tưởng + r</h3>
+      <p>Hai số đo là đủ để tính r: <code>I = U_tải / R_tải</code> (dùng áp <b>lúc có tải</b>), rồi <code>r = (U_hở − U_tải) / I</code>. Ví dụ U_hở 4.78V, U_tải 4.62V qua 20Ω: I = 0.231A, r = 0.16 / 0.231 ≈ <b>0.69Ω</b>.</p>
+      <p>Mô hình này dùng lại được cho mọi nguồn: chân GPIO (bài 9.2), cầu phân áp (2.5), ổn áp. Nguồn nào cũng có một r; câu hỏi chỉ là r lớn cỡ nào so với tải.</p>
+      <h3>Công suất lớn nhất lấy được</h3>
+      <p>Tải R nối vào pin r: <code>P_tải = E²·R / (R + r)²</code>. Lấy đạo hàm theo R, cực đại ở <code>R = r</code>, khi đó P = E²/(4r). Với r ≈ 0.7Ω: ~8W — nhưng lúc đó một nửa công suất đốt ngay trong pin, pin nóng rất nhanh. Mạch thật luôn chạy với R ≫ r.</p>
+      <h3>ESP32 reset vì đâu</h3>
+      <p>WiFi phát làm board kéo từng đợt ~0.3–0.5A. Pin yếu có r ~1.5Ω → áp tụt 0.5–0.75V đúng lúc đó → ổn áp hết dư (bài 8.2) → 3V3 sụt → chip reset. Bài 13.3 làm lại chuyện này với motor.</p>`,
+    hoi: [
+      ['U_hở = 4.70V, U_tải = 4.45V qua 20Ω. Tính r.', 'I = 4.45/20 ≈ 0.223A; r = 0.25/0.223 ≈ <b>1.1Ω</b>: pin đã yếu hơn pin mới.'],
+      ['Vì sao phải lấy I = U_tải / R, không lấy U_hở / R?', 'Dòng thật chạy qua tải được quyết định bởi áp <b>trên tải</b> lúc đó. U_hở không còn nằm trên tải khi có dòng, vì một phần đã mất trên r.'],
+      ['Pin r = 1Ω, ESP32 kéo đỉnh 0.5A. Áp pin tụt bao nhiêu?', '0.5 × 1 = <b>0.5V</b>. Hộp 4.78V còn ~4.28V — đã dưới mức 4.4V AMS1117 cần (bài 8.2).'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Ráp tải, chưa cắm công tắc',

@@ -12,6 +12,10 @@ menu "Bai hoc"
             bool "9.3 / 9.5 Doc GPIO12, doi pull-up noi moi 10s"
         config BAI_9_4
             bool "9.4 Dem so lan nhan GPIO12: tho va chong doi"
+        config BAI_9_7
+            bool "9.7 UART vong lap: TX 10 -> 1k -> RX 11"
+        config BAI_9_8
+            bool "9.8 Ngat: nut GPIO12 hoi vong vs ngat + timer 1kHz"
         config BAI_9_6
             bool "9.6 In muc chan strapping va ly do reset"
         config BAI_10_1
@@ -26,6 +30,8 @@ menu "Bai hoc"
             bool "11.2 PWM giu duty 25/50/75% moi muc 10s"
         config BAI_11_3
             bool "11.3 PWM motor qua S8050 o GPIO14"
+        config BAI_11_4
+            bool "11.4 Coi thu dong GPIO14 qua S8050: doi tan so"
         config BAI_12_1
             bool "12.1 / 12.4 I2C: quet dia chi + ve chu len OLED"
         config BAI_12_2
@@ -48,6 +54,8 @@ menu "Bai hoc"
             bool "15.1 Servo SG90 GPIO14: 1 / 1.5 / 2ms"
         config BAI_15_2
             bool "15.2 Dem xung khe quang GPIO11 (PCNT) + motor DRV8833"
+        config BAI_15_4
+            bool "15.4 PI giu toc do banh (mach 15.2)"
         config BAI_15_3
             bool "15.3 MPU-6050: cong don gyro Z ra goc"
         config BAI_16_3

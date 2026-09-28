@@ -13,6 +13,20 @@
       <p>Nút cắm cùng hướng đã kiểm ở 6.1 (nhả: cột 10 ↔ 12 không thông).</p>`,
     code: 'sandbox/esp32-bai/main/bai_9_3.c',
     du_doan: '<p>Có 10k: nhả in 1, nhấn in 0, bất kể pull-up nội. Không 10k: pull-up nội TẮT → số lung tung; BẬT → như có 10k.</p>',
+    so_do: [{ nhan: 'Nút + pull-up vào GPIO', svg: SD.svg(300, 200, SD.khoi(20, 40, 80, 'ESP32-S3', [], ['3V3', 'GPIO12', 'GND']) + SD.day('112,60 200,60') + SD.tro(200, 60, 50, '10k')
+      + SD.day('200,110 200,125') + SD.cham(200, 120) + SD.day('112,80 160,80 160,120 200,120') + SD.nut(200, 125, 50, 'nút') + SD.day('200,175 135,175 135,100 112,100'),
+      'Chân 3V3 qua 10k tới điểm nối GPIO12, nút từ điểm đó xuống GND'), chu: 'Nhả: GPIO12 = 3.3V (đọc 1). Nhấn: nối GND (đọc 0), 10k hạn dòng 0.33mA.' }],
+    sau: `<h3>Ngưỡng đọc 0/1 tính từ đâu</h3>
+      <p>Datasheet ESP32-S3: mức 1 khi ≥ <code>0.75 × VDD</code> = 2.475V, mức 0 khi ≤ <code>0.25 × VDD</code> = 0.825V. Giữa hai ngưỡng là vùng không xác định: chip có thể đọc ra 0 hoặc 1, và đổi qua lại theo nhiễu. Mạch tốt là mạch không bao giờ để chân nằm lâu trong vùng đó.</p>
+      <h3>Pull-up nội yếu hơn 10k</h3>
+      <p>Pull-up nội ~45k: nhấn nút tốn <code>3.3/45k ≈ 73µA</code> — tiết kiệm. Đổi lại, cạnh lên chậm hơn và chân dễ bị nhiễu hơn khi dây dài. Nút cạnh board: pull-up nội là đủ. Dây nút chạy dài dọc thân robot, gần motor: thêm 10k ngoài cho chắc.</p>
+      <h3>Chân thả nổi đọc ra gì</h3>
+      <p>Tay bạn và dây nhảy như ăng-ten bắt nhiễu điện lưới 50Hz. Chân thả nổi dao động quanh vùng giữa, code in 0/1 lẫn lộn theo nhịp nhiễu. Không phải chip hỏng: chân đó không được nối với "sự thật" nào.</p>`,
+    hoi: [
+      ['Áp ở GPIO12 đo được 1.6V. Chip đọc ra gì?', 'Không chắc: 1.6V nằm giữa 0.825V và 2.475V (vùng không xác định).'],
+      ['Nhấn giữ nút có pull-up nội 45k. Dòng bao nhiêu?', '3.3/45k ≈ <b>73µA</b>.'],
+      ['Nối nút từ GPIO lên 3V3 (thay vì xuống GND) và bật pull-up nội. Nhấn thì đọc ra gì?', 'Luôn 1 (cả nhả lẫn nhấn). Muốn nối lên 3V3 thì phải dùng pull-down.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Pull-up ngoài 10k',

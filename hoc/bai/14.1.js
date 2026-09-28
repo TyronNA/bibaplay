@@ -21,6 +21,15 @@
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Nhả = 1 (pull-up nội), nhấn = 0.' }],
     code: 'sandbox/esp32-bai/main/bai_9_4.c',
     du_doan: '<p>Mỗi lần gạt cần công tắc, số "chong doi" tăng đúng 1; số "tho" có thể nhảy nhiều hơn vì tiếp điểm nảy (bài 9.4).</p>',
+    sau: `<h3>NO hay NC: chọn theo lúc hỏng</h3>
+      <p>Bài dùng NO: bình thường hở, va chạm thì nối. Nếu dây công tắc đứt, GPIO luôn đọc 1 = "không va chạm" — robot cứ thế húc tường mà không biết. Nhiều máy công nghiệp dùng <b>NC</b> cho công tắc an toàn: bình thường đóng, va chạm hoặc <b>đứt dây</b> đều làm mở mạch → máy dừng. Thiết kế sao cho hỏng thì rơi về trạng thái an toàn (fail-safe).</p>
+      <h3>Cần gạt là đòn bẩy</h3>
+      <p>Nút bên trong cần lực F để bấm. Cần gạt dài d_cần, nút nằm cách trục d_nút: lực cần ở đầu cần <code>F_đầu = F · d_nút / d_cần</code>. Cần dài gấp 3 thì va chạm nhẹ gấp 3 cũng bấm được — đổi lại cần phải đi quãng dài hơn.</p>`,
+    hoi: [
+      ['Dùng NO, dây GPIO bị đứt. Robot hiểu thế nào?', 'GPIO chỉ còn pull-up → đọc 1 mãi = "không va chạm". Robot không biết mình đang húc tường.'],
+      ['Nút cần 1.5N, nằm cách trục 5mm; cần gạt dài 25mm. Lực ở đầu cần?', '1.5 × 5/25 = <b>0.3N</b>.'],
+      ['Vì sao số "thô" nhảy nhiều hơn số "chống dội"?', 'Lá kim loại nảy vài ms khi đóng: ngắt bắt từng lần nảy, bộ chống dội chờ 20ms mới tính.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Dò chân COM / NO / NC (chưa nối gì)',

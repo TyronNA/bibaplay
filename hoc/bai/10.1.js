@@ -12,6 +12,21 @@
       <p>Code in 3 số: số thô, mV đã hiệu chuẩn (<code>adc_cali_raw_to_voltage</code>), và mV tính thẳng <code>thô × 3300/4095</code> — để thấy vì sao phải hiệu chuẩn.</p>`,
     code: 'sandbox/esp32-bai/main/bai_10_1.c',
     du_doan: '<p>Vặn từ B sang A: thô 0 → 4095, mV hiệu chuẩn bám đồng hồ trong ±50mV tới ~2.9V, rồi đứng. Cột "tính thẳng" lệch nhiều hơn.</p>',
+    so_do: [{ nhan: 'ADC đọc biến trở', svg: SD.svg(300, 190, SD.mui + SD.khoi(20, 40, 90, 'ESP32-S3', [], ['3V3', 'GPIO1 ADC', 'GND']) + SD.day('122,60 140,60 140,30 220,30 220,40') + SD.tro(220, 40, 100)
+      + SD.chu(234, 52, 'A', 'sd-mo') + SD.chu(234, 136, 'B', 'sd-mo') + SD.day('122,80 170,80 170,90') + `<line x1="170" y1="90" x2="210" y2="90" class="sd-net" marker-end="url(#sd-mui)"/>` + SD.chu(176, 84, 'W', 'sd-mo')
+      + SD.day('122,100 140,100 140,160 220,160 220,140'),
+      'Biến trở cấp bằng 3V3, con trượt W vào GPIO1'), chu: 'W chỉ nối vào chân ADC; A lên 3V3, B xuống GND (kiểu B, bài 2.3).' }],
+    sau: `<h3>ADC làm việc thế nào</h3>
+      <p>ADC của ESP32 là loại <b>SAR</b> (xấp xỉ liên tiếp): nó so áp vào với áp của một DAC bên trong, dò nhị phân từ bit cao xuống bit thấp — 12 lần so cho 12 bit, như tìm số bằng chia đôi. Kết quả là số <code>N</code> từ 0 tới 4095.</p>
+      <h3>Một đơn vị ADC là bao nhiêu mV</h3>
+      <p>Với suy hao 12dB, dải ~0–3.1V chia cho 4096 mức: mỗi mức (LSB) ≈ <b>0.75mV</b>. Nhưng sai số thật (±50mV theo datasheet sau hiệu chuẩn) lớn hơn LSB tới ~60 lần: 12 bit là độ phân giải, không phải độ chính xác. Hai thứ này hay bị nhầm.</p>
+      <h3>"Suy hao" nghĩa là gì</h3>
+      <p>Lõi ADC chỉ đo được dải hẹp (~1V). Suy hao 12dB là chip thu nhỏ áp vào khoảng 4 lần trước khi đo (12dB ≈ ×4 về áp), để chân nhận được dải lớn hơn. Suy hao 0dB đo tới ~850mV nhưng chính xác hơn nhiều (bài 10.4).</p>`,
+    hoi: [
+      ['Số thô 2048, tính thẳng theo 3300/4095 ra bao nhiêu mV? Tin được không?', '2048 × 3300/4095 ≈ <b>1650mV</b>; chỉ là ước lượng — cột đã hiệu chuẩn mới đáng tin.'],
+      ['ADC 12 bit có đo chính xác tới 1mV không?', 'Không. Phân giải ~0.75mV/mức nhưng sai số ±50mV.'],
+      ['Vì sao biến trở phải cấp bằng 3V3 mà không phải 5V?', 'Vặn lên đầu A thì W = áp cấp: 5V vượt 3.6V chân chịu. 3V3 thì W không bao giờ quá 3.3V.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Ráp, đo, đọc',
       buoc: [

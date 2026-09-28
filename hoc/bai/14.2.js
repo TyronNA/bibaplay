@@ -19,6 +19,17 @@
     so_do: [{ nhan: 'Ngõ ra', svg: soDo, chu: 'OUT cao = VCC qua 10k, thấp = LM393 kéo xuống.' }],
     code: 'sandbox/esp32-bai/main/bai_14_2.c',
     du_doan: '<p>Tay cách ~10cm: OUT ≈ 0V, monitor in "CO VAT". Bỏ tay ra: OUT ≈ 3.3V, in "trong".</p>',
+    sau: `<h3>Tín hiệu dội về giảm nhanh theo khoảng cách</h3>
+      <p>Ánh sáng từ bóng phát toả ra, chiếu lên vật rồi tán xạ ngược. Với vật phẳng khuếch tán, lượng quay về bóng thu giảm cỡ <code>1/d²</code>: xa gấp đôi còn 1/4. Vật đen phản xạ ~5% so với ~80% của giấy trắng: tầm với vật đen chỉ còn √(5/80) ≈ 1/4 tầm với giấy trắng. Đó là vì sao bài thấy vải đen gần như "tàng hình".</p>
+      <h3>Bộ so sánh LM393</h3>
+      <p>LM393 so áp từ bóng thu với áp đặt bằng biến trở; ngõ ra là <b>cực thu hở</b>: chỉ kéo xuống được, mức cao do điện trở 10k lên VCC. Nhờ vậy mức cao bằng đúng VCC — cấp 3V3 thì OUT không bao giờ quá 3.3V. Bài 6.5 tự ráp một bộ so sánh để thấy bên trong nó.</p>
+      <h3>Robot thật lọc ánh sáng nền</h3>
+      <p>Cảm biến tốt cho LED phát nhấp nháy ở 38kHz và bóng thu chỉ khuếch đại đúng tần số đó (như bộ thu remote TV): nắng là ánh sáng đều, bị bỏ qua. FC-51 không có tầng này nên nắng làm nó báo sai.</p>`,
+    hoi: [
+      ['Giấy trắng thấy ở 20cm. Vật phản xạ bằng 1/16 giấy trắng thấy ở khoảng bao nhiêu (theo 1/d²)?', '20 × √(1/16) = <b>5cm</b>.'],
+      ['Vì sao cấp 3V3 cho FC-51 thì OUT an toàn với GPIO?', 'Ngõ ra LM393 cực thu hở, mức cao là do điện trở kéo lên VCC module = 3.3V.'],
+      ['Nắng chiếu vào, module báo "có vật" liên tục. Vì sao?', 'Hồng ngoại trong nắng vào thẳng bóng thu, vượt ngưỡng so sánh như thể có vật phản xạ.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Nguồn module, đo OUT, rồi mới nối GPIO',
       buoc: [

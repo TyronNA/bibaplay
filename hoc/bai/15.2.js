@@ -20,6 +20,22 @@
       <p>PCNT: bộ đếm xung trong chip, có bộ lọc bỏ gai ngắn (code đặt 1µs). CPU chỉ việc đọc số mỗi giây.</p>`,
     code: 'sandbox/esp32-bai/main/bai_15_2.c',
     du_doan: '<p>Duty 100% ở 4.5V: ≈ 185 vòng/phút ≈ 62 xung/s (motor Adafruit). Duty 60%: chậm hơn rõ. Lấy tay hãm nhẹ bánh: số giảm.</p>',
+    so_do: [{ nhan: 'Đếm vòng bánh xe', svg: SD.svg(380, 250, SD.khoi(20, 40, 90, 'ESP32-S3', [], ['GPIO9 PWM', 'GPIO10', 'GPIO11', '3V3', 'GND']) + SD.khoi(230, 40, 80, 'DRV8833', ['IN1', 'IN2'], ['OUT1', 'OUT2'])
+      + SD.day('122,60 218,60') + SD.day('122,80 218,80') + SD.day('322,60 350,60 350,72') + SD.motor(350, 88) + SD.day('322,80 338,80 338,110 350,110 350,104')
+      + SD.khoi(230, 120, 80, 'khe quang', ['OUT', 'VCC', 'GND']) + SD.day('122,100 170,100 170,140 218,140') + SD.day('122,120 160,120 160,160 218,160') + SD.day('122,140 150,140 150,180 218,180')
+      + SD.chu(230, 240, 'VM ← hộp pin, SLP → 3V3', 'sd-mo'),
+      'GPIO9 và 10 điều khiển DRV8833 chạy motor; khe quang OUT vào GPIO11'), chu: 'Đo OUT khe quang ≤ 3.3V trước khi nối GPIO11.' }],
+    sau: `<h3>Từ xung ra quãng đường</h3>
+      <p>Đĩa 20 lỗ gắn trên trục bánh → 20 xung/vòng bánh. Bánh 65mm: chu vi π × 6.5 ≈ 20.4cm → mỗi xung ≈ <b>1.02cm</b>. 185 vòng/phút ≈ 3.08 vòng/s → 0.63m/s. Robot biết mình đã đi bao xa bằng cách đếm xung (odometry) — sai số cộng dồn khi bánh trượt.</p>
+      <h3>Đếm trong 1 giây hay đo chu kỳ</h3>
+      <p>Đếm xung trong cửa sổ 1s: sai số ±1 xung. Ở 62 xung/s là ±1.6%, nhưng ở 5 xung/s là ±20% và phải chờ cả giây mới có số. Tốc độ thấp thì đo <b>thời gian giữa 2 xung</b> (dùng ngắt + timer µs): 1 xung là có số ngay. Bộ điều khiển PID ở bài 15.4 cần số tốc độ mới mỗi 50–100ms, nên hoặc cửa sổ ngắn chấp nhận ±1, hoặc đo chu kỳ.</p>
+      <h3>Vì sao cần bộ lọc gai</h3>
+      <p>Motor chổi than phát nhiễu điện: gai ngắn vài trăm ns trên dây OUT bị đếm thành xung giả. Xung thật dài hàng ms, nên bộ lọc 1µs của PCNT bỏ được gai mà không mất xung nào.</p>`,
+    hoi: [
+      ['Đếm được 45 xung trong 1 giây. Vòng/phút và tốc độ robot (bánh 65mm)?', '45/20 × 60 = <b>135 vòng/phút</b>; 45 × 1.02cm ≈ <b>0.46m/s</b>.'],
+      ['Cửa sổ đếm 100ms ở 62 xung/s. Sai số ±1 xung là bao nhiêu %?', '~6 xung mỗi cửa sổ → ±1/6 ≈ <b>±16%</b>.'],
+      ['Robot đi thẳng 2m, bánh trái đếm 196 xung, bánh phải 200. Nó lệch về bên nào?', 'Bánh trái đi ít hơn → robot <b>lệch sang trái</b>.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Khe quang: nguồn, đo OUT, nối GPIO', cot: 30,

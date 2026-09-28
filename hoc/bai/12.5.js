@@ -22,6 +22,23 @@
       <p>Chân theo <code>xiaozhi-esp32/main/boards/bread-compact-wifi/config.h</code>: mic WS=4 SCK=5 SD=6; ampli DIN=7 BCLK=15 LRC=16; OLED SDA=41 SCL=42; nút TOUCH=47, VOL+=40, VOL−=39 (nút BOOT=0 có sẵn trên board). Nút nối chân ↔ GND, firmware bật pull-up nội (lớp <code>Button</code>, active-low).</p>
       <p>Nguồn: thanh + trên = <b>3V3</b> (OLED, mic), thanh − trên và dưới = GND. <b>5V chỉ đi 1 dây thẳng vào VIN ampli</b>, không vào thanh nguồn nào.</p>
       <p>Ráp từng module, đo Ω sau mỗi module. Board thật cắm ghép 2 breadboard cũng được; hình vẽ board để ngoài, nối dây đực–cái.</p>`,
+    so_do: [{ nhan: 'Sơ đồ khối xiaozhi', svg: SD.svg(360, 260, SD.hop(130, 90, 100, 70, 'ESP32-S3') + SD.hop(10, 20, 90, 40, 'OLED') + SD.hop(10, 110, 90, 40, 'mic INMP441') + SD.hop(260, 20, 90, 40, 'ampli') + SD.hop(260, 200, 90, 40, 'loa')
+      + SD.hop(10, 200, 90, 40, '3 nút') + SD.hop(160, 200, 80, 40, 'USB 5V')
+      + SD.day('100,40 150,40 150,90') + SD.chu(106, 34, 'I2C 41/42', 'sd-mo') + SD.day('100,130 130,130') + SD.chu(104, 150, 'I2S 4/5/6', 'sd-mo')
+      + SD.day('260,40 210,40 210,90') + SD.chu(216, 76, 'I2S 7/15/16', 'sd-mo') + SD.day('305,60 305,200') + SD.day('100,220 150,220 150,160') + SD.chu(104, 214, '47/40/39', 'sd-mo')
+      + SD.day('200,200 200,160') + SD.chu(206, 186, '5V', 'sd-pos'),
+      'ESP32 ở giữa: OLED qua I2C, mic và ampli qua I2S, 3 nút, nguồn USB 5V; ampli ra loa'), chu: 'Chân theo bread-compact-wifi (xiaozhi). 5V chỉ vào VIN ampli; OLED và mic ăn 3V3.' }],
+    sau: `<h3>Ngân sách dòng trên cổng USB</h3>
+      <p>Chip phát WiFi: đỉnh vài trăm mA. Ampli nói to vào loa 8Ω: đỉnh ~0.3–0.5A từ 5V. OLED ~20mA, mic ~1.5mA. Cộng các đỉnh lại có lúc chạm 500mA của cổng USB 2.0: câu dài nói to mà board reset là dấu hiệu nguồn không đủ, không phải lỗi firmware. Chữa: cổng USB 3 / cục sạc 5V 2A, tụ 100–470µF sát VIN ampli, giảm âm lượng tối đa.</p>
+      <h3>Độ trễ đi đâu</h3>
+      <p>Server riêng đo được ~2.6s từ lúc ngừng nói tới lúc có tiếng trả lời. Phần của mạch rất nhỏ: I2S đệm vài chục ms, mã hoá Opus ~20–60ms mỗi khung. Phần lớn là mạng + chờ phát hiện hết câu + mô hình nghĩ và nói. Muốn nhanh hơn phải sửa phía server, không phải phía dây.</p>
+      <h3>Ghép từng khối</h3>
+      <p>Ráp từng module, đo Ω sau mỗi module là cách chia đôi lỗi: hỏng ở bước nào thì chỉ nghi phần vừa thêm. Cùng tư duy với tìm bug bằng bisect.</p>`,
+    hoi: [
+      ['Board reset đúng lúc xiaozhi nói to. Nghi gì đầu tiên?', 'Nguồn 5V sụt vì ampli kéo đỉnh dòng (cổng USB không đủ) → brownout.'],
+      ['Vì sao OLED và mic ăn 3V3 còn ampli ăn 5V?', 'OLED và mic là chip logic 3.3V (mic tối đa ~3.6V); ampli cần công suất lớn cho loa, lấy trực tiếp từ 5V.'],
+      ['Ráp cả bộ rồi mới đo Ω, thấy gần 0. Làm gì?', 'Rút từng module ra, đo lại tới khi hết gần 0: module vừa rút là thủ phạm. Lần sau đo sau mỗi module.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Nguồn + OLED', cot: 44,

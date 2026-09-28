@@ -12,6 +12,22 @@
       <p>100k từ B xuống −: khi rút dây bật, B không thả nổi mà bị kéo về 0 → tắt chắc chắn (poster bài 26 thiếu con này).</p>
       <p>Dây vàng <b>thanh + → 13a</b> là nút bật: bài này rút/cắm đúng dây đó khi có pin. 4.7k luôn đứng giữa nên cắm vào không nối tắt gì.</p>`,
     du_doan: '<p>Bật: U_CE ≈ 0.05–0.2V, U_220 ≈ 2.7V (Ic ≈ 12mA). Tắt: LED tắt, U_CE cỡ 3–3.5V — không bằng áp pin, vì dòng rất nhỏ của đồng hồ đi qua LED và LED vẫn giữ lại ~1.3–1.6V.</p>',
+    so_do: [{ nhan: 'Transistor làm công tắc', svg: SD.svg(320, 250, SD.pin(40, 120, '4.78V') + SD.day('40,120 40,30 240,30') + SD.cham(90, 30)
+      + SD.day('90,30 90,80') + '<circle cx="90" cy="80" r="3" class="sd-cham"/><circle cx="90" cy="102" r="3" class="sd-cham"/>' + SD.day('92,82 100,98') + SD.chu(98, 94, 'dây bật', 'sd-mo')
+      + SD.day('90,102 90,160') + SD.troNgang(90, 160, 60, '4.7k') + SD.day('150,160 170,160') + SD.cham(160, 160) + SD.tro(160, 160, 50) + SD.chu(128, 196, '100k', 'sd-chu', 'end') + SD.day('160,210 160,225')
+      + SD.day('210,30 210,34') + SD.tro(210, 34, 44, '220Ω') + SD.day('210,78 210,82') + SD.led(210, 82) + SD.day('210,122 210,130') + SD.npn(200, 160) + SD.day('210,190 210,225 40,225 40,130'),
+      'NPN: tải LED và 220 ôm ở chân C, chân B qua 4.7k tới dây bật, 100k kéo B xuống cực âm'), chu: 'Dây bật cắm: Ib ≈ 0.87mA, dư gấp ~7 lần so với cần. 100k giữ B về 0 khi rút dây.' }],
+    sau: `<h3>Bão hoà "ép buộc"</h3>
+      <p>Muốn transistor chắc chắn bão hoà, chọn Ib sao cho <code>Ic_tải / Ib</code> ≈ 10–20 (gọi là β ép buộc), nhỏ hơn hFE nhỏ nhất nhiều lần. Ở đây 12.6mA / 0.87mA ≈ 14: con hFE 100 hay 300 đều bão hoà như nhau. Mạch không còn phụ thuộc hFE.</p>
+      <h3>Vì sao chế độ công tắc hiệu quả</h3>
+      <p>Công suất transistor đốt: <code>P = U_CE · Ic</code>. Bão hoà: 0.1V × 12.6mA ≈ 1.3mW. Nếu để lưng chừng (U_CE = 1.5V, Ic = 6mA): 9mW — gấp 7 lần mà LED chỉ sáng nửa. Tắt hẳn: Ic ≈ 0 → P ≈ 0. Công tắc tốt nhất là chỉ ở 2 đầu: hoàn toàn dẫn hoặc hoàn toàn tắt. PWM (chương 11) dựa đúng vào điều này.</p>
+      <h3>Tính R_B cho tải khác</h3>
+      <p>Từ GPIO 3.3V, tải 100mA, hFE nhỏ nhất 100, dư 5 lần: <code>Ib = 5mA</code>, <code>R_B = (3.3 − 0.7)/5mA ≈ 520Ω</code> → 470Ω. 5mA vẫn dưới 20mA/chân. Tải lớn hơn nữa thì Ib vượt sức GPIO → dùng MOSFET (bài 13.4).</p>`,
+    hoi: [
+      ['Tải 50mA, hFE_min 100, điều khiển từ 4.78V, muốn dư 5 lần. Chọn R_B?', 'Ib = 2.5mA; R_B = (4.78 − 0.7)/2.5mA ≈ 1.6k → dùng <b>1.5k</b>.'],
+      ['Bỏ 100k kéo xuống thì khi rút dây bật chuyện gì có thể xảy ra?', 'Chân B thả nổi, bắt nhiễu và dòng rò → LED le lói hoặc chập chờn; transistor không tắt chắc.'],
+      ['U_CE = 0.1V, Ic = 12.6mA. Transistor đốt bao nhiêu công suất?', '≈ <b>1.3mW</b> — gần như nguội.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Ráp và bật/tắt',
       buoc: [

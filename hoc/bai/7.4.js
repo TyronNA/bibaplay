@@ -24,6 +24,16 @@
       <p>Chân B: tải ~0.3A, hFE ở dòng lớn ~100 → Ib ≥ 3mA, dư 3 lần → ~8mA → <code>(4.78 − 0.8)/8mA ≈ 500Ω</code>: dùng 470Ω.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Motor ở phía C (phía +), transistor ở phía − (low-side).' }],
     du_doan: '<p>Dòng chạy không tải của motor quạt nhỏ: 0.1–0.3A. Bật: U_CE ≲ 0.3V, motor chạy gần như cắm thẳng pin.</p>',
+    sau: `<h3>Xung áp khi ngắt cuộn dây</h3>
+      <p>Cuộn dây chống lại sự thay đổi dòng: <code>u = L·di/dt</code>. Motor L cỡ 1mH đang chạy 0.3A, transistor ngắt trong ~1µs: <code>u ≈ 10⁻³ × 0.3 / 10⁻⁶ = 300V</code> (lý thuyết), vượt xa 25V mà S8050 chịu. Thực tế transistor bị đánh thủng trước khi tới 300V — và hỏng dần sau nhiều lần.</p>
+      <p>Diode ngược cho dòng đó một đường vòng: áp ở chân C bị kẹp ở <code>U_pin + 0.7V</code>. Năng lượng cuộn dây <code>½·L·I² = ½ × 10⁻³ × 0.3² = 45µJ</code> được đốt chậm trong điện trở cuộn và diode.</p>
+      <h3>Đánh đổi</h3>
+      <p>Có diode, dòng tắt chậm (tụt theo τ = L/R của cuộn), motor dừng "mềm". Mạch cần tắt nhanh (relay cần nhả nhanh, driver bước) thì thêm zener nối tiếp diode: kẹp ở áp cao hơn → tắt nhanh hơn mà vẫn an toàn cho transistor.</p>`,
+    hoi: [
+      ['L = 2mH, I = 0.2A, ngắt trong 2µs. Xung áp lý thuyết?', '2×10⁻³ × 0.2 / 2×10⁻⁶ = <b>200V</b>.'],
+      ['Diode cắm đúng chiều thì áp chân C khi ngắt lên tối đa bao nhiêu?', '≈ 4.78 + 0.7 ≈ <b>5.5V</b>.'],
+      ['Vì sao diode ngược không làm motor yếu đi khi đang chạy?', 'Lúc chạy, diode bị phân cực ngược (vạch về phía +) nên không dẫn; nó chỉ dẫn khi transistor vừa ngắt.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Đo dòng motor cắm thẳng pin', cot: 24,

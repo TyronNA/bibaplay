@@ -60,15 +60,14 @@ b,strong{font-weight:600}
     linear-gradient(var(--c),var(--c)) 100% calc(100% - 6px)/13px 1px no-repeat,linear-gradient(var(--c),var(--c)) calc(100% - 6px) 100%/1px 13px no-repeat}
 
 /* đầu trang = dải khung tên */
-.top{max-width:1100px;margin:22px auto 0;display:grid;grid-template-columns:auto 1fr auto auto;align-items:stretch}
+.top{max-width:1100px;margin:22px auto 0;display:grid;grid-template-columns:auto 1fr auto;align-items:stretch}
 .top>*{padding:10px 16px;display:flex;align-items:center}
 .top>*+*{border-left:1px solid var(--line-dam)}
 .logo{font:700 15px/1 var(--mono);letter-spacing:.14em;color:var(--ink);text-decoration:none;gap:10px}
 .logo i{display:inline-block;width:14px;height:14px;border:1.5px solid currentColor;border-radius:50%;
   background:linear-gradient(currentColor,currentColor) center/100% 1.5px no-repeat,linear-gradient(90deg,currentColor,currentColor) center/1.5px 100% no-repeat}
-.top .du-an{font:12px/1.35 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .top nav{gap:0;padding:0}
-.top nav a{font:600 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;text-decoration:none;color:var(--ink);padding:0 16px;height:100%;display:flex;align-items:center}
+.top nav a{font:600 12px/1 var(--mono);text-transform:uppercase;letter-spacing:.1em;text-decoration:none;color:var(--ink);padding:0 16px;height:100%;display:flex;align-items:center;white-space:nowrap}
 .top nav a+a{border-left:1px solid var(--line)}
 .top nav a:hover,.top nav a[aria-current]{background:var(--ink);color:var(--panel)}
 /* lượt xem + GitHub, góc phải đầu trang */
@@ -93,10 +92,10 @@ b,strong{font-weight:600}
 .top nav .nav-pdf{color:var(--muted);border-left-style:dashed}
 .top nav .nav-pdf::before{content:"↓";margin-right:6px}
 
-/* màn hẹp: một hàng logo + nút, dính đầu màn khi cuộn; nav gập sau nút ☰, mở ra thành danh sách dọc */
-@media (max-width:640px){
+/* màn hẹp: một hàng logo + nút, dính đầu màn khi cuộn; nav gập sau nút ☰, mở ra thành danh sách dọc.
+   1040px: logo + nav (có Tải PDF) + cụm phải cần ~1018px — hẹp hơn là nav bị ép xuống dòng */
+@media (max-width:1040px){
   .top{grid-template-columns:1fr auto;margin-top:12px;position:sticky;top:0;z-index:20}
-  .top .du-an{display:none}
   .top>.top-phu{gap:6px;padding:6px 8px}
   .top-phu .luot-xem{margin-right:6px}
   #nut-menu{display:grid}

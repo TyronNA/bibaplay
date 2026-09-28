@@ -28,4 +28,10 @@
 #define DISPLAY_MIRROR_X true
 #define DISPLAY_MIRROR_Y true
 
+// Bánh xe robot (bài 17.2): DRV8833, cùng chân với sandbox/esp32-bai/main/chung.h (bài 17.1).
+#define MOTOR_A_IN1_GPIO GPIO_NUM_9
+#define MOTOR_A_IN2_GPIO GPIO_NUM_10
+#define MOTOR_B_IN1_GPIO GPIO_NUM_14
+#define MOTOR_B_IN2_GPIO GPIO_NUM_21
+
 #endif // _BOARD_CONFIG_H_

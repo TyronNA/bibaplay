@@ -12,6 +12,18 @@
       <p>Lý do chọn GPIO13: không phải chân strapping, không dính flash/PSRAM/USB, không trùng chân xiaozhi (bài 9.6, <code>sandbox/esp32-bai/main/chung.h</code>).</p>`,
     code: 'sandbox/esp32-bai/main/bai_9_1.c',
     du_doan: '<p>LED nháy 1s. Lúc sáng: U_330 ≈ 1.4V → I ≈ 4.2mA; U ở chân GPIO ≈ 3.3V.</p>',
+    so_do: [{ nhan: 'GPIO bật LED', svg: SD.chuoi('', [['tro', '330Ω'], ['led']], 'Chân GPIO13 qua 330 ôm vào LED rồi về GND', { nguon: { ten: 'ESP32', tren: 'GPIO13', duoi: 'GND' } }), chu: 'I = (3.3 − 1.9)/330 ≈ 4.2mA.' }],
+    sau: `<h3>Bên trong chân GPIO</h3>
+      <p>Chân ra là cặp transistor CMOS: một con nối lên 3.3V (kênh P), một con nối xuống GND (kênh N). Mức 1: con trên dẫn, chân như nối 3.3V qua điện trở vài chục Ω. Mức 0: con dưới dẫn, chân như nối GND. Không bao giờ cả hai cùng dẫn. Vì con trên có điện trở, kéo dòng lớn thì áp chân tụt (bài 9.2).</p>
+      <h3>LED nháy đúng 1 giây cỡ nào</h3>
+      <p><code>vTaskDelay</code> đếm theo tick của FreeRTOS (mặc định 100Hz trên ESP-IDF, tức 10ms/tick; project có thể đặt 1000Hz). Nháy 1000ms với tick 10ms thì chính xác tới ~10ms, đủ cho mắt. Muốn chính xác hơn thì dùng timer phần cứng (bài 9.8) hoặc PWM (chương 11).</p>
+      <h3>Công suất</h3>
+      <p>LED sáng: chân GPIO cấp 3.3V × 4.2mA ≈ 14mW, trong đó LED ăn 1.9 × 4.2 ≈ 8mW, điện trở 5.9mW. Nháy 50% thời gian thì trung bình một nửa.</p>`,
+    hoi: [
+      ['Đổi 330Ω thành 220Ω. Dòng LED?', '(3.3 − 1.9)/220 ≈ <b>6.4mA</b>, vẫn dưới 20mA.'],
+      ['LED xanh dương (~2.9V) với 330Ω từ GPIO. Sáng thế nào?', '(3.3 − 2.9)/330 ≈ <b>1.2mA</b>: mờ. Áp 3.3V gần sát áp LED nên dòng rất nhạy với áp.'],
+      ['Chân ở mức 0, LED nối từ GPIO xuống GND. Dòng chạy đâu?', 'Không có dòng: cả 2 đầu mạch LED đều ở 0V.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Ráp, đo, nạp',
       buoc: [

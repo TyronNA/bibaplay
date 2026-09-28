@@ -4,7 +4,8 @@ setup -> setupComplete, nhận realtimeInput audio, trả transcript / toolCall 
 Kịch bản theo lượt (mỗi lượt kích hoạt khi đã nhận ~1 s audio có tiếng):
   lượt 1: inputTranscription + toolCall set_emotion + 1.2 s audio + outputTranscription + turnComplete
           (+ usageMetadata). Nếu setup có tool demo__get_time (mcp_demo.py) thì gọi luôn nó
-          trong cùng toolCall và đòi kết quả có năm hiện tại.
+          trong cùng toolCall và đòi kết quả có năm hiện tại. Nếu có tool của chip chip__self_robot_move
+          (fake_device.py giả firmware bài 17.2) thì gọi luôn, đòi kết quả "true".
   lượt 2: chỉ chạy nếu lượt 1 đã nhận toolResponse; gửi 1.2 s audio, 0.4 s sau thì interrupted
           (người nói chen ngang lúc robot đang nói)
 
@@ -46,7 +47,7 @@ async def handler(request):
     ws = web.WebSocketResponse()
     await ws.prepare(request)
     assert request.query.get("key"), "thiếu ?key="
-    turn, loud_bytes, tool_ok, demo = 0, 0, False, False
+    turn, loud_bytes, tool_ok, demo, chip = 0, 0, False, False, False
 
     async def send(obj):
         await ws.send_str(json.dumps(obj))
@@ -63,6 +64,7 @@ async def handler(request):
             for d in decls:                 # Gemini từ chối schema có field lạ / type viết thường
                 check_schema(d.get("parameters") or {"type": "OBJECT"})
             demo = any(d["name"] == "demo__get_time" for d in decls)
+            chip = any(d["name"] == "chip__self_robot_move" for d in decls)
             log.info("setup model=%s tools=%s", s["model"], [d["name"] for d in decls])
             await send({"setupComplete": {}})
         elif "toolResponse" in msg:
@@ -71,6 +73,8 @@ async def handler(request):
             if demo:
                 got = rs.get("call-2", {}).get("response", {}).get("result", "")
                 tool_ok = tool_ok and str(time.gmtime().tm_year) in got
+            if chip:
+                tool_ok = tool_ok and rs.get("call-3", {}).get("response", {}).get("result") == "true"
             log.info("toolResponse %s -> ok=%s", rs, tool_ok)
         elif "realtimeInput" in msg and "audio" in msg["realtimeInput"]:
             a = msg["realtimeInput"]["audio"]
@@ -89,6 +93,8 @@ async def handler(request):
                 calls = [{"id": "call-1", "name": "set_emotion", "args": {"emotion": "happy"}}]
                 if demo:
                     calls.append({"id": "call-2", "name": "demo__get_time", "args": {"tz": "Asia/Ho_Chi_Minh"}})
+                if chip:
+                    calls.append({"id": "call-3", "name": "chip__self_robot_move", "args": {"huong": "tien", "thoi_gian_ms": 500}})
                 await send({"toolCall": {"functionCalls": calls}})
                 audio = tone(1.2, 440)
                 for i in range(0, len(audio), 9600):

@@ -12,6 +12,18 @@
       <p>Kit 30 giá trị thường có 150Ω; không có thì dùng 220Ω.</p>`,
     code: 'sandbox/esp32-bai/main/bai_9_1.c',
     du_doan: '<p>330Ω: I ≈ 4mA, U chân ≈ 3.25V. 150Ω: I ≈ 9mA, U chân tụt thêm ~0.1–0.2V → r cỡ 20–40Ω (chưa kiểm, đo mới biết).</p>',
+    so_do: [{ nhan: 'Mô hình chân GPIO', svg: SD.chuoi('', [['tro', 'r (trong chip)'], ['tro', 'R'], ['led']], 'Chân GPIO như nguồn 3.3V nối tiếp điện trở trong r', { nguon: { ten: '3.3V', tren: 'GPIO', duoi: 'GND' }, do: [1, 'V'] }), chu: 'R = 150Ω hoặc 330Ω. Giống nội trở pin ở bài 1.6: kéo dòng thì áp ở chân tụt I·r.' }],
+    sau: `<h3>Tính r từ 2 lần đo</h3>
+      <p>Như bài 1.6: <code>r = (U_chân,1 − U_chân,2) / (I_2 − I_1)</code>. Ví dụ 330Ω: U_chân 3.25V, I = 4.1mA; 150Ω: U_chân 3.12V, I = 8.1mA → r ≈ 0.13V / 4mA ≈ <b>33Ω</b>. Số của bạn phụ thuộc mức <code>drive_cap</code> đặt trong code (mức cao hơn = r nhỏ hơn).</p>
+      <h3>Giới hạn tổng</h3>
+      <p>20mA mỗi chân không có nghĩa là 40 chân × 20mA. Datasheet giới hạn tổng dòng mọi chân (1500mA tuyệt đối), và các chân chia nhau vài nhánh nguồn bên trong chip. Quy tắc tay: LED báo hiệu 2–5mA mỗi con là đủ sáng, cộng lại vẫn dư xa.</p>
+      <h3>Chọn điện trở theo độ sáng cần, không theo mức tối đa</h3>
+      <p>Mắt thấy độ sáng theo kiểu log: 5mA và 15mA khác nhau ít hơn ta nghĩ. Chạy LED ở 1/4 mức tối đa là LED bền, chân GPIO mát, và pin robot đỡ tốn.</p>`,
+    hoi: [
+      ['Không tải chân ra 3.30V; tải 10mA chân còn 3.05V. r bằng bao nhiêu?', '0.25/0.010 = <b>25Ω</b>.'],
+      ['Điện trở nhỏ nhất cho LED đỏ ở 15mA từ GPIO (bỏ qua r)?', '(3.3 − 1.9)/0.015 ≈ <b>93Ω</b> → dùng 100Ω (hoặc lớn hơn cho dư).'],
+      ['Tính cả r = 30Ω, LED đỏ với 100Ω: dòng thật khoảng bao nhiêu?', '(3.3 − 1.9)/(100 + 30) ≈ <b>10.8mA</b>.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Đo áp chân theo tải',
       buoc: [

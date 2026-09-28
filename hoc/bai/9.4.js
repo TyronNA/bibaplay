@@ -12,6 +12,21 @@
       <p>Tụ 100nF song song nút cùng pull-up nội 45k thành mạch RC τ ≈ 4.5ms: cạnh xuống/lên bị làm mượt, nảy ngắn bị nuốt.</p>`,
     code: 'sandbox/esp32-bai/main/bai_9_4.c',
     du_doan: '<p>Không tụ: thô > chống dội thỉnh thoảng (nút rẻ nảy nhiều). Có tụ: thô gần bằng chống dội.</p>',
+    so_do: [{ nhan: 'Tụ chống dội', svg: SD.svg(300, 200, SD.khoi(20, 40, 90, 'ESP32-S3', [], ['GPIO12', 'GND']) + SD.chu(20, 192, 'pull-up nội 45k trong chip', 'sd-mo')
+      + SD.day('122,60 200,60') + SD.cham(160, 60) + SD.day('200,60 230,60') + SD.cham(230, 60) + SD.day('230,60 230,90') + SD.nut(230, 90, 60, 'nút') + SD.day('230,150 230,170')
+      + SD.day('160,60 160,95') + SD.tu(160, 95, 50, '100nF') + SD.day('160,145 160,170') + SD.day('122,80 135,80 135,170 230,170') + SD.cham(160, 170),
+      'Tụ 100 nano fara song song nút, từ GPIO12 xuống GND; pull-up nội trong chip'), chu: 'RC = 45k × 100nF ≈ 4.5ms: làm mượt cạnh, nuốt các lần nảy ngắn.' }],
+    sau: `<h3>Tụ làm chậm cạnh lên bao nhiêu</h3>
+      <p>Nhả nút: tụ nạp qua pull-up 45k, <code>u = 3.3·(1 − e^(−t/τ))</code>, τ = 4.5ms. Chip đọc 1 khi u ≥ 2.475V = 75% × 3.3V → <code>t = τ·ln 4 ≈ 1.39τ ≈ 6.2ms</code>. Những lần nảy ngắn hơn vài ms bị tụ nuốt. Nhấn nút: tụ xả thẳng qua tiếp điểm (gần 0Ω) nên cạnh xuống rất nhanh — không sao với 100nF, nhưng tụ to hơn sẽ làm mòn tiếp điểm.</p>
+      <h3>Chống dội bằng code: chọn thời gian chờ</h3>
+      <p>Nút cơ thường nảy 1–5ms, nút rẻ tới ~10ms. Chờ 20ms là dư. Chờ lâu quá (100ms+) thì bấm nhanh liên tiếp bị mất nhịp. Cả hai cách đều là <b>lọc thông thấp</b>: tụ lọc trong miền điện, code lọc trong miền thời gian.</p>
+      <h3>Vì sao đếm "thô" lại dùng ngắt</h3>
+      <p>Ngắt bắt mọi cạnh xuống, kể cả nảy vài µs — thứ vòng lặp đọc mỗi 2ms bỏ sót. Nhờ vậy thấy rõ nút nảy bao nhiêu lần. Bài 9.8 đi sâu vào ngắt.</p>`,
+    hoi: [
+      ['Pull-up 10k ngoài + tụ 100nF. Mất bao lâu sau khi nhả chip mới đọc 1?', 'τ = 1ms; t ≈ 1.39 × 1ms ≈ <b>1.4ms</b>.'],
+      ['Thay tụ 10µF với pull-up nội 45k. Chuyện gì xảy ra?', 'τ = 0.45s → nhả ra ~0.6s mới đọc 1: nút "ì", bấm nhanh bị mất.'],
+      ['Code chờ 20ms. Bấm nhanh nhất được bao nhiêu lần/giây mà không mất lần nào?', 'Mỗi lần nhấn + nhả tốn ≥ 40ms chờ → tối đa khoảng <b>25 lần/giây</b> (tay người chỉ ~10).'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Đếm thô và chống dội',

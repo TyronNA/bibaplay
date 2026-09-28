@@ -36,6 +36,16 @@
     ],
     du_doan: `<p><code>I = (U − U_LED) / R = (4.78 − 2.0) / 220 ≈ 12.6 mA</code>. Số này khớp với số đã suy ra ở bài 2.3 lúc biến trở vặn về 0.</p>
       <p>Đồng hồ chèn vào có thêm vài ôm, nên số đo có thể thấp hơn một chút, nhưng không đáng kể so với 220Ω.</p>`,
+    sau: `<h3>Bên trong thang mA là một điện trở nhỏ</h3>
+      <p>Đồng hồ không "đếm" dòng trực tiếp. Ở thang mA, dòng chạy qua một <b>điện trở shunt</b> rất nhỏ bên trong, đồng hồ đo áp trên shunt rồi chia cho R: <code>I = U_shunt / R_shunt</code>. Thang 20mA thường có shunt cỡ 10Ω, thang 200mA cỡ 1Ω (tuỳ máy).</p>
+      <p>Shunt cũng là một điện trở nối tiếp trong mạch, nên chèn đồng hồ vào làm dòng giảm một chút. Với shunt 10Ω: <code>I = (4.78 − 2.0) / (220 + 10) ≈ 12.1mA</code> thay vì 12.6mA, <b>thấp hơn ~4%</b>. Áp mất trên shunt (≈ 0.12V) gọi là áp gánh (burden voltage). Mạch dòng lớn điện áp thấp thì áp gánh này đáng kể; lên thang lớn hơn thì shunt nhỏ hơn, lệch ít hơn nhưng lẻ ít số hơn.</p>
+      <h3>Vì sao chạm thẳng pin thì cháy cầu chì</h3>
+      <p>Qua thang 200mA: pin (nội trở ~0.5Ω) + shunt ~1Ω + dây → <code>I ≈ 4.78 / 1.5 ≈ 3A</code>, gấp 15 lần cầu chì 200mA. Cầu chì đứt trong tích tắc: đó là việc nó được thiết kế để làm, và thay cầu chì rẻ hơn thay đồng hồ.</p>`,
+    hoi: [
+      ['Vì sao đo dòng phải mở mạch và nối đồng hồ nối tiếp, còn đo áp thì chạm song song?', 'Dòng phải chạy <b>xuyên qua</b> đồng hồ mới đo được, nên đồng hồ phải nằm trên đường đi của dòng. Áp là chênh lệch giữa 2 điểm, nên chỉ cần chạm 2 điểm đó.'],
+      ['Đồng hồ ở thang mA (shunt ~1Ω) chạm thẳng 2 cực pin 4.78V nội trở 0.5Ω. Dòng cỡ bao nhiêu?', '≈ 4.78 / (0.5 + 1) ≈ <b>3A</b> → đứt cầu chì 200mA ngay.'],
+      ['Thang 20mA có shunt 10Ω. Mạch LED + 220Ω, pin 4.78V, LED 2.0V. Đồng hồ hiện khoảng bao nhiêu?', '(4.78 − 2.0) / 230 ≈ <b>12.1mA</b> (không có đồng hồ là 12.6mA). LED cũng tụt áp nhẹ khi dòng giảm nên số thật có thể nhích lên chút.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Mạch LED thường, tính dòng từ áp',

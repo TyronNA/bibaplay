@@ -16,6 +16,16 @@
       <p>Thang Ω: đồng hồ tự đẩy một dòng nhỏ qua điện trở rồi đo áp. Nên <b>không có pin</b> nào trong mạch lúc đo, và không có đường nào khác song song với con đang đo.</p>`,
     so_do: [{ nhan: 'SAI · đo trong mạch', xau: true, svg: soDoSai, chu: 'Hai con 10k cùng cột: đồng hồ đo cả cụm = 5k.' }],
     du_doan: '<p>Mỗi con nằm trong ±5% giá trị ghi: 220Ω → 209–231; 1k → 950–1050; 10k → 9.5k–10.5k.</p>',
+    sau: `<h3>Vì sao giá trị điện trở "lạ" như 2.2k, 4.7k</h3>
+      <p>Giá trị điện trở đi theo dãy E, chia đều theo <b>tỉ lệ</b> chứ không theo hiệu. Dãy E12 (±10%) có 12 giá trị mỗi thập phân: 1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2. Mỗi giá trị lớn hơn con trước khoảng <code>10^(1/12) ≈ 1.21</code> lần.</p>
+      <p>Chia như vậy để các dải sai số nối vừa khít nhau: 4.7k ±10% phủ 4.23–5.17k, 5.6k ±10% phủ 5.04–6.16k. Con nào ra khỏi dải của mình thì rơi vào dải con kế bên, nhà máy không phải bỏ con nào. Dãy E24 (±5%) chia mịn hơn: 1.0, 1.1, 1.2, 1.3, 1.5, 1.6, 1.8, 2.0, 2.2…</p>
+      <h3>Thang Ω hoạt động thế nào</h3>
+      <p>Đồng hồ tự đẩy một dòng nhỏ đã biết qua điện trở rồi đo áp: <code>R = U / I</code>. Nên có pin trong mạch là đồng hồ đo lẫn áp của pin. Có đường song song là nó đo cả đường đó. Cầm 2 que bằng 2 tay khi đo 100k: người (~1MΩ) song song, ra <code>100k ∥ 1M ≈ 91k</code>.</p>`,
+    hoi: [
+      ['Vòng màu vàng · tím · đỏ · vàng kim là bao nhiêu, và số đo hợp lệ nằm trong khoảng nào?', '47 × 10² = <b>4.7kΩ</b>, ±5% → 4.47–4.94kΩ.'],
+      ['Đo con 1M trong khi 2 tay giữ 2 chân (tay ~1MΩ). Số hiện ra khoảng bao nhiêu?', '1M ∥ 1M = <b>500k</b>. Đó là lý do không cầm cả 2 chân khi đo con lớn.'],
+      ['Một con ghi 220Ω ±5% đo ra 226Ω. Hỏng không?', 'Không. Khoảng hợp lệ là 209–231Ω.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Đo từng con, không có gì khác trong mạch',

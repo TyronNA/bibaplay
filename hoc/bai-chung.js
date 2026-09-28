@@ -53,6 +53,7 @@
       tp4056: () => ({ ten: 'Module TP4056 6 chân (có bảo vệ)', tim: 'TP4056', lk: 'tp4056', sl: 1 }),
       de18650: (o = 1) => ({ ten: `Đế pin 18650 ${o} ô${o > 1 ? ' nối tiếp' : ''}`, tim: 'đế pin 18650', lk: 'de-18650', sl: 1 }),
       bms2s: () => ({ ten: 'Mạch bảo vệ BMS 2S', tim: 'BMS 2S', lk: 'bms-2s', sl: 1 }),
+      cauChi: () => ({ ten: 'Cầu chì ống T2A 5×20mm + đế nối dây', tim: 'cầu chì', lk: 'cau-chi', sl: 1 }),
       lm2596: () => ({ ten: 'Module hạ áp LM2596', tim: 'LM2596', lk: 'lm2596', sl: 1 }),
       khung: () => ({ ten: 'Khung robot 2WD', tim: 'khung 2WD', lk: 'khung-2wd', sl: 1 }),
       sac5v: () => ({ ten: 'Cục sạc điện thoại 5V ≥ 1A + cáp khớp cổng module', tim: 'cục sạc', sl: 1 }),

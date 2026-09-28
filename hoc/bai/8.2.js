@@ -13,6 +13,21 @@
       <p><b>Thứ tự chân mỗi module một khác</b> (VIN-GND-VOUT, GND-VOUT-VIN…). Hình vẽ VIN–GND–VOUT; đọc chữ in trên module của bạn và nối theo <b>tên chân</b>, không theo vị trí trên hình. Cấp nhầm vào VOUT: module nóng, hỏng.</p>
       <p>Tải 330Ω ở 3.3V = 10mA, công suất ổn áp <code>(4.78 − 3.3) × 0.01 ≈ 15mW</code>: nguội. Phần 2 thêm 1N4007 phía trước để giả lập pin yếu (mất 0.7V).</p>`,
     du_doan: '<p>Pin 4.78V: VOUT ≈ 3.30V. Qua diode (VIN ≈ 4.05V < 4.4V): VOUT tụt ≈ 2.9–3.0V — ổn áp "hết dư".</p>',
+    so_do: [{ nhan: 'Ổn áp tuyến tính', svg: SD.svg(340, 200, SD.pin(30, 90, '4.78V') + SD.day('30,90 30,30 120,30 120,70 128,70') + SD.chu(50, 22, 'phần 2: chèn 1N4007 ở đây', 'sd-mo')
+       + SD.khoi(140, 50, 90, 'AMS1117-3.3', ['VIN'], ['VOUT']) + SD.day('185,90 185,170')
+      + SD.day('242,70 280,70') + SD.cham(280, 70) + SD.tro(280, 70, 60, '330Ω') + SD.day('280,130 280,170 30,170 30,100') + SD.chu(190, 130, 'GND', 'sd-mo'),
+      'Pin vào chân VIN của AMS1117, chân VOUT ra điện trở tải 330 ôm, GND chung'), chu: 'Ổn áp "đốt" phần áp dư: (U_vào − 3.3V) × I thành nhiệt.' }],
+    sau: `<h3>Hiệu suất của ổn áp tuyến tính</h3>
+      <p>Dòng vào ≈ dòng ra (cộng ~5mA ổn áp tự ăn), nên <code>η ≈ U_ra / U_vào</code>. Từ 4.78V: 3.3/4.78 ≈ <b>69%</b>. Từ pack 8.4V: 3.3/8.4 ≈ <b>39%</b> — hơn nửa năng lượng pin thành nhiệt. Đó là lý do robot dùng hạ áp xung (LM2596, bài 16.3) cho chặng từ pin xuống 5V.</p>
+      <h3>Nóng bao nhiêu</h3>
+      <p><code>P = (U_vào − U_ra) · I</code>. Board ESP32 phát WiFi 0.3A qua AMS1117 từ 5V: 1.7 × 0.3 ≈ 0.5W. Vỏ SOT-223 trên mạch in nhỏ có nhiệt trở cỡ 50–100°C/W (tuỳ diện tích đồng) → nóng thêm 25–50°C. Từ 8.4V: 1.5W → quá nóng, chip tự ngắt nhiệt.</p>
+      <h3>Dropout</h3>
+      <p>AMS1117 cần U_vào − U_ra ≥ ~1.1V (datasheet, tăng khi dòng lớn). Dưới mức đó nó không còn "ổn": ra ≈ U_vào − 1.1V. Phần 2 của bài (qua diode, ~4.05V vào) cho thấy đúng điều này: ra ~2.9–3.0V thay vì 3.3V. Ổn áp LDO "thật" (dropout ~0.1–0.3V) giữ được 3.3V từ pin gần cạn tốt hơn nhiều.</p>`,
+    hoi: [
+      ['AMS1117 từ 5V ra 3.3V, tải 0.4A. Công suất nhiệt và hiệu suất?', 'P = 1.7 × 0.4 = <b>0.68W</b>; η ≈ 3.3/5 = <b>66%</b>.'],
+      ['U_vào = 4.0V, dropout 1.1V. U_ra khoảng bao nhiêu?', '≈ 4.0 − 1.1 = <b>2.9V</b>: dưới 3.3V, ổn áp đã "hết dư".'],
+      ['Vì sao không cấp 8.4V từ pack qua AMS1117 cho board 0.3A?', 'P = (8.4 − 3.3) × 0.3 ≈ <b>1.5W</b> trong một chip nhỏ: quá nóng, tự ngắt; và phí 60% năng lượng pin.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Pin đầy', cot: 20,

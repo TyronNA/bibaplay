@@ -51,6 +51,17 @@
       <tr><td>10k</td><td>quang trở</td><td>> 10.0, tuỳ ánh sáng</td><td>phòng ≈ 1.6–3.2 V · che tay ≈ 4.3–4.7 V · rọi đèn ≈ 0.4–1 V</td></tr>
       </tbody></table></div>
       <p>Dùng 22k thay 20k: 3.29 V và 1.49 V. Khoảng số của quang trở chỉ là ước lượng, vì nó tuỳ đèn phòng bạn; GL5528 cỡ vài kΩ tới vài chục kΩ khi sáng, lên cỡ MΩ khi tối.</p>`,
+    sau: `<h3>Chọn R1 thế nào cho cảm biến "nhạy" nhất</h3>
+      <p>Quang trở đổi từ R_sáng tới R_tối. Áp giữa: <code>U(R) = U·R / (R1 + R)</code>. Muốn chênh lệch giữa 2 trạng thái lớn nhất thì chọn R1 sao cho <code>U(R_tối) − U(R_sáng)</code> cực đại. Lấy đạo hàm theo R1 và cho bằng 0, ra:</p>
+      <p><code>R1 = √(R_sáng · R_tối)</code> (trung bình nhân).</p>
+      <p>Ví dụ quang trở 5k khi sáng phòng, 100k khi che tay: <code>R1 = √(5k × 100k) ≈ 22k</code>. Khi đó áp giữa chạy 4.78 × 5/27 ≈ 0.89V tới 4.78 × 100/122 ≈ 3.92V, chênh 3.0V. Dùng 10k thì 1.59 → 4.35V, chênh 2.76V: cũng tốt, chỉ kém chút ít.</p>
+      <h3>Độ nhạy quanh một điểm</h3>
+      <p>Đạo hàm <code>dU/dR = U·R1/(R1 + R)²</code>: lớn nhất khi R gần R1. Cầu phân áp đo tốt nhất ở vùng R ≈ R1, ở 2 đầu (R ≪ R1 hoặc R ≫ R1) áp gần như đứng yên dù R còn đổi.</p>`,
+    hoi: [
+      ['R1 = 10k ở trên, R2 = 4.7k ở dưới, pin 4.78V. U_giữa?', '4.78 × 4.7 / 14.7 ≈ <b>1.53V</b>.'],
+      ['Quang trở chạy 2k (sáng) tới 200k (tối). Chọn R1 bao nhiêu?', '√(2k × 200k) = <b>20k</b>.'],
+      ['Đặt quang trở ở trên, 10k ở dưới. Che tay thì áp giữa lên hay xuống?', '<b>Xuống</b>: con trên lớn lên thì áp giữa giảm.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · 10k + 10k',

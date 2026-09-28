@@ -13,6 +13,22 @@
       <p>Chip chạy 2.375–3.46V; module có ổn áp nên VCC nhận 3.3–5V, nhưng điện trở kéo lên SDA/SCL trên module nối vào nguồn của module → cấp <b>3V3</b> cho chắc.</p>`,
     code: 'sandbox/esp32-bai/main/bai_15_3.c',
     du_doan: '<p>Monitor in "WHO_AM_I = 0x68". Để yên: góc ≈ 0 và trôi chậm (vài độ/phút). Xoay cả breadboard 90° trên mặt bàn: góc ≈ ±90 (dấu tuỳ chiều).</p>',
+    so_do: [{ nhan: '2 thiết bị trên một bus I2C', svg: SD.svg(360, 230, SD.khoi(20, 40, 90, 'ESP32-S3', [], ['3V3', 'GND', 'GPIO41 SDA', 'GPIO42 SCL'])
+      + SD.day('122,60 340,60') + SD.day('122,80 340,80') + SD.day('122,100 340,100') + SD.day('122,120 340,120')
+      + [[165, 'OLED 0x3C'], [260, 'GY-521 0x68']].map(([x, t]) => [0, 1, 2, 3].map(i => SD.cham(x + 12 + i * 16, 60 + i * 20) + SD.day(`${x + 12 + i * 16},${60 + i * 20} ${x + 12 + i * 16},160`)).join('') + SD.hop(x, 160, 80, 40, t)).join('')
+      + SD.chu(170, 216, 'VCC GND SDA SCL', 'sd-mo'),
+      'OLED và GY-521 cùng mắc lên 4 dây 3V3, GND, SDA, SCL; khác địa chỉ'), chu: 'Cùng 2 dây SDA/SCL, khác địa chỉ: 0x3C và 0x68.' }],
+    sau: `<h3>Góc trôi vì sao</h3>
+      <p>Góc = tổng (tốc độ đo × Δt). Sau khi trừ sai lệch đo lúc đứng yên, vẫn còn phần sai lệch dư b (vd 0.05°/s do nhiệt độ đổi). Cộng dồn: sau 60s trôi <code>0.05 × 60 = 3°</code>. Thêm nhiễu ngẫu nhiên: nhiễu cộng dồn tăng theo <code>√t</code> (bước ngẫu nhiên). Gyro tốt cho câu hỏi "vừa quay bao nhiêu trong 1–2 giây", không tốt cho "đang hướng về đâu sau 10 phút".</p>
+      <h3>Đổi đơn vị</h3>
+      <p>Thang ±250°/s: 131 đơn vị = 1°/s (datasheet). Đọc được 1310 → 10°/s. Đọc mỗi 10ms: góc += 10 × 0.01 = 0.1° mỗi lần. Δt phải lấy từ đồng hồ thật (esp_timer), không lấy từ "định cho 10ms" vì vòng lặp có lúc chậm hơn.</p>
+      <h3>Sửa trôi bằng cảm biến khác</h3>
+      <p>Góc nghiêng (pitch/roll) sửa được bằng gia tốc kế: trọng lực cho biết đâu là "xuống" (bộ lọc bù: 98% gyro + 2% gia tốc kế). Góc hướng (yaw, thứ robot quay trên sàn) thì trọng lực không giúp: cần la bàn từ hoặc encoder 2 bánh (bài 15.2).</p>`,
+    hoi: [
+      ['Đọc được −655 trên trục Z ở thang ±250°/s. Tốc độ quay?', '−655/131 = <b>−5°/s</b>.'],
+      ['Sai lệch dư 0.02°/s. Sau 5 phút trôi bao nhiêu?', '0.02 × 300 = <b>6°</b>.'],
+      ['Vì sao OLED và MPU-6050 chung được 2 dây?', 'I2C chọn thiết bị bằng địa chỉ trong mỗi gói: 0x3C và 0x68 khác nhau nên không đụng nhau.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Ráp, đọc, xoay', cot: 24,
       buoc: [

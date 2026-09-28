@@ -13,6 +13,21 @@
       <p>INMP441 có loại header 1 hàng 6 chân, có loại 2 hàng 3 chân. Hình vẽ 1 hàng; loại 2 hàng thì cắm vắt qua rãnh giữa (mỗi chân một cột), rồi nối dây theo <b>chữ in</b>.</p>`,
     code: 'sandbox/esp32-bai/main/bai_12_2.c',
     du_doan: '<p>Phòng yên: khoảng −70 tới −60 dBFS. Nói gần mic: lên −30 tới −20. Vỗ tay: gần −10.</p>',
+    so_do: [{ nhan: 'Mic I2S', svg: SD.svg(340, 210, SD.khoi(20, 40, 90, 'ESP32-S3', [], ['3V3', 'GND', 'GPIO4 WS', 'GPIO5 SCK', 'GPIO6 SD']) + SD.khoi(230, 40, 80, 'INMP441', ['VDD', 'GND', 'WS', 'SCK', 'SD', 'L/R'])
+      + SD.day('122,60 218,60') + SD.day('122,80 218,80') + SD.day('122,100 218,100') + SD.day('122,120 218,120') + SD.day('122,140 218,140')
+      + SD.day('218,160 200,160 200,166') + SD.dat(200, 166),
+      'ESP32 nối INMP441: 3V3, GND, WS 4, SCK 5, SD 6; L/R xuống GND'), chu: 'L/R nối GND: mic gửi ở kênh trái. VDD là 3V3.' }],
+    sau: `<h3>Tần số lấy mẫu và clock</h3>
+      <p>16 000 mẫu/giây → âm thanh tới <b>8kHz</b> (định lý lấy mẫu: phải lấy mẫu nhanh gấp đôi tần số cao nhất). Giọng nói nằm chủ yếu dưới 4kHz nên đủ. Clock bit SCK = 16 000 × 32 bit × 2 kênh = <b>1.024MHz</b> — dây lỏng hay dài vài chục cm là bắt đầu có lỗi bit (tiếng lách tách).</p>
+      <h3>dBFS nghĩa là gì</h3>
+      <p><code>dBFS = 20·log₁₀(biên độ / biên độ tối đa)</code>. 0 dBFS là mức to nhất số hoá được; −20 dBFS là 1/10 biên độ đó; −60 dBFS là 1/1000. Datasheet INMP441: âm 94dB SPL (rất to, như máy cắt cỏ sát tai) ra −26 dBFS; mỗi 20dB âm nhỏ hơn thì số giảm 20 dBFS. Phòng yên ~40dB SPL → cỡ −80 dBFS (lẫn trong nhiễu của mic, SNR 61dB).</p>
+      <h3>24 bit để làm gì</h3>
+      <p>Mỗi bit thêm ~6dB dải động: 24 bit ≈ 144dB, nhiều hơn mic làm được. Code lấy 16 bit trên là đủ, và xiaozhi cũng chỉ gửi 16 bit.</p>`,
+    hoi: [
+      ['Muốn thu tới 12kHz thì tần số lấy mẫu tối thiểu?', '<b>24kHz</b> (gấp đôi); thực tế chọn 32kHz cho dư.'],
+      ['Mức âm đo được −40 dBFS. Biên độ bằng mấy phần của tối đa?', '10^(−40/20) = <b>1/100</b>.'],
+      ['Để L/R thả nổi thì sao?', 'Mic không biết gửi ở kênh nào; có lúc code đọc được, có lúc chỉ ra 0.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Ráp, đọc mức âm',
       buoc: [

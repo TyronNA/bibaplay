@@ -32,6 +32,21 @@
     code: null,
     du_doan: '<p>Cell mới mua thường ~3.6V (bán ở mức nửa đầy). Sạc 1A cho cell 2500mAh: ~2–3 giờ. Đầy: đèn xanh, đo 4.14–4.26V.</p>',
     khoi: 'Rút cục sạc khỏi ổ điện ngay. Cell nóng, phồng, xì hơi hoặc có khói: <b>không cầm</b>, không cúi sát, mở cửa cho thoáng, để yên trên nền gạch/bát sứ xa đồ dễ cháy; có lửa thì tránh xa và gọi 114.',
+    so_do: [{ nhan: 'Sạc 1 cell', svg: SD.svg(360, 200, SD.hop(10, 50, 70, 60, 'sạc 5V') + SD.day('80,70 118,70') + SD.day('80,90 118,90') + SD.khoi(130, 50, 90, 'TP4056', ['IN+', 'IN−'], ['B+', 'B−', 'OUT+', 'OUT−'])
+      + SD.day('232,70 280,70 280,100') + SD.pin(280, 100) + SD.day('280,110 280,130 258,130 258,90 232,90') + SD.chu(292, 84, '18650', 'sd-mo')
+      + SD.day('232,110 250,110 250,150 330,150') + SD.day('232,130 244,130 244,170 330,170') + SD.chu(334, 164, 'tải', 'sd-chu'),
+      'Cục sạc 5V vào TP4056; B+ B− ra cell 18650; OUT+ OUT− ra tải'), chu: 'Cell ở B+/B−; tải chỉ lấy ở OUT (qua mạch bảo vệ).' }],
+    sau: `<h3>Sạc 2 giai đoạn: CC rồi CV</h3>
+      <p>TP4056 sạc <b>dòng không đổi</b> 1A tới khi cell lên 4.2V, rồi giữ <b>áp không đổi</b> 4.2V, dòng tự giảm dần; tới ~1/10 dòng đặt (100mA) thì dừng, đèn xanh. Cell 2500mAh: giai đoạn CC ≈ 2 giờ (lên ~80%), CV thêm 0.5–1 giờ. Ép dòng hay áp cao hơn không nhanh hơn được bao nhiêu mà làm cell già nhanh; vượt 4.2V là nguy hiểm.</p>
+      <h3>Năng lượng và nối tắt</h3>
+      <p>Cell 3.6V × 2.5Ah ≈ <b>9Wh</b> — bằng một viên pin AAA gấp ~5 lần. Điện trở trong cell hãng cỡ 20–30mΩ: nối tắt lý thuyết 4.2/0.025 ≈ 170A; thực tế giới hạn bởi dây và tiếp xúc nhưng vẫn hàng chục A. Dây nhảy mỏng ở 30A đốt I²R ≈ 30² × 0.02 = 18W trong vài cm: đỏ rực trong vài giây.</p>
+      <h3>Nhiệt trên module</h3>
+      <p>Sạc tuyến tính: <code>P = (U_vào − U_cell) × I</code>. Lúc cell 3.2V: (5 − 3.2) × 1 = 1.8W — nóng nhất ở đầu quá trình sạc, mát dần khi cell lên áp.</p>`,
+    hoi: [
+      ['Cell 3000mAh, sạc 1A. Ước lượng thời gian sạc đầy?', 'CC ~2.4h tới ~80% + CV ~0.5–1h ≈ <b>3–3.5 giờ</b>.'],
+      ['Cell đang 3.5V, sạc 1A từ 5V. Module đốt bao nhiêu W?', '(5 − 3.5) × 1 = <b>1.5W</b>.'],
+      ['Vì sao tải nối vào B+/B− là mất bảo vệ?', 'B+/B− nối thẳng cell. Mạch bảo vệ (DW01A + MOSFET) chỉ nằm trên đường OUT.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Kiểm cell, chuẩn bị module (chưa có pin trong mạch)',
@@ -61,7 +76,7 @@
       },
     ],
     bang_do: [{ ten: 'Sạc 1 cell', cot: ['Áp cell (V)', 'Đèn', 'Nhiệt (sờ)'], hang: [{ ten: 'Trước sạc', du_doan: ['3.0–4.1', '—', 'nguội'] }, { ten: '30 phút', du_doan: ['tăng', 'đỏ', 'module ấm'] }, { ten: '60 phút', du_doan: ['tăng', 'đỏ', 'module ấm'] }, { ten: 'Đầy', du_doan: ['4.14–4.26', 'xanh', 'nguội dần'] }] }],
-    bay: ['Đo cell ở thang A hoặc Ω: nối tắt qua đồng hồ.', 'Kẹp cá sấu B+ và B− trên module nhỏ: 2 kẹp chạm nhau = nối tắt cell.', 'Cắm cell ngược: module cháy.', 'Dùng TP4056 cho pack 2 cell nối tiếp: sai — chỉ 1 cell (bài 16.2).', 'Để sạc qua đêm / trên giường, sofa.', 'Tải nối vào B+/B−: mất bảo vệ xả cạn.'],
+    bay: ['Đo cell ở thang A (hoặc que đỏ đang ở lỗ mA/10A): nối tắt cell qua đồng hồ. Thang Ω thì không nối tắt nhưng số vô nghĩa và có thể hỏng thang đo — chỉ dùng DCV.', 'Kẹp cá sấu B+ và B− trên module nhỏ: 2 kẹp chạm nhau = nối tắt cell.', 'Cắm cell ngược: module cháy.', 'Dùng TP4056 cho pack 2 cell nối tiếp: sai — chỉ 1 cell (bài 16.2).', 'Để sạc qua đêm / trên giường, sofa.', 'Tải nối vào B+/B−: mất bảo vệ xả cạn.'],
     robot: ['Robot 17.1 dùng 2 cell nối tiếp: mỗi cell sạc riêng bằng đúng bài này, tháo khỏi robot khi sạc.'],
   });
 })();

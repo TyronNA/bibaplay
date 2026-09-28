@@ -26,7 +26,7 @@
     });
   }
 
-  // Menu gập (CSS chỉ ẩn nav khi màn ≤ 640px). Chọn một mục, bấm ra ngoài hoặc Esc thì gập lại.
+  // Menu gập (CSS chỉ ẩn nav khi màn ≤ 1040px). Chọn một mục, bấm ra ngoài hoặc Esc thì gập lại.
   const nutMenu = top.querySelector('#nut-menu');
   const nav = top.querySelector('nav');
   const dong = () => { top.classList.remove('mo-menu'); nutMenu && nutMenu.setAttribute('aria-expanded', 'false'); };

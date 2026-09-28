@@ -12,6 +12,21 @@
       <p>Code đã lấy trung bình 32 lần mỗi số để bớt nhiễu. Đồng hồ vạn năng cũng có sai số (~0.5% + vài chữ số): đây là so 2 dụng cụ, không có "số thật".</p>`,
     code: 'sandbox/esp32-bai/main/bai_10_1.c',
     du_doan: '<p>Giữa dải: mV hiệu chuẩn lệch đồng hồ vài chục mV. Dưới ~0.05V: ADC có thể đọc 0. Trên ~2.9V: đứng ở 4095. Cột tính thẳng lệch lớn nhất ở giữa–cao.</p>',
+    so_do: [{ nhan: 'ADC so với đồng hồ', svg: SD.svg(320, 220, SD.day('50,190 300,190') + SD.day('50,190 50,20') + SD.chu(300, 206, 'đồng hồ (V)', 'sd-mo', 'end') + SD.chu(56, 18, 'ADC hiệu chuẩn (mV)', 'sd-mo')
+      + SD.day('50,190 270,30').replace('sd-net', 'sd-net" stroke-dasharray="4 4') + '<polyline points="50,190 58,190 70,178 120,142 170,106 230,64 245,52 262,52 300,52" class="sd-nong"/>'
+      + SD.chu(300, 44, 'đứng ở ~2.9V', 'sd-xau', 'end') + SD.chu(78, 176, 'sát 0: đọc 0', 'sd-xau', 'start') + SD.chu(210, 100, 'lý tưởng', 'sd-mo'),
+      'Đường cong đo được so với đường lý tưởng: sát 0 đọc 0, trên 2.9V đứng yên'), chu: 'Giữa dải bám đường lý tưởng; 2 đầu lệch. Hình minh hoạ, không phải số đo.' }],
+    sau: `<h3>INL, DNL là gì</h3>
+      <p><b>DNL</b> (phi tuyến vi phân): các bậc thang của ADC không đều nhau; bậc rộng nhất và hẹp nhất lệch bao nhiêu LSB so với 1 LSB. <b>INL</b> (phi tuyến tích phân): cả đường bậc thang cong so với đường thẳng lý tưởng bao nhiêu LSB. Datasheet: DNL ±4, INL ±8 LSB — tức đường cong lệch tối đa ~6mV so với đường thẳng; phần lệch lớn hơn nằm ở độ lệch gốc và độ dốc, thứ hiệu chuẩn sửa.</p>
+      <h3>Hiệu chuẩn 2 điểm</h3>
+      <p>Nếu chỉ có lệch gốc và lệch dốc: <code>U = a·N + b</code>. Đo 2 điểm (N₁, U₁), (N₂, U₂) bằng đồng hồ → <code>a = (U₂ − U₁)/(N₂ − N₁)</code>, <code>b = U₁ − a·N₁</code>. Chọn 2 điểm ở 20% và 80% dải, tránh 2 đầu. ESP-IDF làm việc này bằng số đo nhà máy ghi sẵn trong eFuse của từng chip.</p>
+      <h3>Nhiều điểm: bình phương tối thiểu</h3>
+      <p>Với 10 cặp số đo, tìm a, b sao cho tổng bình phương sai lệch nhỏ nhất: <code>a = Σ(N−N̄)(U−Ū) / Σ(N−N̄)²</code>, <code>b = Ū − a·N̄</code>. Bảng số đo của bạn đủ để tự làm trong bảng tính và so với kết quả hiệu chuẩn của ESP-IDF.</p>`,
+    hoi: [
+      ['Hai điểm hiệu chuẩn: N = 800 → 650mV, N = 3200 → 2560mV. Tính a, b.', 'a = 1910/2400 ≈ <b>0.796 mV/đơn vị</b>; b = 650 − 0.796 × 800 ≈ <b>13mV</b>.'],
+      ['Vì sao không chọn điểm hiệu chuẩn ở 0V và 3.2V?', 'Hai đầu dải ADC bị phi tuyến/bão hoà (đọc 0, đứng ở 4095): điểm đó sai thì cả đường sai.'],
+      ['Đồng hồ ±0.5% cũng có sai số. Vậy "số thật" ở đâu?', 'Không có: đây là so 2 dụng cụ. Muốn tốt hơn thì so với một nguồn chuẩn chính xác hơn cả hai.'],
+    ],
     phan: [{
       ten: 'Phần 1 · 10 mức',
       buoc: [

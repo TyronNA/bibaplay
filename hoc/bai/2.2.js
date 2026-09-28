@@ -31,6 +31,17 @@
     so_do: [{ nhan: 'Phần 1 · áp', svg: soDoAp, chu: 'Cùng một dòng đi qua cả 3 con.' }, { nhan: 'Phần 2 · dòng', svg: soDoDong, chu: 'Nút dưới: 2 dòng nhánh gộp lại.' }],
     du_doan: `<p>Phần 1: <code>I = 4.78 / 7.9k ≈ 0.605mA</code> → U1 ≈ 0.61V, U2 ≈ 1.33V, U3 ≈ 2.84V.</p>
       <p>Phần 2: I1 = 4.78/1k ≈ 4.78mA, I2 = 4.78/2.2k ≈ 2.17mA, I tổng ≈ 6.95mA. R cụm = 1k∥2.2k ≈ 688Ω.</p>`,
+    sau: `<h3>Kirchhoff là bảo toàn</h3>
+      <p>Định luật dòng là <b>bảo toàn điện tích</b>: điện tích không tự sinh ra hay mất đi ở một điểm nối, nên vào bao nhiêu ra bấy nhiêu. Định luật áp là <b>bảo toàn năng lượng</b>: một điện tích đi hết một vòng kín về chỗ cũ thì năng lượng nhận được bằng năng lượng mất đi.</p>
+      <h3>Giải một mạch bằng định luật dòng</h3>
+      <p>Pin 4.78V → 1k → điểm X; từ X có 2 nhánh xuống −: 2.2k và 4.7k. Gọi áp tại X là V. Viết "dòng vào = dòng ra" tại X:</p>
+      <p><code>(4.78 − V)/1k = V/2.2k + V/4.7k</code> → <code>V·(1/1k + 1/2.2k + 1/4.7k) = 4.78/1k</code> → <b>V ≈ 2.87V</b>.</p>
+      <p>Đây là phương pháp điện áp nút: mỗi nút một phương trình, giải hệ là ra hết. Trang mô phỏng của web giải mạch đúng theo cách này, chỉ là với nhiều nút hơn và thêm mô hình cho LED, transistor.</p>`,
+    hoi: [
+      ['Phần 1 đo U1 = 0.60V, U2 = 1.32V, pin 4.77V. Đoán U3 trước khi đo.', 'U3 = 4.77 − 0.60 − 1.32 = <b>2.85V</b> (định luật áp).'],
+      ['Dòng tổng vào cụm song song 6.9mA, nhánh 1k đo 4.75mA. Nhánh 2.2k bao nhiêu?', '6.9 − 4.75 = <b>2.15mA</b> (định luật dòng).'],
+      ['Mạch ví dụ ở trên: dòng qua con 1k bằng bao nhiêu?', '(4.78 − 2.87)/1k ≈ <b>1.91mA</b>; kiểm lại: 2.87/2.2k + 2.87/4.7k ≈ 1.30 + 0.61 = 1.91mA.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Kirchhoff áp: 3 con nối tiếp',

@@ -21,15 +21,29 @@
     id: '16.2',
     muc_tieu: 'Robot cần khoảng 7–8V (motor mạnh hơn, đủ dư cho hạ áp 5V): 2 cell nối tiếp = pack <b>2S</b>. Ráp pack với mạch bảo vệ BMS 2S theo thứ tự không bao giờ để hở cực pin, và đo được áp từng cell.',
     nguon: '2 cell 18650 (đã sạc đầy ở 16.1)',
-    can: [K.can.cell(2), K.can.de18650(2), K.can.bms2s(), K.can.dh(), K.can.moHan()],
+    can: [K.can.cell(2), K.can.de18650(2), K.can.bms2s(), K.can.cauChi(), K.can.dh(), K.can.moHan()],
     kien_thuc: `<p>Nối tiếp cộng áp: 2S = 7.2–7.4V danh nghĩa, <b>đầy 8.4V</b>, cạn ~6V. Dòng xả vẫn là của 1 cell — và nối tắt pack còn mạnh hơn 1 cell.</p>
       <p>BMS 2S giám sát <b>từng</b> cell: cần 3 dây từ pack — <b>B−</b> (âm cell dưới), <b>BM</b> (điểm nối giữa 2 cell), <b>B+</b> (dương cell trên). Cell nào quá thấp/quá cao hoặc dòng quá lớn → BMS ngắt đầu ra <b>P−/P+</b>. Robot lấy điện ở P−/P+. Ngưỡng cụ thể tuỳ board: đọc trang shop.</p>
       <p><b>2 cell phải gần bằng nhau</b> (lệch ≤ 0.1V) trước khi ghép: lệch nhiều thì cell yếu chạm ngưỡng cắt trước, robot dừng sớm; BMS rẻ thường không có mạch cân bằng.</p>
       <p><b>Sạc pack này thế nào:</b> tháo từng cell ra, sạc riêng bằng 16.1, rồi lắp lại. Không dùng TP4056 cho cả pack (chỉ sạc tới 4.2V). <b>Không</b> gắn 2 module TP4056 vào 2 cell đang nối tiếp rồi cắm chung một cục sạc: GND 2 module nối nhau qua cục sạc → nối tắt cell dưới.</p>
+      <p><b>Cầu chì T2A trên dây P+</b>, sát BMS: BMS đã tự ngắt khi quá dòng, cầu chì là lớp thứ hai nếu BMS hỏng hoặc dây nhảy chập. Robot chạy ~0.5A, 2 motor khởi động vài chục ms ~2A: loại T (đứt chậm) 2A không đứt oan, còn chập thật (hàng chục A) thì đứt ngay.</p>
       <p>Thứ tự an toàn: hàn dây BMS vào hộp <b>khi hộp rỗng</b> → đo Ω → lắp cell dưới → đo → lắp cell trên → đo. Mỗi lần chỉ thêm một thứ.</p>`,
     code: null,
     du_doan: '<p>Cell 4.18V + 4.17V → B−↔BM ≈ 4.17, BM↔B+ ≈ 4.18, B−↔B+ ≈ 8.35, P−↔P+ ≈ 8.35.</p>',
     khoi: 'Tháo cell trên ra trước (bỏ nối tiếp), rồi cell dưới — dùng găng hoặc khăn khô nếu ấm. Cell nóng, phồng, xì hơi hoặc có khói: <b>không cầm</b>, không cúi sát, mở cửa cho thoáng, để yên trên nền gạch xa đồ dễ cháy; có lửa thì tránh xa và gọi 114.',
+    so_do: [{ nhan: 'Pack 2S + BMS', svg: SD.svg(360, 220, SD.pin(80, 60, 'cell trên') + SD.pin(80, 140, 'cell dưới') + SD.day('80,70 80,140') + SD.cham(80, 105)
+      + SD.day('80,60 80,30 220,30 220,62') + SD.day('80,105 200,105 200,82 220,82') + SD.day('80,150 80,190 220,190 220,102')
+      + SD.khoi(232, 42, 90, 'BMS 2S', ['B+', 'BM', 'B−'], ['P+', 'P−']) + SD.chu(24, 110, 'BM', 'sd-mo'),
+      'Hai cell nối tiếp; B− ở cực âm cell dưới, BM ở điểm giữa, B+ ở cực dương cell trên nối vào BMS'), chu: 'B+ ↔ BM = cell trên, BM ↔ B− = cell dưới. Robot lấy điện ở P+/P−.' }],
+    sau: `<h3>Nối tiếp cộng áp, không cộng dung lượng</h3>
+      <p>2 cell 2500mAh nối tiếp: vẫn <b>2500mAh</b>, nhưng áp gấp đôi → năng lượng gấp đôi: 7.2V × 2.5Ah ≈ 18Wh. Robot 2 motor TT + board kéo trung bình ~0.6A từ pack (qua LM2596 cho phần 5V): 18Wh / (7.4V × 0.6A) ≈ <b>4 giờ</b>, trừ hao hiệu suất còn ~3 giờ.</p>
+      <h3>Cell yếu nhất quyết định</h3>
+      <p>BMS ngắt khi <b>bất kỳ</b> cell nào chạm ngưỡng thấp. Hai cell lệch dung lượng 10%: cell yếu cạn trước, pack dừng khi cell kia còn 10%. Tệ hơn, mỗi chu kỳ sạc riêng/xả chung làm lệch lớn dần nếu không cân bằng. Chọn cặp cùng loại, cùng đợt, lệch áp ≤ 0.1V là để bắt đầu từ chỗ cân bằng.</p>`,
+    hoi: [
+      ['2 cell 3000mAh nối tiếp. Dung lượng và năng lượng pack?', '<b>3000mAh</b>; ≈ 7.2V × 3Ah ≈ <b>21.6Wh</b>.'],
+      ['Đo B−↔BM = 3.62V, BM↔B+ = 4.05V. Có ghép được không?', 'Không: lệch 0.43V ≫ 0.1V. Sạc riêng cả hai tới đầy rồi ghép.'],
+      ['P−↔P+ đo 0V trong khi 2 cell vẫn ~3.8V. Nghĩa là gì?', 'BMS đang <b>ngắt</b> (bảo vệ kích hoạt hoặc chưa được "đánh thức"); không phải cell hỏng.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Hàn BMS vào hộp rỗng',
@@ -38,7 +52,7 @@
           { ten: 'Đo 2 cell, chọn cặp', kiem_truoc: true, lam: ['Sạc đầy cả 2 cell bằng 16.1 (từng cell một). Nghỉ 1 giờ. Đo <code>DCV 20</code> từng cell trần, ghi lại.'], hinh: hCell, kiem: { thay: 'Mỗi cell ≥ 4.1V và 2 cell lệch nhau ≤ 0.1V.', neu_khong: 'Lệch > 0.1V: sạc lại cell thấp; vẫn lệch → không ghép cặp, dùng cell khác.' } },
           { ten: 'Tìm 3 điểm trên hộp 2 ô', kiem_truoc: true, lam: ['Hộp rỗng. Dây đỏ = B+ (dương ô trên), dây đen = B− (âm ô dưới). Điểm giữa = lá kim loại nối 2 ô ở đầu kia hộp (có hộp có sẵn dây thứ 3). Thang thông mạch: xác nhận lá giữa không thông với dây đỏ hay đen khi hộp rỗng.'], hinh: hinh([0, 0], null, 'hộp rỗng: tìm B−, điểm giữa, B+'),
             kiem: { thay: 'Biết chắc 3 điểm, không cặp nào thông nhau.', neu_khong: 'Không tìm ra điểm giữa: chưa đi tiếp, chụp ảnh nhờ người biết điện tử xem.' } },
-          { ten: 'Hàn 3 dây vào BMS', lam: ['Hộp vẫn rỗng. Đen (B− hộp) → miếng <b>B−</b>. Dây từ lá giữa → <b>BM</b>. Đỏ (B+ hộp) → <b>B+</b>. Hàn thêm 2 dây ra ở <b>P−</b> (đen), <b>P+</b> (đỏ), đầu kia để tách xa nhau, bọc băng keo đầu.'], hinh: hinh([0, 0], null, 'hàn 3 dây khi hộp còn rỗng'),
+          { ten: 'Hàn 3 dây vào BMS', lam: ['Hộp vẫn rỗng. Đen (B− hộp) → miếng <b>B−</b>. Dây từ lá giữa → <b>BM</b>. Đỏ (B+ hộp) → <b>B+</b>. Hàn thêm 2 dây ra ở <b>P−</b> (đen), <b>P+</b> (đỏ), đầu kia để tách xa nhau, bọc băng keo đầu.', 'Chèn đế cầu chì vào giữa dây P+ (cắt dây, hàn 2 đầu vào 2 dây của đế, bọc gen từng mối), rồi lắp ống T2A. Thang thông mạch 2 đầu dây P+ qua cầu chì: kêu.'], hinh: hinh([0, 0], null, 'hàn 3 dây khi hộp còn rỗng'),
             kiem: { thay: 'Mối hàn không dính sang miếng bên cạnh. Ω B−↔BM, BM↔B+, P−↔P+ đều không gần 0.', neu_khong: 'Cặp nào gần 0Ω: có thiếc dính — sửa trước khi có cell.' } },
         ],
       },
@@ -50,13 +64,13 @@
           { ten: 'Lắp cell trên, đo 3 cặp', kiem_truoc: true, lam: ['Lắp cell thứ hai, đúng dấu (thường ngược chiều cell dưới trong hộp). Đo: BM↔B+, B−↔B+.'], hinh: hinh([1, 1], ['B+', 'B−'], 'đủ 2 cell: đo B+ ↔ B− (và B+ ↔ BM)'),
             kiem: { thay: 'BM↔B+ ≈ cell trên. B−↔B+ ≈ tổng 2 cell (≈ 8.3–8.4V khi đầy).', neu_khong: 'B−↔B+ ≈ 0 trong khi mỗi cell có áp: cell trên lắp ngược — <b>tháo ngay</b> (2 cell đang xả vào nhau), sờ xem có ấm không.' } },
           { ten: 'Đo đầu ra P−/P+', lam: ['Bóc băng keo 2 dây P, đo DCV P−↔P+ rồi bọc lại ngay, tách xa nhau.'], hinh: hinh([1, 1], ['P+', 'P−'], 'đầu ra cho robot: P+ ↔ P−'),
-            kiem: { thay: 'P−↔P+ ≈ B−↔B+.', neu_khong: '0V: BMS đang ngắt. Một số BMS cần "đánh thức" lần đầu bằng áp sạc — làm theo trang shop, không tự nối tắt để mở.' } },
+            kiem: { thay: 'P−↔P+ ≈ B−↔B+.', neu_khong: '0V: tháo cell trên, đo thông mạch cầu chì (đứt = có chỗ chập, tìm ra trước khi thay); cầu chì còn thì BMS đang ngắt. Một số BMS cần "đánh thức" lần đầu bằng áp sạc — làm theo trang shop, không tự nối tắt để mở.' } },
           { ten: 'Cất pack', lam: ['Tháo cell trên ra khi chưa dùng (pack không còn nối tiếp). Ghi áp 2 cell vào bảng.'], hinh: hinh([0, 1], null, 'cất: tháo cell trên') },
         ],
       },
     ],
     bang_do: [{ ten: 'Pack 2S', cot: ['B−↔BM', 'BM↔B+', 'B−↔B+', 'P−↔P+'], hang: [{ ten: 'Số đo (V)', du_doan: ['≈ 4.2', '≈ 4.2', '≈ 8.4', '≈ 8.4'] }] }],
-    bay: ['Hàn BMS khi đã có cell trong hộp: mỏ hàn/thiếc chạm 2 miếng = nối tắt cell.', 'Nhầm thứ tự B−/BM/B+: BMS nối tắt một cell.', 'Sạc 2 cell nối tiếp bằng 2 TP4056 chung một cục sạc: nối tắt cell dưới qua GND chung.', 'Dùng BMS 3S/4S cho pack 2S: không bảo vệ đúng.', 'Ghép cell lệch áp nhiều hoặc khác loại.'],
+    bay: ['Hàn BMS khi đã có cell trong hộp: mỏ hàn/thiếc chạm 2 miếng = nối tắt cell.', 'Nhầm thứ tự B−/BM/B+: BMS nối tắt một cell.', 'Sạc 2 cell nối tiếp bằng 2 TP4056 chung một cục sạc: nối tắt cell dưới qua GND chung.', 'Dùng BMS 3S/4S cho pack 2S: không bảo vệ đúng.', 'Bỏ cầu chì, hoặc thay ống đứt bằng ống to hơn / sợi dây.', 'Ghép cell lệch áp nhiều hoặc khác loại.'],
     robot: ['17.1: dây P+/P− là nguồn của robot: vào VM của DRV8833 (≤ 10.8V) và vào LM2596 hạ xuống 5V cho board.'],
   });
 })();

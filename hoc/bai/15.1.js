@@ -21,6 +21,17 @@
     so_do: [{ nhan: 'Tín hiệu', svg: soDo, chu: 'Độ rộng xung = góc.' }],
     code: 'sandbox/esp32-bai/main/bai_15_1.c',
     du_doan: '<p>Mỗi 2 giây servo nhảy tới 1 trong 3 góc: đầu – giữa – đầu kia (~90° mỗi bước). Đứng yên thì giữ góc, đẩy nhẹ thấy cứng.</p>',
+    sau: `<h3>Bên trong servo là một vòng điều khiển P</h3>
+      <p>Mạch trong servo tính <code>sai = góc_muốn − góc_đo</code> (góc đo từ biến trở gắn trục), rồi cấp cho motor một áp tỉ lệ với sai. Sai lớn → quay nhanh, gần tới → chậm dần, khớp → dừng. Đẩy lệch tay quay → sai khác 0 → motor đẩy lại: đó là cảm giác "cứng" khi đẩy. Có một vùng chết nhỏ (vài µs độ rộng xung) để servo không run khi đứng yên.</p>
+      <h3>Phân giải góc</h3>
+      <p>1ms → 2ms ≈ 180° → 1µs ≈ 0.18°. PWM 50Hz với 14 bit: mỗi bước 20ms/16384 ≈ 1.22µs ≈ 0.22°. 10 bit (1024) thì mỗi bước 19.5µs ≈ 3.5° — thô thấy rõ. Với servo, số bit của PWM quyết định bước góc nhỏ nhất.</p>
+      <h3>Dòng lúc kẹt</h3>
+      <p>Servo bị giữ chặt khi đang cố quay: motor bên trong kéo dòng kẹt (bài 7.3), có thể vài trăm mA. Đó là lý do lấy nguồn riêng, và vì sao ép servo vào chặn cơ khí (xung ngoài 1–2ms) làm nó nóng.</p>`,
+    hoi: [
+      ['Muốn servo ở 45° (0° = 1ms, 180° = 2ms). Độ rộng xung?', '1 + 45/180 = <b>1.25ms</b>.'],
+      ['PWM 50Hz 12 bit. Một bước bao nhiêu µs, bao nhiêu độ?', '20ms/4096 ≈ <b>4.9µs ≈ 0.9°</b>.'],
+      ['Vì sao đẩy tay quay thấy servo cưỡng lại?', 'Góc đo lệch góc muốn → mạch trong servo cấp dòng cho motor đẩy về: vòng phản hồi.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Ráp, rồi cấp điện theo thứ tự', cot: 28,
       buoc: [

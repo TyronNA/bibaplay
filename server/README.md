@@ -22,6 +22,13 @@ Key miễn phí: https://aistudio.google.com/apikey. `ARES_DEVICES`: MAC các ch
 lạ bị từ chối và log in MAC của nó ra, chép vào đây. Biến khác: `ARES_TOKEN` (mặc định sinh mới mỗi lần chạy), `GEMINI_MODEL`, `GEMINI_VOICE`, `ARES_PROMPT`,
 `ARES_MCP_CONFIG`, `ARES_DB`, `ARES_DEBUG`, `GEMINI_WS_URL` (trỏ sang `mock_gemini.py`).
 
+## Tool của chip (MCP phía thiết bị)
+
+Chip báo `features.mcp` trong hello thì server hỏi `initialize` + `tools/list`, đưa các tool đó cho Gemini với tên `chip__<tên>`
+(vd `chip__self_robot_move`), và chuyển `tools/call` xuống chip khi Gemini gọi. Tin `mcp` được xử lý ngay lúc đọc WebSocket,
+không xếp hàng: chip gửi hello rồi listen start liền nhau, mở Gemini phải chờ được danh sách tool. `fake_device.py` giả một chip
+có tool `self.robot.move` để tự kiểm.
+
 ## Bẫy
 
 - **Chỉ chạy trong LAN.** Token phát qua `/xiaozhi/ota/` (firmware cần vậy để tự kết nối) nên không chặn được người lạ;

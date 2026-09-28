@@ -16,6 +16,19 @@
       <p>Hàng chân có <code>5V</code> đứng sát <code>GND</code>: que đo trượt một cái là nối tắt 5V của USB. Nên bài này (và mọi bài sau) đo qua <b>dây đực–cái</b> đưa ra từng cột riêng trên breadboard, không chạm que thẳng vào hàng chân.</p>
       <p>Board 2 cổng USB-C: cổng ghi <code>COM</code>/<code>UART</code> đi qua chip chuyển USB–serial; cổng <code>USB</code> nối thẳng USB của chip. Cổng nào cũng nạp được; chọn 1 cổng dùng cho cả giáo trình.</p>`,
     du_doan: '<p>Chưa cắm USB: 3V3–GND và 5V–GND ra vài kΩ tới MΩ, số có thể tăng dần (tụ trên board đang nạp). Cắm USB: 5V ≈ 4.8–5.1V, 3V3 ≈ 3.28–3.35V.</p>',
+    so_do: [{ nhan: 'Nguồn trên board', svg: SD.svg(330, 170, SD.hop(10, 50, 54, 40, 'USB') + SD.day('64,70 110,70') + SD.chu(70, 62, '5V', 'sd-pos') + SD.cham(88, 70) + SD.day('88,70 88,130') + SD.chu(94, 140, 'chân 5V', 'sd-mo')
+      + SD.hop(110, 50, 76, 40, 'ổn áp') + SD.day('186,70 236,70') + SD.chu(192, 62, '3.3V', 'sd-pos') + SD.cham(212, 70) + SD.day('212,70 212,130') + SD.chu(218, 140, 'chân 3V3', 'sd-mo')
+      + SD.hop(236, 40, 80, 60, 'chip S3') + SD.day('37,90 37,110 276,110 276,100') + SD.day('148,90 148,110') + SD.chu(150, 124, 'GND chung', 'sd-mo', 'middle'),
+      'USB 5V đi vào ổn áp trên board, ra 3.3V nuôi chip; chân 5V và 3V3 lấy ra từ 2 đường này'), chu: 'Chân 5V nối thẳng USB; chân 3V3 là đầu ra ổn áp. Mọi chân GPIO chịu tối đa 3.6V.' }],
+    sau: `<h3>Vì sao số Ω cứ tăng dần khi chưa cắm USB</h3>
+      <p>Giữa 3V3 và GND trên board có vài tụ lọc (µF). Thang Ω đẩy một dòng nhỏ, nên thực chất đang nạp các tụ đó: áp tăng dần, đồng hồ tính ra "R" tăng dần. Đợi số đứng rồi mới đọc. Số cuối cùng là điện trở của chip + ổn áp khi không có điện, thường vài kΩ tới vài trăm kΩ. Con số tuyệt đối không quan trọng; quan trọng là <b>mốc</b> để mọi bài sau so vào: mạch ngoài chỉ được làm số này nhỏ đi chút ít, không bao giờ về gần 0.</p>
+      <h3>Nguồn USB có bao nhiêu</h3>
+      <p>Cổng USB 2.0 cho 5V ±5% (4.75–5.25V), tối thiểu 500mA. Chip ESP32-S3 lúc phát WiFi kéo đỉnh vài trăm mA; board còn LED, chip USB-serial. Nếu cắm thêm ampli, motor… lấy từ chân 5V thì rất nhanh chạm giới hạn cổng: máy tính cắt cổng hoặc áp sụt làm chip reset. Ngân sách dòng là thứ phải cộng trước khi cắm thêm module.</p>`,
+    hoi: [
+      ['Đo Ω 3V3–GND khi chưa cắm USB: số chạy từ 0.5k lên 12k rồi đứng. Mốc ghi bao nhiêu? Có đáng lo không?', 'Ghi <b>12k</b> (số đã đứng). Không lo: số tăng dần là tụ trên board đang được đồng hồ nạp.'],
+      ['Cắm USB đo chân 5V được 4.86V. Có ổn không?', 'Ổn: USB cho 4.75–5.25V; dây dài và cổng hub làm tụt thêm chút.'],
+      ['Vì sao không chạm que thẳng vào hàng chân board đang cắm USB?', 'Chân 5V nằm sát GND: que trượt là nối tắt 5V của USB. Đưa ra breadboard bằng dây rồi đo ở đó.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Chưa cắm USB',

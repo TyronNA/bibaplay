@@ -14,6 +14,19 @@
       <p>Duty thấp (40%) motor có thể không đủ lực khởi động từ đứng yên: robot thật thường "đá" 100% trong vài chục ms rồi mới hạ.</p>`,
     code: 'sandbox/esp32-bai/main/bai_13_2.c',
     du_doan: '<p>Chiều A: chậm → vừa → nhanh, dừng 1s; chiều B tương tự.</p>',
+    so_do: [{ nhan: 'Chiều + tốc độ', svg: SD.svg(360, 190, SD.khoi(20, 40, 90, 'ESP32-S3', [], ['GPIO9 PWM', 'GPIO10', 'GND']) + SD.khoi(210, 40, 80, 'DRV8833', ['IN1', 'IN2', 'GND'], ['OUT1', 'OUT2'])
+      + SD.day('122,60 198,60') + SD.day('122,80 198,80') + SD.day('122,100 198,100') + SD.day('302,60 330,60 330,72') + SD.motor(330, 88) + SD.day('302,80 318,80 318,110 330,110 330,104')
+      + SD.chu(210, 150, 'VM ← hộp pin, SLP → 3V3', 'sd-mo'),
+      'GPIO9 PWM vào IN1, GPIO10 vào IN2 của DRV8833, OUT1 OUT2 ra motor'), chu: 'Chiều A: PWM ở IN1, IN2 = 0. Chiều B: đổi vai 2 chân.' }],
+    sau: `<h3>Hai cách băm PWM</h3>
+      <p>Theo bảng DRV8833: <b>IN1 = PWM, IN2 = 0</b> → lúc xung thấp là thả trôi (dòng tắt nhanh qua diode, "fast decay"). <b>IN1 = 1, IN2 = PWM đảo</b> → lúc xung là phanh (dòng chạy vòng qua 2 công tắc dưới, "slow decay"). Slow decay cho tốc độ gần tuyến tính theo duty hơn và mô-men tốt hơn ở tốc độ thấp; fast decay đơn giản, là cách code bài này dùng.</p>
+      <h3>"Đá" khởi động</h3>
+      <p>Ma sát tĩnh lớn hơn ma sát động: cần một cú dòng để bắt đầu quay, rồi duty thấp vẫn giữ được. Code robot thường cho 100% trong 30–50ms rồi hạ về duty đích. Đây là một dạng điều khiển vòng hở — bài 15.4 làm bằng vòng kín.</p>`,
+    hoi: [
+      ['Muốn quay chiều B tốc độ 60% (fast decay). Đặt IN1, IN2 thế nào?', 'IN1 = <b>0</b>, IN2 = <b>PWM 60%</b>.'],
+      ['Vì sao code nghỉ 1s trước khi đảo chiều?', 'Để motor dừng hẳn (hết áp ngược) trước khi cấp chiều mới, tránh cú dòng lớn nhất.'],
+      ['Duty 40% motor đứng rung, 100% thì chạy. Cách chữa trong code?', 'Cho 100% trong vài chục ms để khởi động, rồi hạ về 40%.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Mạch 13.1, code PWM', cot: 34,
       buoc: [

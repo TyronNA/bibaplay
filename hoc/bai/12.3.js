@@ -14,6 +14,21 @@
       <p>Chân DIN=7, BCLK=15, LRC=16 theo <code>bread-compact-wifi/config.h</code>.</p>`,
     code: 'sandbox/esp32-bai/main/bai_12_3.c',
     du_doan: '<p>Tiếng "tuuu" 440Hz (nốt La) 2 giây, nghỉ 2 giây, lặp lại.</p>',
+    so_do: [{ nhan: 'Ampli I2S + loa', svg: SD.svg(380, 190, SD.khoi(20, 40, 90, 'ESP32-S3', [], ['5V', 'GND', 'GPIO7 DIN', 'GPIO15 BCLK', 'GPIO16 LRC']) + SD.khoi(230, 40, 80, 'MAX98357A', ['VIN', 'GND', 'DIN', 'BCLK', 'LRC'], ['+', '−'])
+      + SD.day('122,60 218,60') + SD.day('122,80 218,80') + SD.day('122,100 218,100') + SD.day('122,120 218,120') + SD.day('122,140 218,140')
+      + SD.day('322,60 340,60 340,70') + SD.day('322,80 334,80 334,90 340,90') + SD.loa(346, 80),
+      'ESP32 nối MAX98357A: 5V, GND, DIN 7, BCLK 15, LRC 16; loa nối thẳng 2 cực ra của ampli'), chu: '2 đầu loa chỉ nối vào + và − của ampli, không đầu nào xuống GND.' }],
+    sau: `<h3>Ngõ ra cầu (BTL)</h3>
+      <p>Ampli có 2 ngõ ra, mỗi ngõ dao động quanh VIN/2 và ngược pha nhau. Loa nối giữa 2 ngõ nên thấy biên độ gấp đôi mỗi ngõ, công suất gấp 4 — không cần tụ chặn một chiều. Hệ quả: <b>không đầu loa nào là GND</b>. Nối một đầu xuống GND là chập một ngõ ra.</p>
+      <h3>Class D và công suất</h3>
+      <p>Class D bật/tắt ngõ ra ở vài trăm kHz và điều độ rộng xung theo âm thanh (một kiểu PWM, chương 11); cuộn dây loa lọc lấy trung bình. Hiệu suất ~90% thay vì ~50% của ampli thường. Datasheet MAX98357A: cỡ 3W vào loa 4Ω ở VIN 5V. Loa điện thoại chịu ít hơn nhiều.</p>
+      <h3>Biên độ 9% là bao nhiêu công suất</h3>
+      <p>Công suất theo bình phương biên độ: <code>0.09² ≈ 0.8%</code> công suất tối đa, tức cỡ vài chục mW — an toàn cho loa nhỏ. Tính theo dB: 20·log₁₀(0.09) ≈ −21 dBFS. Tăng biên độ gấp đôi (+6dB) là công suất gấp 4.</p>`,
+    hoi: [
+      ['Vì sao nối 1 đầu loa xuống GND là sai với MAX98357A?', 'Ngõ ra là cầu: cả 2 cực đều có áp dao động quanh VIN/2. Nối xuống GND là chập một ngõ ra.'],
+      ['Tăng BIEN_DO từ 9% lên 27%. Công suất tăng mấy lần?', '(27/9)² = <b>9 lần</b>.'],
+      ['Vì sao VIN lấy từ 5V mà không từ 3V3?', 'Công suất loa lấy từ VIN; 3V3 là ổn áp nhỏ nuôi chip, âm to sẽ kéo sụt nguồn chip.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Ráp, phát tone',
       buoc: [

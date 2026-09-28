@@ -13,6 +13,19 @@
       <p>Thang diode (ký hiệu ▶|) của đồng hồ đẩy một dòng nhỏ (~1mA) và hiện <b>áp</b> trên diode, đơn vị mV hoặc V. Chiều ngược hiện <code>1</code>.</p>
       <p>LED xanh dương/trắng có thể hiện <code>1</code> ở cả 2 chiều nếu áp thử của đồng hồ thấp hơn ~3V: không phải LED hỏng.</p>`,
     du_doan: '<p>1N4148 và 1N4007: 0.55–0.7V ở thang diode. Phần 2: với 10k (≈0.4mA) ≈ 0.6V, với 1k (≈4mA) ≈ 0.68V, với 220Ω (≈18mA) ≈ 0.75V: dòng đổi 45 lần, áp đổi ~0.15V.</p>',
+    so_do: [{ nhan: 'Đo áp diode theo dòng', svg: SD.chuoi('4.78V', [['tro', '10k / 1k / 220Ω'], ['diode', '1N4148']], 'Pin qua điện trở rồi diode xuống cực âm, vôn kế đo trên diode', { do: [1, 'V'] }), chu: 'Đổi điện trở để đổi dòng; đồng hồ đo áp trên diode.' }],
+    sau: `<h3>Phương trình Shockley</h3>
+      <p>Dòng qua diode theo áp: <code>I = I_s·(e^(U / (n·V_T)) − 1)</code>, với <code>V_T ≈ 26mV</code> ở nhiệt độ phòng, n cỡ 1–2. Đảo lại: <code>U = n·V_T·ln(I/I_s)</code>. Áp chỉ tăng theo <b>log</b> của dòng.</p>
+      <p>Hệ quả đo được: dòng tăng 10 lần thì áp tăng <code>n·V_T·ln 10 ≈ n × 60mV</code>. Bài này dòng đổi 45 lần (≈ 1.65 lần ×10) mà áp chỉ đổi ~0.15V → mỗi lần ×10 cỡ 90mV, tức n ≈ 1.5. Đó là vì sao người ta nói "diode silicon ~0.6–0.7V" mà không cần nói dòng bao nhiêu.</p>
+      <h3>Màu LED quyết định áp</h3>
+      <p>LED phát ra một photon cho mỗi electron đi qua. Năng lượng photon <code>E = h·c/λ</code>: đỏ 630nm ≈ 1.97eV, xanh dương 470nm ≈ 2.64eV. Áp thuận của LED xấp xỉ năng lượng đó tính bằng volt (cộng thêm chút tổn hao). Vì thế LED đỏ ~2V, xanh dương/trắng ~3V: đây là vật lý của chất bán dẫn, không phải do hãng.</p>
+      <h3>Nhiệt độ</h3>
+      <p>Áp thuận diode silicon giảm khoảng <b>2mV mỗi °C</b>. Nóng thêm 30°C là mất ~60mV. Mạch đo nhiệt độ rẻ tiền dùng chính hiệu ứng này.</p>`,
+    hoi: [
+      ['Dòng qua 1N4148 tăng từ 0.4mA lên 4mA. Áp tăng khoảng bao nhiêu?', 'Một lần ×10 → cỡ <b>60–110mV</b> (tuỳ n). Bài đo ra ~0.08V giữa 10k và 1k.'],
+      ['Vì sao LED xanh dương cần áp cao hơn LED đỏ?', 'Photon xanh dương mang năng lượng lớn hơn (bước sóng ngắn hơn), nên mỗi electron phải được đẩy qua một bậc năng lượng cao hơn: ~2.6eV so với ~2eV.'],
+      ['Một diode đang ở 0.65V nóng thêm 40°C (cùng dòng). Áp còn khoảng bao nhiêu?', '0.65 − 40 × 0.002 ≈ <b>0.57V</b>.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Thang diode, không pin',

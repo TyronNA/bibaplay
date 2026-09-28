@@ -15,6 +15,16 @@
       <p>Đồng hồ có lỗ <code>hFE</code> (4 lỗ E B C E ghi NPN/PNP): cắm đúng chiều ra 100–400; E và C đảo chỗ thì ra số nhỏ (~5–20). Đây là cách xác nhận chắc nhất.</p>
       <p>Poster ghi B-C-E; S8050 TO-92 thường là <b>E-B-C</b> (mặt phẳng hướng về mình, chân chúc xuống, trái sang phải). Lô của bạn phải đo mới biết.</p>`,
     so_do: [{ nhan: 'Nhìn bằng đồng hồ', svg: soDo, chu: 'Que đỏ ở B: dẫn sang cả E và C.' }],
+    sau: `<h3>Vì sao không phải 2 diode bất kỳ</h3>
+      <p>NPN là 3 lớp bán dẫn n – p – n. Lớp giữa (B) rất <b>mỏng</b> và pha ít tạp chất. Khi B–E dẫn, electron từ E tràn vào B; vì B mỏng, phần lớn electron không kịp gặp lỗ trống để tái hợp mà trôi thẳng sang C. Chỉ vài phần trăm đi ra chân B: đó là lý do dòng B nhỏ điều khiển được dòng C lớn gấp hFE lần.</p>
+      <p>Hàn 2 diode rời quay lưng vào nhau thì đồng hồ đo ra giống hệt, nhưng không khuếch đại gì: không có lớp B mỏng chung.</p>
+      <h3>Vì sao B–E đo cao hơn B–C một chút</h3>
+      <p>Mối nối B–C có diện tích lớn hơn (C thường là cả đế của chip), dòng bão hoà I_s lớn hơn, nên ở cùng dòng thử áp thấp hơn vài chục mV (phương trình ở bài 4.1). Còn E pha nhiều tạp chất để "phun" electron mạnh. Cắm ngược E và C vào lỗ hFE thì transistor vẫn chạy, chỉ là rất kém (hFE ngược ~5–20).</p>`,
+    hoi: [
+      ['Que đỏ ở chân giữa, que đen chạm 2 chân kia đều ra ~0.7V; đảo que thì ra "1". Chân giữa là gì, loại gì?', 'Chân giữa là <b>B</b>, transistor <b>NPN</b> (B là anode của cả 2 "diode").'],
+      ['Với transistor PNP (như S8550), cách tìm B khác thế nào?', 'Ngược chiều: <b>que đen</b> ở B thì B dẫn sang cả E lẫn C.'],
+      ['Lỗ hFE ra 12 ở một chiều cắm, 220 ở chiều kia. Chiều nào đúng, vì sao chiều kia vẫn ra số?', 'Chiều 220 đúng. Chiều 12 là E và C bị đảo: transistor vẫn dẫn nhưng ở chế độ ngược, hệ số khuếch đại rất nhỏ.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Dò 6 cặp chân',
       buoc: [

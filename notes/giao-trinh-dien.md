@@ -39,22 +39,31 @@ Tiến độ đánh dấu ngay trong bảng (✅ xong). Web tự học đọc th
 
 ## 4. Diode
 
+Bài 4.3, 4.4 cần mua thêm: diode zener 3.3V (1N4728A), LED RGB 5mm chung cathode, 1 điện trở 150Ω nếu kit thiếu.
+
 | # | Bài | Làm gì | Đo / thấy gì |
 |---|---|---|---|
 | 4.1 | Chiều dẫn & sụt áp | Thang diode: 1N4148, 1N4007, 5 màu LED, cắm thuận rồi ngược | Silicon ~0.6–0.7V; LED đỏ/vàng ~2V, xanh dương/trắng ~3V. Áp gần như cố định dù dòng đổi → vì thế U/I không hằng số (bài 1.4) |
 | 4.2 | Chống cắm ngược nguồn | 1N4007 nối tiếp nguồn vào mạch LED; đảo chiều hộp pin | Đảo pin → mạch không sao; cái giá: mất ~0.7V |
+| 4.3 | Zener giữ áp | 100Ω + zener 3.3V mắc **ngược** (vạch về phía +); thêm tải 1k, 330Ω, 100Ω | Áp zener gần như đứng yên khi tải nhẹ; tải nặng quá thì zener "đói", áp sập về cầu phân áp |
+| 4.4 | LED RGB trộn màu | Dò chân chung bằng thang diode; mỗi màu một điện trở riêng; bật đỏ → + xanh lá → + xanh dương | Đỏ + lục = vàng, cả 3 = trắng: trộn màu cộng. Chung 1 điện trở thì màu đỏ giành hết dòng |
 
 ## 5. Transistor
+
+Bài 5.6 cần mua thêm: transistor S8550 (PNP).
 
 | # | Bài | Làm gì | Đo / thấy gì |
 |---|---|---|---|
 | 5.1 | Tìm chân | Thang diode dò S8050 (NPN): chân B dẫn sang cả E lẫn C | B–E ~0.7V, B–C ~0.7V. Đối chiếu datasheet S8050 |
-| 5.2 | Khuếch đại | Biến trở nối 3 chân làm chia áp, chân giữa → 100k → chân B (Ib chỉnh được 0 → ~38µA), LED + 220Ω ở chân C, đồng hồ đo dòng C. Dòng B tính từ áp trên điện trở 100k (Ohm) | `Ic ≈ hFE·Ib` (hFE ~100–300) tới khi LED hết sáng thêm = **bão hoà** |
+| 5.2 | Khuếch đại | Biến trở nối 3 chân làm chia áp, chân giữa → 100k → chân B (Ib chỉnh được 0 → ~41µA), LED + 220Ω ở chân C, đồng hồ đo dòng C. Dòng B tính từ áp trên điện trở 100k (Ohm) | `Ic ≈ hFE·Ib` (hFE ~100–300); trần ~12.6mA là **bão hoà** — Ib tối đa chỉ ~41µA nên chỉ con hFE ≳ 310 mới chạm |
 | 5.3 | Công tắc | Tính điện trở chân B để transistor bão hoà chắc chắn (Ib dư 3–5 lần) | Áp C–E ~0.1–0.2V khi dẫn. GPIO chỉ ra vài chục mA → cần transistor cho tải lớn |
 | 5.4 | Đèn tự bật khi tối | Quang trở ở **dưới**; phía trên 47k nối tiếp biến trở 10k (chỉnh ngưỡng) → chân B → LED ở chân C | Áp chân B qua ngưỡng ~0.7V thì LED bật. 47k giữ chân B không bao giờ nối thẳng + |
 | 5.5 | Công tắc chạm tay | 2 S8050 Darlington (C chung, E con 1 → B con 2), ngón tay nối nguồn ↔ B con 1 qua 100k | hFE nhân nhau → dòng µA qua da đủ bật LED |
+| 5.6 | PNP phía trên tải | S8550: E lên +, tải ở C xuống −; kéo B xuống (qua 10k) thì bật. Rồi đưa B lên 3.2V (giả GPIO mức 1) | B ở 3.2V mà E ở 4.78V: PNP **vẫn bật**. GPIO 3.3V không tắt được PNP nối nguồn cao hơn |
 
 ## 6. Logic & mạch có trạng thái
+
+Bài 6.5 cần mua thêm: IC LM358 (vỏ DIP-8).
 
 | # | Bài | Làm gì | Đo / thấy gì |
 |---|---|---|---|
@@ -62,6 +71,7 @@ Tiến độ đánh dấu ngay trong bảng (✅ xong). Web tự học đọc th
 | 6.2 | Cổng logic | OR: 2 diode 1N4148 chung cathode + 10k kéo xuống. AND: chung anode + 10k kéo lên. NOT: 1 S8050 | Bảng chân trị bằng đồng hồ: 0/1 thực chất là áp |
 | 6.3 | Mạch nháy (astable) | 2 S8050 + 2 tụ 10µF + 2 × 47k (chân B) + 2 LED kèm 470Ω–1k (chân C). **Chân + tụ hướng về chân C** | Mỗi nửa chu kỳ ≈ `0.69·R·C` (~0.3s); đổi R/C → nháy nhanh/chậm. Đây là "clock" |
 | 6.4 | Mạch nhớ 1 bit (bistable) | Như 6.3 nhưng thay 2 tụ bằng 10k; 2 nút kéo chân B xuống GND | Nhấn → đổi trạng thái, nhả vẫn **giữ**: flip-flop, ô nhớ dạng thô nhất |
+| 6.5 | Bộ so sánh LM358 | Quang trở chia áp vào IN−, biến trở đặt ngưỡng vào IN+, OUT → 470Ω → LED; rồi thêm 100k từ OUT về IN+ | Che tay → LED bật hẳn, không sáng lưng chừng như 5.4. Thêm 100k: hết chập chờn ở ngưỡng (trễ). Đây là con LM393 trên module FC-51 |
 
 ## 7. Cuộn dây & motor
 
@@ -75,6 +85,18 @@ Bài 7.1–7.2 là **nối tắt pin có chủ đích** (cuộn dây gần như 
 | 7.2 | Motor cuộn dây tự quấn | Cuộn 15 vòng emay làm rotor, 2 đầu làm trục; 1 đầu cạo hết men, đầu kia cạo **một nửa** chu vi. 2 kẹp giấy làm giá nối pin, nam châm đặt dưới | Mồi nhẹ là quay. Nửa men còn lại ngắt dòng mỗi nửa vòng = **cổ góp**, đúng cơ chế motor DC chổi than của robot |
 | 7.3 | Motor phát điện | Tháo motor quạt dự phòng, đồng hồ DCV vào 2 cực, xoay trục bằng tay | Có áp → khi motor chạy, áp này **chống lại** nguồn. Vì thế motor đứng yên/bị kẹt (khởi động, bánh kẹt) kéo dòng lớn nhất |
 | 7.4 | Chạy motor bằng transistor | Đo dòng motor trước (1.2). S8050 chịu ~0.5A → lớn hơn thì dừng, chờ driver. 1N4007 **ngược chiều** song song motor | Áp C–E khi chạy; không diode → cuộn dây bị ngắt đột ngột tạo xung áp cao, có thể giết transistor |
+
+## 0. Hàn chân cắm
+
+Module mic/ampli/OLED hay giao kèm hàng rào chân rời: phải hàn trước khi cắm breadboard. Cần đồ nghề hàn (mỏ hàn chỉnh nhiệt, thiếc, đế, búi đồng), kính bảo hộ, thảm silicon, bo đục lỗ.
+Mỏ hàn cắm điện 220V và nóng ~330°C: luôn gác lên đế, rút điện khi rời bàn. Không hàn gì đang nối pin.
+
+| # | Bài | Làm gì | Đo / thấy gì |
+|---|---|---|---|
+| 0.1 | Mối hàn đầu tiên | Hàn 4 điện trở 1k thành chuỗi trên bo đục lỗ, uốn chân làm dây nối | Mối đạt bóng, hình nón. Đo 2 đầu chuỗi ≈ 4k; 2 pad cạnh nhau không thông |
+| 0.2 | Hàn header lên module | Cắm header vào breadboard làm đồ gá, đặt module lên, hàn 2 chân đầu, kiểm thẳng rồi hàn nốt | Header vuông góc; thông mạch từng chân ↔ pad, 2 chân cạnh nhau không thông |
+| 0.3 | Gỡ mối hàn | Gỡ 1 điện trở khỏi chuỗi 0.1 bằng bơm hút / bấc, hàn con mới vào | Gỡ xong: chuỗi hở (1). Hàn lại: về ≈ 4k |
+| 0.4 | Chuyển mạch lên bo | Mạch 4.2 (1N4007 + 220Ω + LED) hàn lên bo đục lỗ, cấp pin qua 2 chân header | Đo Ω trước khi cấp pin; LED sáng như trên breadboard, lắc bo không chập chờn |
 
 ## Xuyên suốt
 - **Trước khi cấp nguồn, mọi mạch**: ráp khi chưa có pin → đo Ω giữa `+` và `−` → phải ra đúng con số đã tính
@@ -111,6 +133,8 @@ Chân của mic/ampli/OLED/nút lấy theo board `bread-compact-wifi` của xiao
 | 9.4 | Chống dội phím | Đếm số lần nhấn: nhấn 1 lần đếm ra nhiều lần. Sửa bằng code (chờ ~20ms), rồi thử tụ 100nF song song nút | Tiếp điểm kim loại nảy vài ms → bật/tắt nhiều lần. Nút xiaozhi (47/40/39) cần xử lý này |
 | 9.5 | 5V vs 3.3V | Cầu phân áp 10k/20k hạ 5V → ~3.3V, **đo bằng đồng hồ trước** rồi mới nối vào GPIO | GPIO không chịu 5V. Tín hiệu 5V → hạ áp hoặc module chuyển mức |
 | 9.6 | Chân không được đụng | Đọc bảng chân: strapping (GPIO0, 3, 45, 46), flash/PSRAM (26–37 trên bản N16R8), USB (19, 20) | Cắm nhầm: board không khởi động hoặc không nạp code được. Config xiaozhi đã né các chân này |
+| 9.7 | UART | UART1: TX GPIO10 → 1k → RX GPIO11 (tự gửi tự nhận); đo TX lúc nghỉ; rút dây | Nhận lại đúng chuỗi sau ≈ 1ms (12 byte ở 115200). TX nghỉ ở mức 1 (3.3V). Rút dây: hết giờ |
+| 9.8 | Ngắt | Nút GPIO12 + LED GPIO13: 10s hỏi vòng mỗi 250ms, 10s dùng ngắt; timer phần cứng 1kHz | Hỏi vòng: LED trễ, bấm nhanh bị sót. Ngắt: tức thì, in độ trễ ngắt → task vài chục µs. Timer ≈ 1000 nhịp/s |
 
 ## 10. ADC
 
@@ -130,6 +154,7 @@ Chỉ dùng chân ADC1 (GPIO1–10); ADC2 bị WiFi chiếm. Áp vào chân ADC 
 | 11.1 | Chỉnh sáng LED | PWM (LEDC) 5kHz trên mạch 9.1, duty 0 → 100% | Mắt thấy sáng dần dù chân chỉ có 0V hoặc 3.3V |
 | 11.2 | Đo PWM bằng đồng hồ | DCV đo chân PWM ở duty 25/50/75% | Đồng hồ ra ≈ duty × 3.3V — áp trung bình. Logic analyzer mới thấy xung thật |
 | 11.3 | PWM chạy motor | Mạch 7.4, chân B nối GPIO qua 470Ω (1k chỉ cho ~2.5mA, thiếu cho motor ~0.3A); GND chung; diode 1N4007 ngược song song motor | Tốc độ theo duty. Motor lấy nguồn riêng, không lấy 3V3 của board |
+| 11.4 | Còi PWM | Còi thụ động qua S8050 từ 3V3 (100Ω nối tiếp, 1N4148 ngược song song); đổi tần số chơi gam Đô | Tần số quyết định nốt; còi to nhất quanh 2–4kHz. Còi chủ động thì chỉ kêu một tiếng |
 
 ## 12. Bus số
 
@@ -148,6 +173,7 @@ Chỉ dùng chân ADC1 (GPIO1–10); ADC2 bị WiFi chiếm. Áp vào chân ADC 
 | 13.1 | Cầu H | Module driver (chọn lúc tới nơi), 2 chân IN từ GPIO, đảo chiều motor | 4 công tắc bắt chéo: đổi cặp đóng → đổi chiều dòng qua motor. 2 công tắc cùng một nhánh mà cùng đóng = nối tắt |
 | 13.2 | Tốc độ + chiều | PWM vào chân IN/EN, chạy 2 chiều × 3 tốc độ | Đúng thứ bánh xe robot cần |
 | 13.3 | Nhiễu motor lên ESP32 | Cho motor chung nguồn với board, xem board có reset / OLED nhảy khi motor khởi động; rồi tách nguồn + GND chung + tụ | Motor khởi động kéo dòng lớn → sụt áp → ESP32 reset (brownout) |
+| 13.4 | MOSFET chạy motor | IRLZ44N thay S8050 ở mạch 11.3: G ← GPIO14 qua 220Ω, 10k G→S, diode ngược song song motor | U_DS khi dẫn chỉ vài chục mV so với U_CE ~0.2V của S8050: MOSFET mát hơn, gánh được dòng lớn |
 
 Mua thêm khi tới Phần 2: **logic analyzer** 8 kênh 24MHz (rẻ, nhìn được I2C/I2S), máy hiện sóng giá rẻ (vd kit DSO138 — kiêm bài tập hàn),
 ổn áp AMS1117, module driver motor. IC 555 / op-amp LM358: chỉ khi muốn đào sâu analog.
@@ -164,7 +190,7 @@ Từ chương 16 có **pin lithium**: nối tắt = hàng chục ampe, cháy th�
 |---|---|---|---|
 | 14.1 | Công tắc va chạm | Công tắc hành trình 3 chân (COM/NO/NC): dò chân bằng thang thông mạch, rồi COM → GND, NO → GPIO12 bật pull-up nội | NO thông COM chỉ khi nhấn. Đây là "cản va" phía trước robot hút bụi |
 | 14.2 | Hồng ngoại tránh vật | Module FC-51 cấp **3V3**, đo OUT lúc có/không có tay chắn, rồi mới nối GPIO8; vặn biến trở chỉnh tầm | OUT ≈ 3.3V khi trống, ≈ 0V khi có vật. Vật màu đen, nắng chiếu → bắt kém |
-| 14.3 | Siêu âm HC-SR04 | VCC 5V, TRIG ← GPIO17, ECHO → cầu 10k/20k (9.5) → GPIO18; in khoảng cách | `cm = µs / 58`. Tường 20cm → xung ≈ 1160µs. Vật mềm/xiên → đo sai |
+| 14.3 | Siêu âm HC-SR04 | VCC 5V, TRIG ← GPIO17, ECHO → cầu 10k/20k (9.5) → GPIO18, đo 5V + Ω 2 con rồi tính áp Echo ≤ 3.45V trước khi nối; in khoảng cách | `cm = µs / 58`. Tường 20cm → xung ≈ 1160µs. Vật mềm/xiên → đo sai |
 | 14.4 | Chống rơi TCRT5000 | Module TCRT5000 cấp 3V3 úp xuống bàn: DO → GPIO21, AO → GPIO2 (ADC); đưa ra mép bàn | Mặt bàn sáng: AO thấp, DO = 0; nhấc lên / mép bàn: AO cao, DO = 1. Robot hút bụi dùng cách này để không lăn xuống cầu thang |
 
 ## 15. Chuyển động có phản hồi
@@ -174,6 +200,7 @@ Từ chương 16 có **pin lithium**: nối tắt = hàng chục ampe, cháy th�
 | 15.1 | Servo SG90 | Nguồn servo từ hộp 3×AAA, GND chung, dây cam ← GPIO14; PWM 50Hz, xung 1 / 1.5 / 2ms | Servo đứng ở 3 góc và **giữ** góc đó khi bị đẩy nhẹ: bên trong có biến trở đo góc + mạch tự chỉnh |
 | 15.2 | Đếm vòng bánh xe | Motor TT + đĩa 20 lỗ + cảm biến khe quang (đo OUT trước) → GPIO11, đếm bằng PCNT; motor chạy qua DRV8833 | Xung/giây ÷ 20 × 60 = vòng/phút. Pin 4.5V không tải ≈ 185 vòng/phút ≈ 62 xung/s |
 | 15.3 | Quay đúng góc bằng IMU | GY-521 (MPU-6050) chung bus I2C với OLED (41/42), đọc gyro Z, cộng dồn ra góc | Xoay board 90° trên bàn → in ≈ 90°. Để yên lâu → góc trôi dần: sai số cộng dồn |
+| 15.4 | Giữ tốc độ bằng PI | Mạch 15.2; code đo tốc độ mỗi 200ms, chỉnh duty theo sai lệch: pha P rồi pha PI; hãm tay | P: luôn thiếu đích. PI: bám đích, hãm tay thì duty tự tăng giữ tốc độ |
 
 ## 16. Pin lithium cho robot
 
@@ -188,6 +215,7 @@ Từ chương 16 có **pin lithium**: nối tắt = hàng chục ampe, cháy th�
 | # | Bài | Làm gì | Đo / thấy gì |
 |---|---|---|---|
 | 17.1 | Robot tự tránh vật | Khung 2WD: DRV8833 + 2 motor TT từ pack 2S, LM2596 → 5V board, HC-SR04 + FC-51 + công tắc va chạm; chạy thử khi **bánh nhấc khỏi mặt bàn** | Gặp vật / chạm → dừng, lùi, quay rồi đi tiếp. Pin dưới 6.6V (3.3V/cell) → tự dừng |
+| 17.2 | Xiaozhi điều khiển bánh xe | Firmware tự build có tool `self.robot.move`; server riêng chuyển tool của chip cho Gemini; nói "tiến lên một giây" (bánh nhấc khỏi bàn) | Robot chạy đúng hướng rồi tự dừng; log server in lần gọi tool |
 
 Mua thêm (đợt 4): đồ của Phần 3 — mục Đồ cần của từng bài liệt kê đủ.
 

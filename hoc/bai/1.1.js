@@ -16,6 +16,17 @@
       <p>Thang đo chọn lớn hơn số dự đoán: pin ~4.8V thì dùng <code>DCV 20</code>. Màn hiện <code>1</code> ở bên trái = quá thang, lên thang lớn hơn.</p>`,
     so_do: [{ nhan: 'ĐÚNG · song song', svg: soDo, chu: 'Đo áp: 2 que đặt song song với thứ cần đo.' }],
     du_doan: '<p>3 viên AAA mới: mỗi viên ~1.55–1.6V → hộp ≈ 4.7–4.8V. Pin gần hết: ~1.1V/viên → ~3.3V.</p>',
+    sau: `<h3>Đồng hồ có "ăn" điện của mạch không?</h3>
+      <p>Có, nhưng rất ít. Ở thang V, giữa 2 que là khoảng <b>10MΩ</b>. Đặt que lên một điểm là mắc thêm 10MΩ song song với phần mạch bên dưới điểm đó.</p>
+      <p>Đo điểm giữa cầu 10k + 10k: phía dưới thành <code>10k ∥ 10M ≈ 9.99k</code>, áp đo lệch cỡ 0.03%, coi như không có. Đo cầu <b>1M + 1M</b>: phía dưới thành <code>1M ∥ 10M ≈ 909k</code>, nên
+      <code>U = 4.78 × 909k / (1M + 909k) ≈ 2.28V</code> thay vì 2.39V, <b>thấp hơn 5%</b>. Quy tắc tay: điện trở của mạch ở chỗ đo nhỏ hơn 10MΩ cỡ 100 lần thì số đo tin được.</p>
+      <h3>Đọc màn hình cho đúng</h3>
+      <p>Thang DCV 20 hiện tối đa 19.99 và lẻ được 0.01V. Độ chính xác đồng hồ rẻ thường ghi cỡ <code>±(0.5% + 2 chữ số)</code>: số 4.78 thật ra nằm trong khoảng 4.78 ± (0.024 + 0.02) ≈ 4.74–4.82V. Vì vậy trong giáo trình, lệch dưới ~1% so với số đoán là "khớp".</p>`,
+    hoi: [
+      ['Pin đo ~4.78V mà núm để ở <code>DCV 2</code>. Màn hình hiện gì, và có hỏng gì không?', 'Hiện <code>1</code> ở bên trái: quá thang (thang 2 chỉ tới 1.999). Không hỏng; vặn lên DCV 20.'],
+      ['Que đỏ chạm cực −, que đen chạm cực +. Màn hiện <code>-4.78</code>. Nghĩa là gì?', 'Đồng hồ hiện áp que đỏ trừ áp que đen. Que đỏ đang ở điểm thấp hơn 4.78V. Không hỏng gì, chỉ đổi dấu.'],
+      ['Đo điểm giữa cầu 1M + 1M nối pin 4.78V bằng đồng hồ 10MΩ. Đoán số hiện ra.', 'Nửa dưới thành 1M ∥ 10M ≈ 909k → U ≈ 4.78 × 0.909 / 1.909 ≈ <b>2.28V</b>, thấp hơn 2.39V khoảng 5%, do đồng hồ lấy dòng.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Đo áp hộp pin',

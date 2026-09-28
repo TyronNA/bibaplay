@@ -19,6 +19,15 @@
       <p>Bỏ điện trở thì điểm đo "thả nổi": không nối chắc vào đâu. Đồng hồ (~10MΩ) tự kéo nó về 0 nên ở đây chỉ thấy số trôi khi chạm tay; ở bài 9.3, GPIO sẽ đọc ra 0/1 lung tung.</p>`,
     so_do: [{ nhan: 'Pull-up', svg: soDo, chu: 'Nhả = 1 (≈ U pin), nhấn = 0.' }],
     du_doan: '<p>Pull-up: nhả ≈ 4.78V, nhấn ≈ 0V. Pull-down: ngược lại.</p>',
+    sau: `<h3>Chọn giá trị điện trở kéo</h3>
+      <p>Nhỏ quá thì tốn điện: pull-up 100Ω, nhấn nút là <code>3.3/100 = 33mA</code> đổ xuống GND vô ích. Lớn quá thì yếu: chân vào có điện dung vài pF + dây, mạch RC làm cạnh lên chậm (<code>τ = R·C</code>: 1MΩ × 50pF = 50µs), và dòng rò hay nhiễu dễ kéo chân lệch mức. Vùng hay dùng: <b>4.7k–47k</b>. 10k là con số mặc định của dân làm mạch.</p>
+      <h3>"Thả nổi" nghĩa là gì bằng số</h3>
+      <p>Chân vào CMOS có điện trở vào cỡ GΩ trở lên. Không có gì kéo nó thì một dòng rò 1nA đi qua 1GΩ đã ra 1V — mức áp là do nhiễu và dòng rò quyết định, không phải do mạch. Đồng hồ 10MΩ chạm vào là "kéo xuống" bằng 10MΩ, nên lúc đo lại ra 0V: đo thì đổi thứ mình đang đo.</p>`,
+    hoi: [
+      ['Pull-up 10k lên 3.3V. Nhấn nút giữ 1 phút tốn bao nhiêu dòng?', '3.3/10k = <b>0.33mA</b> trong suốt lúc nhấn; nhả thì ~0.'],
+      ['Pull-up 1MΩ, dây dài có điện dung 100pF. Cạnh lên sau khi nhả nút mất cỡ bao lâu?', 'τ = 1M × 100pF = 100µs; lên tới mức 1 cỡ vài τ → <b>~0.1–0.3ms</b>. Không sao với nút, nhưng chậm cho tín hiệu nhanh.'],
+      ['Vì sao đo chân thả nổi bằng đồng hồ lại thấy 0V?', 'Đồng hồ 10MΩ tự kéo chân xuống (điện trở của nó nối tới que đen). Đồng hồ đã thay đổi mạch.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Tìm cặp chân của nút',

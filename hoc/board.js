@@ -494,6 +494,12 @@
     hop: (x, y, w, h, ten) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" class="sd-net sd-to"/>` + SD.chu(x + w / 2, y + h / 2 + 4, ten, 'sd-chu', 'middle'),
     dat: (x, y) => SD.day(`${x},${y} ${x},${y + 8}`) + `<path d="M${x - 11} ${y + 8}H${x + 11}M${x - 7} ${y + 13}H${x + 7}M${x - 3} ${y + 18}H${x + 3}" class="sd-net"/>`,
     dongHo: (x, y, chu) => `<circle cx="${x}" cy="${y}" r="16" class="sd-net"/>` + SD.chu(x, y + 5, chu, 'sd-chu', 'middle'),
+    // diode dọc chỉ lên: cathode (vạch) ở TRÊN — kiểu diode ngược song song motor, vạch về phía +
+    diodeLen: (x, y, d, nhan) => {
+      const m = y + d / 2;
+      return SD.day(`${x},${y} ${x},${m - 7}`) + `<line x1="${x - 10}" y1="${m - 7}" x2="${x + 10}" y2="${m - 7}" class="sd-net" stroke-width="2.4"/>`
+        + `<path d="M${x - 10} ${m + 9}H${x + 10}L${x} ${m - 7}Z" class="sd-net sd-to"/>` + SD.day(`${x},${m + 9} ${x},${y + d}`) + (nhan ? SD.chu(x + 16, m + 4, nhan) : '');
+    },
     // zener dọc, cathode (vạch có râu) ở TRÊN: vẽ đúng chiều mắc ngược (K về phía +)
     zener: (x, y, d, nhan) => {
       const m = y + d / 2;
@@ -522,6 +528,14 @@
       return SD.day(`${x},${y} ${x},${m - 8}`) + SD.day(`${x},${m + 8} ${x},${y + d}`) + `<path d="M${x - 14} ${m - 8}H${x + 14}M${x - 14} ${m + 8}H${x + 14}M${x - 10} ${m - 8}A12 12 0 0 1 ${x + 10} ${m - 8}" class="sd-net"/>`
         + SD.chu(x - 22, m - 8, '+', 'sd-pos') + (nhan ? SD.chu(x + 20, m + 4, nhan) : '');
     },
+    // Khối có chân ghi tên: trai/phai = danh sách tên chân. Chân thứ i nằm ở y + 20 + 20·i; đầu dây trái ở x − 12, phải ở x + w + 12.
+    khoi: (x, y, w, ten, trai = [], phai = []) => {
+      const h = Math.max(trai.length, phai.length, 1) * 20 + 20;
+      let s = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" class="sd-net sd-to"/>` + SD.chu(x + w / 2, y + h + 14, ten, 'sd-chu', 'middle');
+      trai.forEach((t, i) => { const yy = y + 20 + i * 20; s += SD.day(`${x - 12},${yy} ${x},${yy}`) + SD.chu(x + 4, yy + 4, t, 'sd-mo'); });
+      phai.forEach((t, i) => { const yy = y + 20 + i * 20; s += SD.day(`${x + w},${yy} ${x + w + 12},${yy}`) + SD.chu(x + w - 4, yy + 4, t, 'sd-mo', 'end'); });
+      return s;
+    },
     // Mạch một vòng: nguồn bên trái, các linh kiện xếp dọc bên phải từ trên xuống, nối tiếp.
     // cac: [['tro','220Ω'], ['led'], ['diode','1N4148'], ['tu','100µF',true], ['nut','S1'], ['motor'], ['dh','A'], ['ldr','quang trở'], ['zener','3.3V'], ['coi','còi']]
     // o.nguon: { tren: 'GPIO13', duoi: 'GND', ten: 'ESP32' } → vẽ khối chip thay cho pin. o.do: [i, 'V'] → vôn kế song song linh kiện thứ i.
@@ -547,7 +561,7 @@
       if (o.nguon) {
         s += SD.hop(x0 - 40, ym - 40, 70, 80, o.nguon.ten || 'ESP32') + SD.day(`${x0 + 30},${ym - 24} ${x0 + 50},${ym - 24} ${x0 + 50},30 ${X},30 ${X},30`)
           + SD.day(`${x0 + 30},${ym + 24} ${x0 + 50},${ym + 24} ${x0 + 50},${yb} ${X},${yb}`)
-          + SD.chu(x0 + 32, ym - 28, o.nguon.tren || 'GPIO', 'sd-mo') + SD.chu(x0 + 32, ym + 38, o.nguon.duoi || 'GND', 'sd-mo');
+          + SD.chu(x0 - 5, ym - 22, o.nguon.tren || 'GPIO', 'sd-mo', 'middle') + SD.chu(x0 - 5, ym + 32, o.nguon.duoi || 'GND', 'sd-mo', 'middle');
       } else {
         s += SD.pin(x0, ym, ap) + SD.day(`${x0},${ym} ${x0},30 ${X},30 ${X},30`) + SD.day(`${x0},${ym + 10} ${x0},${yb} ${X},${yb}`);
       }
@@ -585,7 +599,7 @@
       } else if (it.loai === 'led') {
         const a = P(it.a), k = P(it.b);
         if (b.mat !== 'duoi') duoi.push(`<circle cx="${(a.x + k.x) / 2}" cy="${(a.y + k.y) / 2}" r="11" style="fill:#E5372C;opacity:.9"/><text x="${a.x}" y="${a.y - 13}" text-anchor="middle" class="bb-cuc">+</text>`);
-        if (it.nhan) tren.push(`<text x="${Math.max(a.x, k.x) + 14}" y="${a.y + 4}" class="bb-nhan">${esc(it.nhan)}</text>`);
+        if (it.nhan && b.mat !== 'duoi') tren.push(`<text x="${Math.max(a.x, k.x) + 14}" y="${a.y + 4}" class="bb-nhan">${esc(it.nhan)}</text>`);
       } else if (it.loai === 'day') {
         const pts = it.pts.map(P);
         (it.tren ? duoi : duoi).push(`<polyline points="${pts.map(q => `${q.x},${q.y}`).join(' ')}" class="${it.thiec ? 'pb-thiec' : 'pb-day'}" style="${it.mau ? `stroke:${it.mau}` : ''}"/>`);

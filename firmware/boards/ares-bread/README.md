@@ -5,6 +5,8 @@ Board riêng: phần cứng và đi dây y hệt `bread-compact-wifi` biến th�
 
 - Màn hình dùng `RobotFaceDisplay`: giữ thanh trạng thái 16 px của xiaozhi, còn vùng 48 px bên dưới
   hiện mặt robot (`robot_face.c`, dùng chung với bản giả lập `sandbox/robot-face`).
+- Tool MCP bánh xe `self.robot.move` / `self.robot.stop` (bài 17.2): DRV8833 ở GPIO 9/10 (motor trái) và 14/21 (motor phải), như bài 17.1.
+  Giới hạn trong firmware: tốc độ ≤ 70%, mỗi lệnh ≤ 3s, tự tắt bằng `esp_timer`. Không nối motor thì các chân này chỉ ra PWM 0%.
 - `CONFIG_OTA_URL` trỏ về server riêng (`server/app.py`) thay vì xiaozhi.me.
 
 Board type riêng (`ares-bread`) để OTA của upstream không bao giờ đè firmware này bằng bản gốc.

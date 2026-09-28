@@ -14,6 +14,20 @@
       <p>Robot thật dùng 3–4 cảm biến kiểu này ở mép dưới đáy. Sàn đen, thảm tối phản xạ yếu → bị coi như mép vực: robot hút bụi rẻ tiền hay "sợ" thảm đen vì đúng lý do này.</p>`,
     code: 'sandbox/esp32-bai/main/bai_14_4.c',
     du_doan: '<p>Giấy trắng sát mắt (~5mm): DO = 0, AO thấp. Không có gì (như mép vực): DO = 1, AO cao (≈ VCC). Vật đen ở 5mm: gần giống không có gì.</p>',
+    so_do: [{ nhan: 'Bên trong module TCRT5000', svg: SD.svg(360, 220, SD.day('20,30 330,30') + SD.chu(24, 22, 'VCC 3V3', 'sd-pos') + SD.day('60,30 60,40') + SD.tro(60, 40, 40, 'R') + SD.day('60,80 60,86') + SD.led(60, 86) + SD.chu(20, 140, 'hồng ngoại', 'sd-mo') + SD.day('60,126 60,190')
+      + SD.day('170,30 170,40') + SD.tro(170, 40, 40, 'R') + SD.day('170,80 170,100') + SD.cham(170, 90) + SD.npn(160, 130) + SD.day('170,160 170,190') + SD.chu(186, 184, 'phototransistor', 'sd-mo')
+      + SD.day('170,90 195,90 195,142 230,142') + SD.chu(198, 84, 'AO', 'sd-chu') + SD.day('205,118 230,118') + SD.chu(206, 112, 'ngưỡng', 'sd-mo') + SD.opamp(250, 130, 'LM393') + SD.day('290,130 330,130') + SD.chu(334, 134, 'DO', 'sd-chu')
+      + SD.day('20,190 330,190') + SD.chu(24, 206, 'GND', 'sd-mo'),
+      'LED hồng ngoại qua điện trở; phototransistor kéo điểm AO xuống khi thấy phản xạ; LM393 so AO với ngưỡng ra DO'), chu: 'Phản xạ mạnh → phototransistor dẫn → AO thấp → DO = 0. Giá trị R tuỳ module.' }],
+    sau: `<h3>AO là một cầu phân áp</h3>
+      <p>Phototransistor như một điện trở đổi theo ánh sáng (bài 2.4, nhưng nhanh hơn quang trở hàng nghìn lần). Nối với R lên VCC: AO = VCC − I_quang·R. Phản xạ mạnh → dòng lớn → AO thấp. Không có gì (mép vực) → dòng ~0 → AO ≈ VCC. Chỉ đọc AO là biết cả "sàn đang tối dần" chứ không chỉ có/không.</p>
+      <h3>Vì sao phải gắn sát sàn</h3>
+      <p>LED và phototransistor đặt cạnh nhau, chùm sáng chỉ chồng lên nhau ở một vùng hẹp phía trước: gần quá thì chùm chưa giao, xa quá thì ánh sáng loang và yếu theo bình phương khoảng cách. Datasheet Vishay: mạnh nhất quanh 2.5mm. Robot hút bụi gắn cảm biến chống rơi cách sàn chỉ vài mm vì lý do này.</p>`,
+    hoi: [
+      ['AO đọc được 2.9V, 3.1V, 3.2V khi dịch dần ra mép bàn. Nghĩa là gì?', 'Phản xạ yếu dần: sắp tới mép. Robot có thể giảm tốc trước khi DO báo hẳn.'],
+      ['Thảm đen dưới robot bị coi là mép vực. Chữa bằng cách nào?', 'Đặt ngưỡng dựa trên AO với biên cho thảm tối, hoặc kết hợp thêm cảm biến khác (va chạm, encoder thấy bánh quay tự do).'],
+      ['Vì sao cấp 5V cho module rồi nối AO vào ADC là sai?', 'AO lên tới VCC = 5V, vượt 3.6V chân chịu và vượt dải ADC.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Nguồn, đo DO/AO, rồi nối GPIO',
       buoc: [

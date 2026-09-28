@@ -16,6 +16,17 @@
       <p>Chỉ 1 đồng hồ: đo U trước (dây đen cắm), rồi thay dây đen bằng đồng hồ ở chế độ mA để đo I. Cách cắm mA giống bài 1.2.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Hai chỗ đặt đồng hồ; bài này đo lần lượt từng chỗ.' }],
     du_doan: `<p><code>I = 4.78 / R</code>: 220Ω → 21.7mA · 1k → 4.78mA · 10k → 0.478mA · 100k → 47.8µA.</p>`,
+    sau: `<h3>Vẽ U theo I: đường thẳng đi qua gốc</h3>
+      <p>Ghi 4 cặp (I, U) lên giấy kẻ ô: với điện trở, các điểm nằm trên một đường thẳng đi qua gốc toạ độ, <b>độ dốc chính là R</b>. Đo nhiều điểm rồi tính độ dốc chính xác hơn tính từ một điểm, vì sai số từng điểm bù nhau.</p>
+      <p>Với LED thì đường này cong: gần như nằm ngang ở ~1.8–2V, dòng tăng mà áp gần như đứng yên. Tỉ số U/I tại mỗi điểm khác nhau, nên "điện trở của LED" không phải một con số.</p>
+      <h3>Sai số của R tính ra</h3>
+      <p><code>R = U / I</code>: sai số tương đối của R ≈ sai số của U cộng sai số của I. Đồng hồ ±0.5% ở thang V và ±1% ở thang mA → R tính ra lệch tới ~1.5% mà không có gì sai cả. Cộng thêm sai số ±5% của chính điện trở, lệch 5–6% so với số in là bình thường.</p>
+      <p>Với 100k (47.8µA), thang 20mA chỉ lẻ tới 0.01mA = 10µA: số hiện 0.05, sai tới ~5%. Đó là lúc phải lên thang nhỏ hơn (nếu máy có 200µA) hoặc tính I từ U/R.</p>`,
+    hoi: [
+      ['Con 1k: đo U = 4.76V, I = 4.70mA. R tính ra bằng bao nhiêu? Có "sai" không?', 'R = 4.76 / 0.00470 ≈ <b>1013Ω</b>. Nằm trong ±5% của 1k, không sai.'],
+      ['Vì sao với LED, U/I không phải hằng số?', 'LED giữ áp gần như cố định (~1.8–2V) trong khi dòng đổi nhiều lần. U gần như đứng yên còn I thay đổi, nên tỉ số đổi theo dòng.'],
+      ['Mọi điện trở trong bài đều ≥ 220Ω. Công suất lớn nhất là bao nhiêu, có an toàn với loại 1/4W không?', 'P = 4.78² / 220 ≈ <b>0.10W</b> &lt; 0.25W: an toàn.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Ráp với 1k, đo U',
@@ -45,15 +56,15 @@
         ten: 'Phần 3 · Đổi điện trở: 220Ω, 10k, 100k', ke_thua: true,
         gioi_thieu: 'Trước phần này: đo Ω rời cả 3 con (như bài 1.3) và ghi lại; con nào dưới 200Ω thì không dùng, vì lúc đồng hồ đang kẹp ở mA sẽ không đo Ω lại được. Mỗi giá trị làm đúng thứ tự: tháo pin → đổi điện trở → kiểm que → lắp pin đọc I → tháo pin. Thang dòng: 220Ω dùng DCA 200m; 10k dùng DCA 2m; 100k dùng DCA 200µ.',
         buoc: [
-          K.thaoPin(['Rút 1k ra, cắm 220Ω vào đúng 5e → 5f. Đồng hồ giữ nguyên kẹp, núm lên <code>DCA 200m</code>.'], { bo: ['r'], them: [R('220')] }),
+          K.thaoPin(['Con 220Ω sắp cắm phải là con đã đo Ω rời ở đầu phần này (209–231Ω). Không chắc thì đo lại rời trước khi cắm.', 'Rút 1k ra, cắm 220Ω vào đúng 5e → 5f. Đồng hồ giữ nguyên kẹp, núm lên <code>DCA 200m</code>.'], { bo: ['r'], them: [R('220')] }),
           { ten: 'Kiểm lại que trước khi lắp pin', kiem_truoc: true, lam: ['Que đỏ vẫn ở 5j, que đen vẫn ở thanh −, núm DCA 200m.'], board: { them: [K.dh('DCA 200m', '5j', 'B-:7', '—', 'mA')] }, kiem: { thay: 'Không que nào chạm thanh +.', neu_khong: 'Sửa trước khi lắp pin.' } },
           K.lapPin('Lắp pin, đọc I với 220Ω', ['Đọc nhanh, ghi, rồi tháo pin. 220Ω lúc này ăn ~0.1W, ấm nhẹ là bình thường.'], { them: [K.dh('DCA 200m', '5j', 'B-:7', '≈ 21.7', 'mA')] },
             { thay: '≈ 21–22 mA.', neu_khong: 'Nóng rõ: tháo pin, kiểm lại vòng màu (có thể cắm nhầm con 22Ω).' }),
-          K.thaoPin(['Rút 220Ω, cắm 10k (nâu-đen-cam) vào 5e → 5f. Núm xuống <code>DCA 2m</code>. Kẹp giữ nguyên.'], { bo: ['r'], them: [R('10k')] }),
+          K.thaoPin(['Con 10k sắp cắm: đã đo rời (9.5–10.5k).', 'Rút 220Ω, cắm 10k (nâu-đen-cam) vào 5e → 5f. Núm xuống <code>DCA 2m</code>. Kẹp giữ nguyên.'], { bo: ['r'], them: [R('10k')] }),
           { ten: 'Kiểm lại que trước khi lắp pin', kiem_truoc: true, lam: ['Que đỏ vẫn ở 5j, que đen vẫn ở thanh −, núm DCA 2m.'], board: { them: [K.dh('DCA 2m', '5j', 'B-:7', '—', 'mA')] }, kiem: { thay: 'Không que nào chạm thanh +.', neu_khong: 'Sửa trước khi lắp pin.' } },
           K.lapPin('Lắp pin, đọc I với 10k', ['Đọc, ghi, tháo pin.'], { them: [K.dh('DCA 2m', '5j', 'B-:7', '≈ 0.478', 'mA')] },
             { thay: '≈ 0.47–0.48 mA.', neu_khong: 'Hiện <code>1</code>: quá thang, lên lại <code>DCA 20m</code>.' }),
-          K.thaoPin(['Rút 10k, cắm 100k (nâu-đen-vàng) vào 5e → 5f. Núm xuống <code>DCA 200µ</code>.'], { bo: ['r'], them: [R('100k')] }),
+          K.thaoPin(['Con 100k sắp cắm: đã đo rời (95–105k).', 'Rút 10k, cắm 100k (nâu-đen-vàng) vào 5e → 5f. Núm xuống <code>DCA 200µ</code>.'], { bo: ['r'], them: [R('100k')] }),
           { ten: 'Kiểm lại que trước khi lắp pin', kiem_truoc: true, lam: ['Que đỏ vẫn ở 5j, que đen vẫn ở thanh −, núm DCA 200µ.'], board: { them: [K.dh('DCA 200µ', '5j', 'B-:7', '—', 'mA')] }, kiem: { thay: 'Không que nào chạm thanh +.', neu_khong: 'Sửa trước khi lắp pin.' } },
           K.lapPin('Lắp pin, đọc I với 100k', ['Đọc, ghi, tháo pin.'], { them: [K.dh('DCA 200µ', '5j', 'B-:7', '≈ 47.8', 'mA')] },
             { thay: '≈ 47–48 µA.', neu_khong: 'Đọc ra 0: thang chưa đủ nhỏ, hoặc đồng hồ không có thang µA — ghi "không đo được".' }),

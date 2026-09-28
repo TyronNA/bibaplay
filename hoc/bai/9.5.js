@@ -17,6 +17,16 @@
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Chỉ nối GPIO sau khi đã đo điểm giữa ≤ 3.4V.' }],
     code: 'sandbox/esp32-bai/main/bai_9_3.c',
     du_doan: '<p>Điểm giữa ≈ 3.2–3.4V. GPIO12 đọc ra 1.</p>',
+    sau: `<h3>Tính cho trường hợp xấu nhất</h3>
+      <p>5V × 20k/30k = 3.33V là với số danh nghĩa. Điện trở ±5% và USB 5.25V: xấu nhất R1 = 9.5k, R2 = 21k → <code>5.25 × 21/30.5 ≈ 3.61V</code> — <b>chạm</b> mức 3.6V tối đa. Chưa hỏng, nhưng không có dư. Bài này vẫn dùng 10k/20k vì bạn <b>đo</b> điểm giữa trên đúng board và đúng 2 con điện trở của mình: ra ≤ 3.45V là còn dư 0.15V. Mạch không đo từng cái (làm hàng loạt, hay nguồn 5V lạ) thì chọn tỉ lệ thấp hơn, vd 10k + 15k:</p>
+      <p>Danh nghĩa 3.0V; xấu nhất cao: 5.25 × 15.75/(9.5 + 15.75) ≈ 3.27V; xấu nhất thấp: 4.75 × 14.25/(10.5 + 14.25) ≈ 2.73V — vẫn trên ngưỡng 1 (2.475V). Thiết kế đúng là kiểm cả 2 đầu.</p>
+      <h3>Cầu phân áp nhanh cỡ nào</h3>
+      <p>Chân vào có ~5–10pF. R_th của cầu = 10k ∥ 20k ≈ 6.7k → τ ≈ 6.7k × 10pF ≈ 67ns: đủ cho tín hiệu tới cỡ 1MHz (Echo của HC-SR04, UART 115200). I2C 2 chiều thì cầu không dùng được (chỉ hạ 1 chiều) → dùng module chuyển mức MOSFET BSS138.</p>`,
+    hoi: [
+      ['Cầu 10k + 22k từ 5V. Điểm giữa danh nghĩa bao nhiêu? An toàn không?', '5 × 22/32 ≈ <b>3.44V</b>; xấu nhất vượt 3.6V → không nên.'],
+      ['Vì sao không nối 5V qua một điện trở 10k vào GPIO rồi thôi?', 'Chân sẽ bị kéo lên 5V qua diode bảo vệ bên trong chip, đẩy dòng vào đường 3.3V — không được datasheet cho phép lâu dài.'],
+      ['Cầu 10k + 20k tốn bao nhiêu dòng từ 5V?', '5/30k ≈ <b>0.17mA</b>.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Cầu phân áp, chưa nối GPIO',
@@ -24,7 +34,7 @@
           { ten: 'Cầu 10k + 20k', lam: ['USB rút. 10k 5c → 9c. 20k (đỏ-đen-cam) vắt qua rãnh 9e → 9f. Dây đen 9j → thanh −.'], board: { them: [R1, R2, DK] } },
           { ten: 'Dây 5V và GND từ board', lam: ['<code>5V</code> → <b>5a</b> (không phải thanh +). <code>GND</code> → thanh − dưới. Chưa nối chân GPIO nào.'], board: { them: [ESP0] } },
           { ten: 'Đo trước khi cắm USB', kiem_truoc: true, lam: ['<code>Ω 200k</code>. Que đỏ 5b (5V), que đen thanh −.'], board: { them: [K.dh('Ω 200k', '5b', 'B-:12', '≤ 30')] }, kiem: { thay: '≈ 30k song song với mốc 5V–GND ở 8.1 → không dưới 100Ω.', neu_khong: 'Gần 0: dây 5V đang chạm GND. Không cắm USB.' } },
-          K.camUsb('Cắm USB, đo điểm giữa', ['<code>DCV 20</code>, que đỏ 9b, que đen thanh −. Đo cả 5V (5b).'], { them: [K.dh('DCV 20', '9b', 'B-:12', '≈ 3.3')] }, { thay: '5V ≈ 4.8–5.1; điểm giữa ≈ 3.2–3.4, <b>không quá 3.5</b>.', neu_khong: 'Điểm giữa > 3.5: 2 điện trở đảo chỗ hoặc sai giá trị. Không đi tiếp.' }),
+          K.camUsb('Cắm USB, đo điểm giữa', ['<code>DCV 20</code>, que đỏ 9b, que đen thanh −. Đo cả 5V (5b).'], { them: [K.dh('DCV 20', '9b', 'B-:12', '≈ 3.3')] }, { thay: '5V ≈ 4.8–5.1; điểm giữa ≈ 3.2–3.4, <b>không quá 3.45</b>.', neu_khong: 'Điểm giữa > 3.45: 2 điện trở đảo chỗ, sai giá trị, hoặc 5V của cổng USB cao. Không đi tiếp: thay 20k bằng con nhỏ hơn (15k–18k), hoặc thêm 2.2k nối tiếp con 10k, đo lại.' }),
           K.rutUsb(),
         ],
       },

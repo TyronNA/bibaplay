@@ -14,6 +14,16 @@
       <p>LED chịu áp ngược tối đa ~5V; 4.78V vẫn trong giới hạn nên không cháy dù không có diode. Với nguồn cao hơn (pin lithium 2 cell 8.4V) thì không còn đúng.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Vạch của 1N4007 hướng về phía mạch.' }],
     du_doan: '<p>Chiều đúng: áp sau diode ≈ 4.78 − 0.72 ≈ 4.06V → I ≈ (4.06 − 1.9)/220 ≈ 9.8mA (không có diode là ~13mA). Chiều ngược: LED tắt. Diode và LED cùng chặn, 4.78V chia giữa 2 con tuỳ dòng rò của mỗi con — đo mới biết.</p>',
+    sau: `<h3>Cái giá của diode chống ngược, bằng số</h3>
+      <p>Mất ~0.7V trên 4.78V là mất <b>15%</b> áp. Với pack 2S (7.4V) chỉ còn ~9%, nên nguồn càng cao, diode chống ngược càng "rẻ".</p>
+      <p>Diode còn đốt công suất <code>P = U_d · I</code>. Robot kéo 1A qua 1N4007 (ở 1A sụt ~0.9–1V theo datasheet): <b>~1W</b> nóng trong một con diode nhỏ. Thân 1N4007 chịu được nhưng nóng tay, và đó là 1W pin phải trả mà không làm gì có ích.</p>
+      <h3>Cách làm tốt hơn</h3>
+      <p><b>Diode Schottky</b> (1N5819): sụt ~0.3–0.45V ở dòng nhỏ, ≤ 0.6V ở 1A — mất bớt gần một nửa. <b>MOSFET kênh P</b> đặt ngược: khi pin đúng chiều, MOSFET dẫn với điện trở vài chục mΩ → ở 1A chỉ mất vài chục mV. Cắm ngược thì cổng G không được phân cực, MOSFET khoá. Mạch nguồn thiết bị bán ngoài chợ thường dùng cách này.</p>`,
+    hoi: [
+      ['Mạch 4.2 kéo 10mA qua 1N4007 sụt 0.72V. Diode đốt bao nhiêu công suất?', '0.72 × 0.01 = <b>7.2mW</b> — không đáng kể ở dòng nhỏ.'],
+      ['Cùng diode đó, robot kéo 1.5A. Vì sao không ổn?', 'Sụt ~1V × 1.5A ≈ <b>1.5W</b> nhiệt, sát/vượt mức 1N4007 chịu (1A liên tục), và mất ~1V áp cho motor.'],
+      ['Có cách nào chống cắm ngược mà gần như không mất áp?', 'MOSFET kênh P mắc ngược trên đường +: dẫn khi đúng chiều (mất vài chục mV), khoá khi ngược.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Chiều đúng',

@@ -43,9 +43,19 @@ def wav_frames(path: str) -> list[bytes]:
     return [pcm[i:i + N * 2] for i in range(0, len(pcm), N * 2)]
 
 
+# Tool giả giống cách firmware ares-bread đăng ký (bài 17.2): Property của xiaozhi chỉ có bool/int/string + min/max/default.
+TOOLS = [{"name": "self.robot.move", "description": "Cho robot chạy một đoạn ngắn rồi tự dừng.",
+          "inputSchema": {"type": "object", "properties": {
+              "huong": {"type": "string"},
+              "toc_do": {"type": "integer", "minimum": 0, "maximum": 70, "default": 50},
+              "thoi_gian_ms": {"type": "integer", "minimum": 100, "maximum": 3000, "default": 800}},
+              "required": ["huong"]}}]
+
+
 class Device:
     def __init__(self, ws, sid: str, out_rate: int):
         self.ws, self.sid = ws, sid
+        self.calls = []                     # tools/call server đã gọi xuống chip
         self.enc = opuslib.Encoder(SR, 1, opuslib.APPLICATION_VOIP)
         self.dec = opuslib.Decoder(out_rate, 1)
         self.out_samples = out_rate * FRAME_MS // 1000
@@ -71,10 +81,32 @@ class Device:
             if m.type != aiohttp.WSMsgType.TEXT:
                 raise RuntimeError(f"server đóng kết nối: {m.type} {m.data}")
             msg = json.loads(m.data)
+            if msg.get("type") == "mcp":        # server hỏi tool của chip như firmware thật trả lời
+                await self.mcp(msg.get("payload") or {})
+                continue
             texts.append(msg)
             print("  <-", {k: v for k, v in msg.items() if k != "session_id"})
             if msg.get("type") == "tts" and msg.get("state") == "stop":
                 return texts, bytes(pcm)
+
+
+    async def mcp(self, p: dict):
+        method, rid = p.get("method"), p.get("id")
+        print("  mcp <-", method, p.get("params"))
+        if method == "initialize":
+            res = {"protocolVersion": "2024-11-05", "capabilities": {"tools": {}},
+                   "serverInfo": {"name": "fake", "version": "0"}}
+        elif method == "tools/list":
+            res = {"tools": TOOLS, "nextCursor": ""}
+        elif method == "tools/call":
+            self.calls.append(p.get("params") or {})
+            res = {"content": [{"type": "text", "text": "true"}], "isError": False}
+        else:
+            await self.ws.send_str(json.dumps({"session_id": self.sid, "type": "mcp", "payload": {
+                "jsonrpc": "2.0", "id": rid, "error": {"code": -32601, "message": f"Method not implemented: {method}"}}}))
+            return
+        await self.ws.send_str(json.dumps({"session_id": self.sid, "type": "mcp",
+                                           "payload": {"jsonrpc": "2.0", "id": rid, "result": res}}))
 
 
 def kinds(texts):
@@ -139,6 +171,9 @@ async def main(a) -> int:
                        and emo == ["happy"] and subs == ["Chào bạn!", "Mình là ARES."]
                        and k1[-1] == ("tts", "stop") and 1.2 <= sec1 <= 1.3)
                 print(f"  audio {sec1:.2f} s (mock gửi 1.2 s), phụ đề {subs}, cảm xúc {emo} -> {'ok' if ok1 else 'SAI'}")
+                ok_chip = [c.get("name") for c in dev.calls] == ["self.robot.move"] and dev.calls[0]["arguments"].get("huong") == "tien"
+                print(f"  tool của chip được gọi: {dev.calls} -> {'ok' if ok_chip else 'SAI'}")
+                ok1 = ok1 and ok_chip
 
                 print("lượt 2 (bị ngắt lời):")
                 await dev.say(tone_frames(20, 5), realtime=False)

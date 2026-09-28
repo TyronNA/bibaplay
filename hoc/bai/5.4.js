@@ -21,6 +21,16 @@
       <p>Biến trở chỉ dùng A và W (kiểu A, bài 2.3). Chân B của biến trở bỏ trống.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Trên: biến trở + 47k. Dưới: quang trở. Giữa → chân B.' }],
     du_doan: '<p>Sáng phòng (quang trở 5–20k): LED mờ hoặc tắt. Che bằng tay (≥ 100k): LED sáng hẳn, U_B ≈ 0.7V.</p>',
+    sau: `<h3>Tính ngưỡng bật</h3>
+      <p>Transistor bắt đầu dẫn khi áp chân B ≈ 0.65V: <code>4.78 × R_q / (R_trên + R_q) = 0.65</code> → <code>R_q = 0.65/4.13 × R_trên ≈ 0.157·R_trên</code>. R_trên = 47k + biến trở (0–10k) → ngưỡng R_q ≈ <b>7.4k–9k</b>: vặn biến trở là dời ngưỡng trong khoảng đó.</p>
+      <h3>Vì sao LED sáng dần chứ không bật "tách"</h3>
+      <p>Quanh ngưỡng, transistor ở vùng khuếch đại: áp B nhích vài chục mV là dòng C đổi nhiều lần (bài 4.1: ×10 dòng mỗi ~60mV). Cầu phân áp lại bị chính dòng B kéo xuống. Kết quả: một vùng chuyển tiếp mềm, trời chạng vạng thì LED sáng lưng chừng hoặc chập chờn.</p>
+      <p>Cách chữa là <b>trễ (hysteresis)</b>: bật ở một ngưỡng, tắt ở ngưỡng khác cao hơn chút. Mạch điện làm bằng bộ Schmitt trigger (thêm phản hồi dương); bài 10.2 làm bằng 2 dòng code.</p>`,
+    hoi: [
+      ['R_trên = 57k (biến trở vặn hết). Quang trở dưới bao nhiêu thì LED tắt?', 'Ngưỡng ≈ 0.157 × 57k ≈ <b>8.9k</b>: dưới đó áp B &lt; 0.65V, LED tắt.'],
+      ['Thay 47k bằng 100k. Ngưỡng mới khoảng bao nhiêu?', '0.157 × (100k … 110k) ≈ <b>15.7k–17.3k</b>: quang trở phải lên cao hơn, tức <b>phải tối hơn</b> mới bật. Dùng khi phòng hơi tối mà LED đã sáng suốt.'],
+      ['Vì sao LED sáng lưng chừng lúc chạng vạng?', 'Transistor ở vùng khuếch đại quanh ngưỡng, không có trễ nên không nhảy hẳn sang bật hay tắt.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Ráp', cot: 24,

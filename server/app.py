@@ -26,7 +26,7 @@ import aiohttp
 import opuslib
 from aiohttp import WSMsgType, web
 
-from mcp_hub import McpHub
+from mcp_hub import McpHub, gemini_name, gemini_schema
 from tracing import Tracer
 
 log = logging.getLogger("server")
@@ -41,6 +41,7 @@ SPEECH_RMS = 500        # biên độ int16; tiếng ồn phòng thường < 200
 END_SILENCE_MS = 700    # im lặng bấy lâu sau khi đã có tiếng nói = hết câu
 MAX_UTTERANCE_MS = 15000
 RESULT_MAX = 6000       # ký tự kết quả tool gửi lại Gemini; dài hơn chỉ tốn token, robot đọc không hết
+DEVICE_TIMEOUT = 5      # s chờ chip trả lời MCP (initialize, tools/list, tools/call)
 
 GEMINI_WS = ("wss://generativelanguage.googleapis.com/ws/"
              "google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent")
@@ -57,6 +58,11 @@ TOOL_RULES = (
     "rồi chỉ nói lại ý chính (vài mục quan trọng nhất), không đọc nguyên danh sách. "
     "Trước khi gọi tool làm thay đổi dữ liệu (gửi, trả lời, comment, tạo, sửa, xoá), phải đọc lại "
     "nội dung sẽ làm và chờ chủ nhân nói đồng ý rõ ràng. Tool báo lỗi thì nói thật là lỗi.")
+# Chỉ nối vào prompt khi chip có tool (MCP phía thiết bị, vd motor ở bài 17.2). Robot chạy thật trên sàn nên phải dặn.
+DEVICE_RULES = (
+    "Các tool tên bắt đầu bằng chip__ điều khiển chính thân robot (bánh xe, âm lượng…). "
+    "Chỉ cho robot di chuyển khi chủ nhân yêu cầu rõ ràng, mỗi lần một đoạn ngắn; nghe không rõ thì hỏi lại. "
+    "Chủ nhân nói dừng thì gọi tool dừng ngay.")
 # phải khớp tên trong firmware/boards/ares-bread/robot_face.c
 EMOTIONS = ["neutral", "happy", "sad", "angry", "surprised", "thinking", "sleepy", "winking", "confused"]
 
@@ -126,6 +132,12 @@ class Session:
         self.id = uuid.uuid4().hex[:12]
         self.decoder = opuslib.Decoder(IN_RATE, 1)
         self.listening = False
+        # MCP phía thiết bị: server là client, chip là server (xiaozhi-esp32/docs/mcp-protocol.md)
+        self.dev_tools: dict[str, tuple[str, dict]] = {}   # tên đưa Gemini -> (tên tool trên chip, declaration)
+        self.dev_ready = asyncio.Event()
+        self.rpc_id = 0
+        self.rpc_wait: dict[int, asyncio.Future] = {}
+        self.mcp_task = None
 
     async def send(self, **msg):
         msg.setdefault("session_id", self.id)
@@ -139,6 +151,10 @@ class Session:
             await self.send(type="hello", transport="websocket",
                             audio_params={"format": "opus", "sample_rate": self.out_rate,
                                           "channels": 1, "frame_duration": FRAME_MS})
+            if (msg.get("features") or {}).get("mcp") and self.mcp_task is None:
+                self.mcp_task = asyncio.create_task(self.load_device_tools())
+            else:
+                self.dev_ready.set()
         elif t == "listen":
             state = msg.get("state")
             log.info("[%s] listen %s mode=%s", self.id, state, msg.get("mode"))
@@ -154,11 +170,81 @@ class Session:
         else:
             log.info("[%s] <- %s", self.id, msg)
 
+    # ---- MCP với chip ----
+    # Tin "mcp" được websocket() giao thẳng cho on_mcp lúc vừa đọc, không qua hàng đợi: chip gửi hello rồi
+    # listen start liền nhau, và xử lý listen start (mở Gemini) phải chờ được danh sách tool mà không chặn việc đọc.
+
+    async def rpc(self, method: str, params: dict, timeout: float = DEVICE_TIMEOUT) -> dict:
+        self.rpc_id += 1
+        rid = self.rpc_id
+        fut = asyncio.get_running_loop().create_future()
+        self.rpc_wait[rid] = fut
+        try:
+            await self.send(type="mcp", payload={"jsonrpc": "2.0", "method": method, "params": params, "id": rid})
+            return await asyncio.wait_for(fut, timeout)
+        finally:
+            self.rpc_wait.pop(rid, None)
+
+    def on_mcp(self, p: dict):
+        fut = self.rpc_wait.get(p.get("id"))
+        if fut is not None and not fut.done():
+            fut.set_result(p)
+        else:                               # thông báo từ chip (notifications/...) hoặc trả lời đã quá hạn
+            log.info("[%s] mcp <- %s", self.id, json.dumps(p, ensure_ascii=False)[:300])
+
+    async def load_device_tools(self):
+        try:
+            await self.rpc("initialize", {"capabilities": {}})
+            tools, cursor = [], ""
+            while True:
+                res = (await self.rpc("tools/list", {"cursor": cursor})).get("result") or {}
+                tools += res.get("tools") or []
+                cursor = res.get("nextCursor") or ""
+                if not cursor:
+                    break
+            for t in tools:
+                if not t.get("name"):
+                    continue
+                decl = {"name": gemini_name("chip", t["name"]), "description": (t.get("description") or t["name"])[:2000]}
+                params = gemini_schema(t.get("inputSchema") or {})
+                if params.get("properties"):
+                    decl["parameters"] = params
+                self.dev_tools[decl["name"]] = (t["name"], decl)
+            log.info("[%s] chip có %d tool: %s", self.id, len(tools), [t.get("name") for t in tools])
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:              # chip cũ / không trả lời: chạy tiếp không có tool của chip
+            log.warning("[%s] không lấy được tool của chip: %r", self.id, e)
+        finally:
+            self.dev_ready.set()
+
+    async def call_device(self, name: str, args: dict) -> tuple[str, bool]:
+        """Trả (text, is_error) như McpHub.call."""
+        orig = self.dev_tools[name][0]
+        try:
+            r = await self.rpc("tools/call", {"name": orig, "arguments": args or {}})
+        except asyncio.TimeoutError:
+            return f"chip không trả lời tool {orig} sau {DEVICE_TIMEOUT} s", True
+        if "error" in r:
+            e = r["error"] or {}
+            return str(e.get("message") if isinstance(e, dict) else e), True
+        res = r.get("result") or {}
+        text = "\n".join(c.get("text", f"[{c.get('type')}]") for c in res.get("content") or [])
+        return text, bool(res.get("isError"))
+
+    def close_mcp(self):
+        if self.mcp_task is not None:
+            self.mcp_task.cancel()
+        for fut in self.rpc_wait.values():
+            if not fut.done():
+                fut.cancel()
+
     async def on_listen_start(self): ...
     async def on_listen_stop(self): ...
     async def on_abort(self): ...
     async def on_audio(self, frame: bytes): ...
-    async def close(self): ...
+    async def close(self):
+        self.close_mcp()
 
 
 class EchoSession(Session):
@@ -248,7 +334,12 @@ class GeminiSession(Session):
             self.gws = await self.http.ws_connect(f"{self.url}?key={self.key}", heartbeat=20)
             self.conn += 1
             mcp_tools = self.hub.declarations()
-            prompt = SYSTEM_PROMPT + ("\n" + TOOL_RULES if mcp_tools else "")
+            try:                            # tool của chip lấy song song từ lúc hello; thường đã xong
+                await asyncio.wait_for(self.dev_ready.wait(), DEVICE_TIMEOUT)
+            except asyncio.TimeoutError:
+                pass
+            dev_tools = [d for _, d in self.dev_tools.values()]
+            prompt = SYSTEM_PROMPT + ("\n" + TOOL_RULES if mcp_tools else "") + ("\n" + DEVICE_RULES if dev_tools else "")
             await self.gws.send_str(json.dumps({"setup": {
                 "model": f"models/{GEMINI_MODEL}",
                 "generationConfig": {
@@ -263,7 +354,7 @@ class GeminiSession(Session):
                     "description": "Đổi nét mặt robot trên màn hình.",
                     "parameters": {"type": "OBJECT", "properties": {
                         "emotion": {"type": "STRING", "enum": EMOTIONS}}, "required": ["emotion"]},
-                }] + mcp_tools}],
+                }] + mcp_tools + dev_tools}],
             }}))
             first = await asyncio.wait_for(self.gws.receive(), 15)
             msg = {}
@@ -274,8 +365,8 @@ class GeminiSession(Session):
                 await self.gws.close()
                 self.gws = None
                 raise RuntimeError(f"Gemini setup thất bại: {str(why)[:300]}")
-            log.info("[%s] Gemini Live sẵn sàng (%s, giọng %s, %d tool MCP)", self.id, GEMINI_MODEL,
-                     GEMINI_VOICE, len(mcp_tools))
+            log.info("[%s] Gemini Live sẵn sàng (%s, giọng %s, %d tool MCP, %d tool chip)", self.id, GEMINI_MODEL,
+                     GEMINI_VOICE, len(mcp_tools), len(dev_tools))
             self.reader = asyncio.create_task(self.read_loop(self.gws))
 
     async def on_listen_start(self):
@@ -392,6 +483,14 @@ class GeminiSession(Session):
                 await self.send(type="llm", emotion=emo if ok else "neutral")
                 text, err = ("ok" if ok else "unknown"), not ok
                 response = {"result": text}
+            elif name in self.dev_tools:
+                log.info("[%s] tool chip %s %s", self.id, name, json.dumps(args, ensure_ascii=False)[:200])
+                try:
+                    text, err = await self.call_device(name, args)
+                except asyncio.CancelledError:
+                    self.tracer.tool_call(self.id, turn_id, fc.get("id"), name, args, "(bị huỷ)", True, t0)
+                    raise
+                response = {"error": text[:RESULT_MAX]} if err else {"result": text[:RESULT_MAX]}
             elif self.hub.owns(name):
                 log.info("[%s] tool %s %s", self.id, name, json.dumps(args, ensure_ascii=False)[:200])
                 try:
@@ -481,6 +580,7 @@ class GeminiSession(Session):
             log.exception("[%s] gửi xuống chip lỗi", self.id)
 
     async def close(self):
+        self.close_mcp()
         self.end_turn(interrupted=self.speaking)
         for task in list(self.tool_tasks):
             task.cancel()
@@ -510,16 +610,42 @@ async def websocket(request: web.Request) -> web.WebSocketResponse:
                                 GEMINI_MODEL if app["gemini_key"] else None)
     log.info("[%s] connect device=%s protocol=%s mode=%s", s.id, request.headers.get("Device-Id"),
              request.headers.get("Protocol-Version"), type(s).__name__)
+    # Đọc và xử lý tách 2 task: tin "mcp" (trả lời của chip) giải quyết ngay lúc đọc, còn lại xếp hàng giữ thứ tự.
+    # Xử lý một tin có thể chờ lâu (listen start mở Gemini, chờ tool của chip) mà vẫn đọc được trả lời MCP.
+    q: asyncio.Queue = asyncio.Queue()
+
+    async def xu_ly():
+        while (item := await q.get()) is not None:
+            kind, data = item
+            if kind == "text":
+                await s.on_text(data)
+            else:
+                await s.on_audio(data)
+
+    worker = asyncio.create_task(xu_ly())
     try:
         async for m in ws:
+            if worker.done():               # xử lý lỗi: đóng kết nối, chip sẽ tự nối lại
+                break
             if m.type == WSMsgType.TEXT:
                 try:
-                    await s.on_text(json.loads(m.data))
+                    msg = json.loads(m.data)
                 except json.JSONDecodeError:
                     log.warning("[%s] JSON hỏng: %r", s.id, m.data[:200])
+                    continue
+                if msg.get("type") == "mcp":
+                    s.on_mcp(msg.get("payload") or {})
+                else:
+                    await q.put(("text", msg))
             elif m.type == WSMsgType.BINARY:
-                await s.on_audio(m.data)
+                await q.put(("audio", m.data))
     finally:
+        await q.put(None)
+        try:
+            await asyncio.wait_for(worker, 5)
+        except Exception:
+            log.exception("[%s] xử lý tin lỗi", s.id)
+            worker.cancel()
         await s.close()
         if isinstance(s, GeminiSession):
             app["tracer"].session_end(s.id, GEMINI_MODEL, s.in_ms, s.out_ms)

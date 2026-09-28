@@ -13,6 +13,20 @@
       <p>Module phải có hàng chân (header) đã hàn; loại bán rời header thì hàn trước khi làm bài này.</p>`,
     code: 'sandbox/esp32-bai/main/bai_12_1.c',
     du_doan: '<p>Monitor in "co thiet bi o 0x3C"; OLED hiện XIN CHAO, DIA CHI 3C, và số DEM tăng.</p>',
+    so_do: [{ nhan: 'Bus I2C', svg: SD.svg(340, 170, SD.khoi(20, 40, 90, 'ESP32-S3', [], ['3V3', 'GND', 'GPIO41 SDA', 'GPIO42 SCL']) + SD.khoi(230, 40, 90, 'OLED SSD1306', ['VCC', 'GND', 'SDA', 'SCL'])
+      + SD.day('122,60 218,60') + SD.day('122,80 218,80') + SD.day('122,100 218,100') + SD.day('122,120 218,120'),
+      'Bốn dây nối ESP32 với OLED: 3V3, GND, SDA 41, SCL 42'), chu: 'Thứ tự chân trên module thật mỗi shop một kiểu: nối theo chữ in. Điện trở kéo lên thường có sẵn trên module.' }],
+    sau: `<h3>Chọn điện trở kéo lên</h3>
+      <p>Dây I2C chỉ được kéo xuống bởi thiết bị; lên lại là nhờ điện trở kéo lên nạp điện dung của bus (dây + chân, cỡ 20–100pF). Thời gian lên từ 30% tới 70%: <code>t_r ≈ 0.85·R·C</code>. Chuẩn I2C 400kHz cho t_r ≤ 300ns → với 50pF: <code>R ≤ 300ns / (0.85 × 50pF) ≈ 7k</code>. Nhỏ quá thì thiết bị không kéo xuống nổi (chuẩn cho tối đa 3mA → R ≥ 3.3/3mA ≈ 1.1k). Vì vậy module hay gắn 4.7k. Pull-up nội ~45k chỉ đủ cho bus ngắn, chậm.</p>
+      <h3>Địa chỉ 0x3C trên dây</h3>
+      <p>0x3C = <code>0111100</code> (7 bit). Trên dây, byte đầu là 7 bit địa chỉ + 1 bit đọc/ghi: ghi → <code>0111100 0</code> = 0x78. Nhiều tài liệu ghi "0x78" cho OLED là đang nói byte này — cùng một thiết bị.</p>
+      <h3>Màn hình nhanh cỡ nào</h3>
+      <p>Cả màn 128×64 = 1024 byte. Mỗi byte trên I2C tốn 9 nhịp (8 bit + ACK): ở 400kHz là 22.5µs → cả màn ≈ 23ms + phần đầu gói → tối đa ~40 khung/giây. Đủ cho mặt robot chớp mắt, không đủ cho video.</p>`,
+    hoi: [
+      ['Địa chỉ 7 bit 0x68 (MPU-6050). Byte đầu khi ghi là bao nhiêu?', '0x68 &lt;&lt; 1 = <b>0xD0</b> (đọc là 0xD1).'],
+      ['Bus dài có 200pF, cần t_r ≤ 300ns. Điện trở kéo lên tối đa?', '300ns / (0.85 × 200pF) ≈ <b>1.8k</b> (vẫn trên mức tối thiểu ~1.1k).'],
+      ['Quét I2C không thấy gì. Nêu 3 chỗ kiểm trước.', 'Đảo SDA/SCL; VCC/GND sai hoặc chưa có điện (đo áp VCC module); thiếu điện trở kéo lên hoặc dây lỏng.'],
+    ],
     phan: [{
       ten: 'Phần 1 · Ráp, quét, vẽ',
       buoc: [

@@ -24,6 +24,23 @@
       <p>NOT: đầu vào → 10k → chân B; đầu ra ở C, kéo lên bằng 10k. Vào 1 → transistor dẫn → ra ≈ 0.1V.</p>
       <p>Dây đen nối thanh − trên với thanh − dưới, để thanh − trên là mức 0 ngay cạnh thanh + (mức 1). <b>Đầu vào chỉ được cắm vào thanh + hoặc thanh −</b>, đầu kia cố định ở cột 5/8.</p>`,
     du_doan: '<p>OR: (0,0) → 0; còn lại ≈ 4.1V. AND: (1,1) → 4.78V; còn lại ≈ 0.6V. NOT: vào 0 → 4.78V; vào 1 → ≈ 0.1V.</p>',
+    so_do: [
+      { nhan: 'OR', svg: SD.svg(300, 220, SD.chu(100, 20, 'A', 'sd-chu', 'middle') + SD.chu(180, 20, 'B', 'sd-chu', 'middle') + SD.day('100,26 100,40') + SD.diode(100, 40, 60) + SD.day('180,26 180,40') + SD.diode(180, 40, 60)
+        + SD.day('100,100 100,120 250,120') + SD.day('180,100 180,120') + SD.cham(140, 120) + SD.cham(180, 120) + SD.day('140,120 140,130') + SD.tro(140, 130, 50, '10k') + SD.day('140,180 140,190') + SD.dat(140, 190) + SD.chu(254, 124, 'ra', 'sd-chu'),
+        'Cổng OR: hai diode chung cathode, điện trở 10k kéo xuống'), chu: 'Vào nào = 1 thì diode đó dẫn: ra ≈ 4.78 − 0.6 ≈ 4.1V.' },
+      { nhan: 'AND', svg: SD.svg(300, 220, SD.day('140,20 140,30') + SD.chu(150, 22, '+4.78V', 'sd-pos') + SD.tro(140, 30, 50, '10k') + SD.day('140,80 140,90 250,90') + SD.cham(140, 90) + SD.day('100,90 180,90')
+        + SD.day('100,90 100,110') + SD.diode(100, 110, 60) + SD.day('180,90 180,110') + SD.diode(180, 110, 60) + SD.chu(100, 196, 'A', 'sd-chu', 'middle') + SD.chu(180, 196, 'B', 'sd-chu', 'middle') + SD.chu(254, 94, 'ra', 'sd-chu'),
+        'Cổng AND: hai diode chung anode, điện trở 10k kéo lên'), chu: 'Vào nào = 0 thì diode đó dẫn: ra ≈ 0.6V.' },
+    ],
+    sau: `<h3>Mỗi tầng diode mất một ít</h3>
+      <p>OR ra 4.1V chứ không 4.78V; nối ra đó vào một cổng OR nữa thì còn ~3.5V, tầng nữa ~2.9V… Logic bằng diode không ghép dài được: mức "1" tụt dần tới khi không còn phân biệt với "0". Transistor (cổng NOT) thì khác: ra là 4.78V hoặc 0.1V bất kể vào hơi thấp hay hơi cao — nó <b>phục hồi mức</b>. Chip logic thật (TTL, rồi CMOS) đều có tầng transistor ở ngõ ra vì lý do này.</p>
+      <h3>Biên nhiễu</h3>
+      <p>ESP32-S3 hiểu "1" khi ≥ 2.48V và "0" khi ≤ 0.83V (datasheet). AND ra 0.6V → cách ngưỡng 0 là 0.23V; nhiễu lớn hơn 0.23V là có thể đọc nhầm. Khoảng cách đó gọi là biên nhiễu. Ra của cổng NOT (0.1V / 4.78V) có biên rộng hơn nhiều.</p>`,
+    hoi: [
+      ['Nối ra cổng OR (4.1V) vào đầu vào một cổng OR diode thứ hai. Ra tầng 2 khoảng bao nhiêu?', '≈ 4.1 − 0.6 = <b>3.5V</b>.'],
+      ['Ra cổng AND ≈ 0.6V. ESP32 có đọc chắc là 0 không? Biên nhiễu bao nhiêu?', 'Có (≤ 0.83V), biên nhiễu chỉ ~<b>0.23V</b>.'],
+      ['Ghép AND diode rồi NOT transistor thành cổng gì?', '<b>NAND</b>. Mọi mạch logic đều xây được chỉ từ NAND.'],
+    ],
     phan: [
       { ten: 'Phần 1 · OR', buoc: [
         K.buocPin(), { ten: 'Nối 2 thanh −, ráp OR', lam: ['Dây đen thanh − trên (cột 24) → thanh − dưới (cột 24).', 'D1: anode 5b, <b>vạch 12b</b>. D2: anode 8d, <b>vạch 12d</b>. 10k từ 12a lên thanh − trên (cột 12).', 'Đầu vào: dây xanh thanh − trên → 5a (A = 0), dây xanh thanh − trên → 8a (B = 0).'],

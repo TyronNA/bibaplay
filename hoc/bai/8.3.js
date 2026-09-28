@@ -19,6 +19,15 @@
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'GPIO → 4.7k → B. E, − hộp pin và GND board phải chung một điểm.' }],
     code: 'sandbox/esp32-bai/main/bai_8_3.c',
     du_doan: '<p>Chưa nối GND: LED tắt dù code đang bật/tắt. Nối GND: LED nháy 1s.</p>',
+    sau: `<h3>Áp luôn là "so với cái gì"</h3>
+      <p>GPIO ra 3.3V nghĩa là 3.3V so với GND của board. Chân B–E của transistor cần ~0.7V so với E, mà E nằm ở − hộp pin. Nếu 2 GND không nối, không có vòng kín nào cho dòng B: định luật áp của Kirchhoff chỉ áp dụng trên một vòng kín, và ở đây không có vòng.</p>
+      <h3>GND chung cũng có điện trở</h3>
+      <p>Dây GND dài ~0.05Ω. Motor kéo 1A chạy về qua dây đó → GND ở đầu motor cao hơn GND board 50mV. Nhỏ với mạch số, nhưng lớn với ADC (50mV ≈ 70 đơn vị ADC ở dải 2.9V). Cách chữa là <b>nối đất hình sao</b>: dây GND dòng lớn (motor) và dây GND tín hiệu (cảm biến, ADC) đi riêng về một điểm chung ở cực − pin, thay vì dòng motor chảy qua dây GND của cảm biến.</p>`,
+    hoi: [
+      ['Không nối GND chung, đo áp GPIO14 so với − hộp pin thấy "lung tung". Vì sao?', 'Hai mạch không có điểm chung nào, nên áp giữa chúng không xác định: đồng hồ chỉ đo nhiễu và dòng rò.'],
+      ['Dòng B là (3.3 − 0.7)/4.7k. Dòng đó quay về board theo đường nào?', 'Từ E xuống − hộp pin, rồi qua <b>dây GND chung</b> về GND board. Không có dây đó thì không có dòng.'],
+      ['Motor 1.5A chạy về qua dây GND chung 0.04Ω. GND lệch bao nhiêu?', '1.5 × 0.04 = <b>60mV</b>.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Nạp code khi board chưa nối gì',

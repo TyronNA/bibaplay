@@ -15,6 +15,17 @@
       <p>Tải càng nhỏ (lấy càng nhiều dòng) càng tụt. Quy tắc tay: tải phải lớn hơn R2 cỡ 10 lần thì áp mới gần đúng.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'R_L là tải: 100k, 10k, rồi 1k.' }],
     du_doan: '<p>Không tải 2.39V · 100k: 2.28V · 10k: 1.59V · 1k: 0.40V.</p>',
+    sau: `<h3>Cầu phân áp = nguồn Thevenin</h3>
+      <p>Nhìn từ điểm giữa, cầu R1 + R2 nối pin U giống hệt một nguồn <code>U_th = U·R2/(R1+R2)</code> nối tiếp <code>R_th = R1 ∥ R2</code>. Với 10k + 10k: U_th = 2.39V, R_th = 5k. Nối tải R_L:</p>
+      <p><code>U = U_th · R_L / (R_th + R_L)</code></p>
+      <p>Kiểm lại cả 3 số đoán: 100k → 2.39 × 100/105 ≈ 2.28V; 10k → 2.39 × 10/15 ≈ 1.59V; 1k → 2.39 × 1/6 ≈ 0.40V. Khớp bảng. Nguyên tắc "tải lớn gấp 10 lần R2" thật ra là "tải lớn gấp ~10 lần <b>R_th</b>": sai số khi đó ≈ R_th/R_L ≈ 10%.</p>
+      <h3>Vì sao ADC đọc cầu phân áp được</h3>
+      <p>Chân ADC của ESP32 lấy mẫu bằng một tụ nhỏ bên trong: gần như không lấy dòng trung bình, nhưng mỗi lần lấy mẫu cần nạp tụ nhanh. R_th quá lớn (vài trăm k) thì tụ nạp không kịp, số đọc thấp và nhiễu. Cầu đo pin trong robot vì thế dùng 10k–100k, kèm một tụ 100nF ở điểm giữa làm "kho" cho ADC.</p>`,
+    hoi: [
+      ['Cầu 20k (trên) + 10k (dưới). R_th nhìn từ điểm giữa bằng bao nhiêu?', '20k ∥ 10k ≈ <b>6.67k</b>.'],
+      ['Cầu 10k + 10k từ pin 4.78V, tải 5k. Áp giữa?', '2.39 × 5/(5 + 5) ≈ <b>1.20V</b>.'],
+      ['Muốn nuôi ESP32 (~100mA, 3.3V) từ pack 8.4V bằng cầu phân áp. Vì sao không được?', 'Tải ESP32 tương đương ~33Ω, nhỏ hơn R_th của mọi cầu hợp lý hàng trăm lần → áp sập ngay. Muốn giữ áp thì cầu phải rất nhỏ (vài chục Ω), khi đó nó tự đốt vài W. Việc này là của ổn áp.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Cầu không tải',

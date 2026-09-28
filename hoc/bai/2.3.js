@@ -65,6 +65,18 @@
       <p>R tăng đều nhưng độ sáng tụt gần hết trong <b>đoạn vặn đầu tiên</b>: dòng tỉ lệ nghịch với R, còn mắt nhìn độ sáng theo kiểu log.</p>
       <p><b>Kiểu B:</b> <code>U_W = U × R(W–B) / 10k</code>, chạy liên tục 0 → 4.78V. Dòng qua biến trở luôn <code>4.78 / 10k ≈ 0.48 mA</code>, công suất ≈ 2 mW nên luôn nguội.</p>
       <p><b>Kiểu C:</b> nhìn từ W, biến trở như một nguồn <code>U·x</code> nối tiếp điện trở <code>x·(1−x)·10k</code>, với x là vị trí W (0 ở B, 1 ở A). LED chỉ sáng khi U·x vượt ≈ 1.8V, tức x > 0.4: gần nửa vòng đầu LED tắt hẳn.</p>`,
+    sau: `<h3>Nhìn từ con trượt: nguồn Thevenin</h3>
+      <p>Với W ở vị trí x (0 ở B, 1 ở A), nhìn từ W xuống −, biến trở giống một nguồn <code>U·x</code> nối tiếp điện trở <code>R_th = x·(1−x)·10k</code> (hai nửa dải than song song). R_th lớn nhất ở giữa: <b>2.5k</b>. Nối tải R_L vào W: <code>U_W = U·x · R_L / (R_th + R_L)</code>.</p>
+      <p>Ví dụ W ở giữa, tải 10k xuống −: <code>2.39 × 10 / 12.5 ≈ 1.91V</code> thay vì 2.39V. Đó là kiểu C của bài này, và là bài 2.5 viết gọn.</p>
+      <h3>Loại A và loại B</h3>
+      <p>Biến trở "B" (tuyến tính): R(W–B) tăng đều theo góc vặn. Biến trở "A" (log) tăng chậm lúc đầu rồi nhanh, dùng cho núm âm lượng vì tai nghe theo kiểu log. RM065 ghi <code>103</code> là loại tuyến tính.</p>
+      <h3>Lần cháy ở bài này, bằng số</h3>
+      <p>W nối về −, A nối +, vặn W về sát A: giữa + và − chỉ còn đoạn than vài Ω + nội trở pin ~0.5Ω → dòng vài A qua một đoạn than bé xíu chịu ~0.1W. Công suất cỡ vài W dồn vào một điểm: than cháy đỏ trong vài giây.</p>`,
+    hoi: [
+      ['Kiểu B, W ở giữa, mắc thêm tải 10k từ W xuống −. Áp W còn bao nhiêu?', 'R_th = 0.5 × 0.5 × 10k = 2.5k; U = 2.39 × 10/(2.5 + 10) ≈ <b>1.91V</b>.'],
+      ['Vì sao kiểu A cần 220Ω nối tiếp?', 'Vặn biến trở về 0Ω thì chỉ còn 220Ω hạn dòng cho LED: (4.78 − 2)/220 ≈ 12.6mA. Không có nó, LED cắm thẳng vào pin và cháy.'],
+      ['Đo A–W được 3.2k. Đoán W–B.', '10k − 3.2k ≈ <b>6.8k</b> (tổng luôn ≈ 10k).'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Xác định chân',

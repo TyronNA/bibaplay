@@ -12,6 +12,20 @@
       <p>Board đã có sẵn tụ lọc trên đó; tụ thêm ở đây nằm xa chip hơn nên tác dụng nhỏ. Điều cần nhớ là <b>cách đặt</b>: + tụ hoá vào 3V3, − vào GND.</p>`,
     code: 'sandbox/esp32-bai/main/bai_8_4.c',
     du_doan: '<p>Đồng hồ: 3V3 gần như đứng yên cả lúc WiFi bật lẫn tắt (lệch vài mV). Máy hiện sóng: gai sụt vài chục mV lúc quét WiFi, nhỏ đi khi có tụ.</p>',
+    so_do: [{ nhan: 'Tụ sát nguồn', svg: SD.svg(320, 190, SD.khoi(20, 40, 80, 'ESP32-S3', [], ['3V3', 'GND']) + SD.day('112,60 300,60') + SD.day('112,80 125,80 125,160 300,160')
+      + SD.cham(190, 60) + SD.cham(190, 160) + SD.tu(190, 60, 100, '100nF') + SD.cham(260, 60) + SD.cham(260, 160) + SD.tu(260, 60, 100, '10µF', true),
+      'Tụ gốm 100nF và tụ hoá 10 micro fara mắc giữa 3V3 và GND'), chu: '+ tụ hoá về 3V3. Tụ gốm lo cú nhanh, tụ hoá lo cú dài hơn.' }],
+    sau: `<h3>Tụ giữ áp được bao lâu</h3>
+      <p>Tụ cấp dòng I trong thời gian Δt thì tụt <code>ΔU = I·Δt / C</code>. Một cú WiFi 0.3A kéo dài 1ms mà chỉ trông vào tụ 10µF: ΔU = 0.3 × 10⁻³ / 10⁻⁵ = 30V — nghĩa là tụ cạn ngay. Tụ không thay được ổn áp. Việc của nó là cấp trong <b>vài µs</b> ổn áp cần để phản ứng: 0.3A × 5µs / 10µF ≈ 0.15V.</p>
+      <h3>Điện trở trong của tụ</h3>
+      <p>Tụ hoá nhỏ có ESR cỡ 0.5–2Ω: cú 0.3A làm sụt ngay 0.15–0.6V trên chính ESR, trước cả khi tụ kịp xả. Tụ gốm ESR vài mΩ. Vì thế đặt cả hai song song: tụ gốm cho cú nhanh, tụ hoá cho năng lượng.</p>
+      <h3>Đồng hồ thấy gì</h3>
+      <p>Đồng hồ lấy mẫu vài lần mỗi giây và lọc. Gai sụt 50mV kéo dài 1ms, lặp 10 lần/giây làm trung bình chỉ lệch 50mV × 1% = 0.5mV: chìm trong chữ số cuối. Muốn thấy phải có máy hiện sóng.</p>`,
+    hoi: [
+      ['Tụ 100µF cấp 0.2A trong 0.5ms. Áp tụt bao nhiêu (bỏ qua ESR)?', '0.2 × 0.5×10⁻³ / 10⁻⁴ = <b>1V</b>.'],
+      ['Tụ hoá ESR 1Ω, dòng tăng đột ngột 0.3A. Sụt tức thì trên ESR?', '<b>0.3V</b> — vì vậy cần tụ gốm ESR thấp song song.'],
+      ['Vì sao đồng hồ vạn năng không thấy gai sụt khi WiFi phát?', 'Nó lấy mẫu chậm (2–3 lần/s) và lấy trung bình; gai vài ms chỉ đổi trung bình vài phần nghìn volt.'],
+    ],
     phan: [
       {
         ten: 'Phần 1 · Chưa có tụ thêm',
