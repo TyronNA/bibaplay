@@ -2,3 +2,5 @@ xiaozhi-esp32/
 .DS_Store
 build/
 .playwright-mcp/
+sandbox/esp32-bai/sdkconfig
+sandbox/esp32-bai/sdkconfig.old

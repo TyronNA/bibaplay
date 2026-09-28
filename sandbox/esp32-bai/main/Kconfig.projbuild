@@ -1,0 +1,42 @@
+menu "Bai hoc"
+    choice BAI
+        prompt "Chay bai nao"
+        default BAI_9_1
+        config BAI_8_3
+            bool "8.3 GND chung: GPIO14 bat/tat S8050 moi 1s"
+        config BAI_8_4
+            bool "8.4 Tu loc: WiFi quet lien tuc de keo dong"
+        config BAI_9_1
+            bool "9.1 / 9.2 Nhay LED GPIO13"
+        config BAI_9_3
+            bool "9.3 / 9.5 Doc GPIO12, doi pull-up noi moi 10s"
+        config BAI_9_4
+            bool "9.4 Dem so lan nhan GPIO12: tho va chong doi"
+        config BAI_9_6
+            bool "9.6 In muc chan strapping va ly do reset"
+        config BAI_10_1
+            bool "10.1 / 10.4 ADC GPIO1: so tho + mV da hieu chuan"
+        config BAI_10_2
+            bool "10.2 Quang tro GPIO2 bat LED GPIO13 khi toi"
+        config BAI_10_3
+            bool "10.3 Do ap hop pin qua cau 10k+10k o GPIO1"
+        config BAI_11_1
+            bool "11.1 PWM chinh sang LED GPIO13"
+        config BAI_11_2
+            bool "11.2 PWM giu duty 25/50/75% moi muc 10s"
+        config BAI_11_3
+            bool "11.3 PWM motor qua S8050 o GPIO14"
+        config BAI_12_1
+            bool "12.1 / 12.4 I2C: quet dia chi + ve chu len OLED"
+        config BAI_12_2
+            bool "12.2 I2S: muc am mic INMP441"
+        config BAI_12_3
+            bool "12.3 I2S: phat tone 440Hz qua MAX98357A"
+        config BAI_13_1
+            bool "13.1 Cau H: doi chieu motor bang IN1/IN2"
+        config BAI_13_2
+            bool "13.2 Cau H + PWM: 2 chieu x 3 toc do"
+        config BAI_13_3
+            bool "13.3 Nhieu motor: nhay LED luc khoi dong + tang toc motor"
+    endchoice
+endmenu
