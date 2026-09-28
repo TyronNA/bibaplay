@@ -25,7 +25,7 @@
       ],
     }],
     bang_do: [{ ten: 'Lúc LED sáng', cot: ['U GPIO', 'U_330', 'I = U_330/330'], hang: [{ ten: 'Số đo', du_doan: ['≈ 3.3', '≈ 1.4', '≈ 4.2 mA'] }] }],
-    bay: ['LED cắm thẳng GPIO không điện trở: dòng chỉ bị điện trở trong của chân chặn, vượt 20mA, hại chân.', 'Đếm chân theo vị trí trên hình thay vì chữ in trên board của ông.'],
+    bay: ['LED cắm thẳng GPIO không điện trở: dòng chỉ bị điện trở trong của chân chặn, vượt 20mA, hại chân.', 'Đếm chân theo vị trí trên hình thay vì chữ in trên board của bạn.'],
     robot: ['LED trạng thái của robot; cùng cách này bật transistor/driver (bài 8.3, 11.3).'],
   });
 })();

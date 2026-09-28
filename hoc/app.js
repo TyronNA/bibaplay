@@ -87,7 +87,7 @@
     app.innerHTML = `
       <section class="dau"><p class="eyebrow">Giáo trình điện · nghiêng về robot + nhúng</p>
       <h1>Học điện trên breadboard</h1>
-      <p class="lede">Bài nào cũng đi theo một vòng: đoán trước bằng công thức, ráp khi chưa có pin, đo Ω rồi mới cấp điện, sau đó đo và so với số đã đoán. Danh sách bài đọc thẳng từ <code>notes/giao-trinh-dien.md</code>.</p></section>
+      <p class="lede">Bài nào cũng đi theo một vòng: đoán trước bằng công thức, ráp khi chưa có pin, đo Ω rồi mới cấp điện, sau đó đo và so với số đã đoán.</p></section>
       ${khungAnToan()}
       ${Object.entries(S.gt.phan).map(([so, ph]) => `
       <section><h2><span class="so">Phần ${so}</span><span>${dong(ph.ten.replace(/\s*\(.*\)\s*$/, ''))}</span></h2>
@@ -112,7 +112,7 @@
     fetch(LUU.url('notes/do-dang-co.md')).then(r => r.text()).then(t => {
       datDo(t);
       const co = LINHKIEN.ds.filter(coLK);
-      app.innerHTML = `<section class="dau"><p class="eyebrow">Đọc thẳng từ notes/do-dang-co.md</p><h1>Đồ đang có</h1>
+      app.innerHTML = `<section class="dau"><p class="eyebrow">Bộ đồ dùng cho giáo trình</p><h1>Đồ đang có</h1>
         <p class="lede">${co.length} loại đồ, mỗi món có hình. Bấm vào để xem cách nhận chân, giới hạn và bẫy trong <a href="${R(`linh-kien`)}">thư viện linh kiện</a>.</p></section>
         <section><h2>Hình từng món</h2><ul class="do-luoi">${co.map(l => {
           let dong = dongBang(t, l.tim);
@@ -147,7 +147,7 @@
     const tatCa = tatCaBai();
     const tenBai = id => { const b = tatCa.find(x => x.id === id); return b ? `<a href="${R(`bai/${id}`)}">${id} ${dong(b.ten)}</a>` : id; };
     const the = l => `<article class="lk-the to${l.id === chon ? ' chon' : ''}" id="lk-${l.id}">
-      <header><h3>${l.id === chon ? l.ten : `<a href="${R(`linh-kien/${l.id}`)}">${l.ten}</a>`}</h3>${coLK(l) ? '<span class="pill ok">có</span>' : `${l.mua ? `<span class="pill mo">${l.mua}</span>` : ''}<span class="pill xau">chưa có</span>`}${nutMua(l.id)}</header>
+      <header><h3>${l.id === chon ? l.ten : `<a href="${R(`linh-kien/${l.id}`)}">${l.ten}</a>`}</h3>${coLK(l) ? '<span class="pill ok">có</span>' : `${l.mua && !LUU.web ? `<span class="pill mo">${l.mua.replace(/\s*·\s*\S+\.md$/, '')}</span>` : ''}<span class="pill xau">chưa có</span>`}${nutMua(l.id)}</header>
       <div class="lk-hinh${l.kh ? '' : ' mot'}"><figure>${l.anh}<figcaption>Hình minh hoạ</figcaption></figure>${l.kh ? `<figure>${l.kh}<figcaption>Ký hiệu trên sơ đồ</figcaption></figure>` : ''}</div>
       <dl class="lk-tt">
         <div><dt>Nhận chân / cực</dt><dd><ul>${l.chan.map(x => `<li>${x}</li>`).join('')}</ul></dd></div>
@@ -201,9 +201,9 @@
   const moPhongDuoc = bd => bd.items.some(i => i.loai === 'pin') && !bd.items.some(i => ['esp', 'mod'].includes(i.loai) || (i.loai === 'ngoai' && i.kieu === 'hop'));
 
   function veBuoc(b, bd, n, pi, id) {
-    const kiem = b.kiem ? `<div class="gate">
-      <b class="y">Phải thấy</b><span>${b.kiem.thay}</span>
-      <b class="n">Nếu không</b><span>${b.kiem.neu_khong}</span></div>` : '';
+    const kiem = b.kiem && (b.kiem.thay || b.kiem.neu_khong) ? `<div class="gate">
+      ${b.kiem.thay ? `<b class="y">Phải thấy</b><span>${b.kiem.thay}</span>` : ''}
+      ${b.kiem.neu_khong ? `<b class="n">Nếu không</b><span>${b.kiem.neu_khong}</span>` : ''}</div>` : '';
     const so = `${id}·P${pi + 1}·${String(n).padStart(2, '0')}`;
     return `<li class="buoc to${b.cap_dien ? ' cap-dien' : ''}${b.kiem_truoc ? ' kiem-truoc' : ''}">
       <h4><span class="tag" title="Bước ${n} của phần ${pi + 1}"><b>${n}</b><i>P${pi + 1}</i></span>${b.cap_dien ? '<span class="pill canh">cấp điện</span>' : ''}${b.kiem_truoc ? '<span class="pill kiem">đo trước khi cấp điện</span>' : ''} ${b.ten}</h4>
@@ -260,7 +260,7 @@
     app.innerHTML = `${dau}
       ${khungTen(`<div><dt>Phần · bước</dt><dd>${bai.phan.length} phần · ${soBuoc} bước</dd></div>${bai.poster ? `<div><dt>Poster 30 bài</dt><dd>bài ${bai.poster.join(', ')}</dd></div>` : ''}`)}
       <section class="khung to"><p class="lede">${bai.muc_tieu}</p>
-        ${bai.poster ? `<p class="mo">Hình trên poster có chỗ sai, đã ghi trong <code>notes/poster-30-bai.md</code>. Ráp theo hình ở trang này.</p>` : ''}</section>
+        ${bai.poster ? `<p class="mo">Hình trên poster có chỗ sai. Ráp theo hình ở trang này.</p>` : ''}</section>
       <section><h2>Đồ cần</h2><ul class="can">${can}</ul><p class="mo">Đối chiếu với trang <a href="${R(`do`)}">Đồ đang có</a>. Bấm vào hình để xem cách nhận chân trong <a href="${R(`linh-kien`)}">thư viện linh kiện</a>.</p></section>
       ${bai.kien_thuc ? `<section><h2>Hiểu trước khi ráp</h2><div class="khung to">${bai.kien_thuc}</div></section>` : ''}
       ${bai.so_do ? `<section><h2>Sơ đồ</h2><div class="sd-luoi">${bai.so_do.map(s => `<figure class="sd-hinh to">${s.nhan ? `<span class="pill ${s.xau ? 'xau' : 'ok'}">${s.nhan}</span>` : ''}${s.svg}<figcaption>${s.chu}</figcaption></figure>`).join('')}</div></section>` : ''}
@@ -270,7 +270,7 @@
         return `<section class="phan"><div class="phan-dau"><span class="chu-phan">${pi + 1}</span><h2>${p.ten}</h2></div>${p.gioi_thieu ? `<p class="lede">${p.gioi_thieu}</p>` : ''}
           <ol class="cac-buoc">${p.buoc.map((b, k) => veBuoc(b, tt[k], k + 1, pi, id)).join('')}</ol></section>`;
       }).join(''); })()}
-      ${bai.code ? `<section><h2>Code</h2><p class="mo">Đọc thẳng từ <code>${bai.code}</code> — build + nạp: <code>sandbox/esp32-bai/README.md</code>.</p><div class="cuon"><pre class="code" id="code">đang tải…</pre></div></section>` : ''}
+      ${bai.code ? `<section><h2>Code</h2><p class="mo">Code chạy trên ESP32 cho bài này (<code>${bai.code.split('/').pop()}</code>).</p><div class="cuon"><pre class="code" id="code">đang tải…</pre></div></section>` : ''}
       ${bai.bang_do ? `<section><h2>Ghi số đo</h2><p class="mo">${LUU.noiLuu(id)} <span id="luu"></span></p>${bangDo(bai, kq)}</section>` : ''}
       ${bai.bay ? `<section class="bay to"><h2>Bẫy của bài này</h2><ul>${bai.bay.map(x => `<li>${x}</li>`).join('')}</ul></section>` : ''}
       <section class="alarm to"><h2>Khi có khói, mùi khét hoặc thấy nóng</h2><p>${bai.khoi ? bai.khoi : gt.chuong.phan > 1 ? 'Rút cáp USB (và tháo pin nếu bài có hộp pin) ngay.' : 'Tháo pin khỏi hộp ngay.'} Không sờ vào linh kiện đó cho tới khi nguội hẳn. Linh kiện đã bốc khói thì bỏ đi, kể cả khi còn chạy. Tìm ra chỗ nối sai rồi mới ráp lại.</p></section>

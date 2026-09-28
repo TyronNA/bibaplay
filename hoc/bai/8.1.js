@@ -23,14 +23,14 @@
           { ten: 'Đọc chữ in cạnh từng chân', lam: ['Chụp ảnh 2 mặt board. Tìm: <code>3V3</code>, <code>5V</code> (hoặc <code>5VIN</code>/<code>VBUS</code>), các chân <code>GND</code>, <code>RST</code>/<code>EN</code>, và số GPIO. Đánh dấu vị trí các chân 4, 5, 6, 7, 15, 16, 41, 42, 39, 40, 47 (xiaozhi dùng).', 'Tìm 2 nút <code>BOOT</code> và <code>RST</code>.'], hinh: hBoard },
           { ten: 'Cắm 3 dây đực–cái ra breadboard', lam: ['Đầu cái vào chân <code>5V</code>, <code>GND</code>, <code>3V3</code> của board. Đầu đực vào 14a, 17a, 20a — <b>mỗi dây một cột</b>, cột đó không có gì khác.'], board: { them: [ESP] } },
           { ten: 'Đo mốc Ω', kiem_truoc: true, lam: ['<code>Ω 200k</code>. Que đỏ cột 20 (3V3), que đen cột 17 (GND); đợi số đứng rồi ghi. Rồi que đỏ cột 14 (5V), que đen cột 17.', 'Đây là <b>mốc</b>: các bài sau đo lại 3V3–GND trước khi cắm USB và so với số này.'], board: { them: [K.dh('Ω 200k', '20c', '17c', 'ghi mốc')] },
-            kiem: { thay: 'Cả 2 số đều không dưới ~100Ω (thường vài kΩ trở lên).', neu_khong: 'Gần 0: board lỗi (chập nguồn) hoặc dây đực–cái chạm nhau. Không cắm USB, chụp ảnh gửi Claude.' } },
+            kiem: { thay: 'Cả 2 số đều không dưới ~100Ω (thường vài kΩ trở lên).', neu_khong: 'Gần 0: board lỗi (chập nguồn) hoặc dây đực–cái chạm nhau. Không cắm USB, rút 3 dây ra đo lại; vẫn gần 0 thì chụp ảnh nhờ người biết điện tử xem.' } },
         ],
       },
       {
         ten: 'Phần 2 · Cắm USB', ke_thua: true,
         buoc: [
-          K.camUsb('Cắm USB vào Mac', ['Đèn nguồn trên board sáng. Chạy <code>ls /dev/cu.usb*</code>: phải thấy 1 cổng mới (vd <code>/dev/cu.usbmodem…</code>).'], {}, { thay: 'Đèn sáng, có cổng mới.', neu_khong: 'Đèn sáng mà không có cổng: cáp chỉ sạc, không có dây data — đổi cáp. Board nóng hoặc có mùi: rút USB ngay.' }),
-          { ten: 'Đo áp 5V và 3V3', lam: ['<code>DCV 20</code>. Que đen cột 17 (GND). Que đỏ cột 14 (5V), rồi cột 20 (3V3).'], board: { them: [K.dh('DCV 20', '20c', '17c', '≈ 3.30')] }, kiem: { thay: '5V ≈ 4.8–5.1; 3V3 ≈ 3.28–3.35.', neu_khong: '3V3 lệch nhiều (< 3.1 hoặc > 3.5): ghi lại, hỏi Claude trước khi nối gì vào board.' } },
+          K.camUsb('Cắm USB vào máy tính', ['Đèn nguồn trên board sáng. Mac: chạy <code>ls /dev/cu.usb*</code>, phải thấy 1 cổng mới (vd <code>/dev/cu.usbmodem…</code>). Windows: Device Manager → Ports có thêm một cổng COM.'], {}, { thay: 'Đèn sáng, có cổng mới.', neu_khong: 'Đèn sáng mà không có cổng: cáp chỉ sạc, không có dây data — đổi cáp. Board nóng hoặc có mùi: rút USB ngay.' }),
+          { ten: 'Đo áp 5V và 3V3', lam: ['<code>DCV 20</code>. Que đen cột 17 (GND). Que đỏ cột 14 (5V), rồi cột 20 (3V3).'], board: { them: [K.dh('DCV 20', '20c', '17c', '≈ 3.30')] }, kiem: { thay: '5V ≈ 4.8–5.1; 3V3 ≈ 3.28–3.35.', neu_khong: '3V3 lệch nhiều (< 3.1 hoặc > 3.5): ghi lại, chưa nối gì vào board — board có thể lỗi ổn áp.' } },
           { ten: 'Nạp thử bài 9.6', lam: ['<code>source firmware/idf-env.sh</code>, <code>cd sandbox/esp32-bai</code>, <code>idf.py menuconfig</code> → Bai hoc → 9.6. Rồi <code>idf.py -p /dev/cu.usbmodem… flash monitor</code>.', 'Màn hình in lý do reset và mức 4 chân strapping mỗi giây. Thoát: <code>Ctrl+]</code>.'],
             board: {}, kiem: { thay: 'In "ly do reset: 1 = cap dien" hoặc "reset qua USB", rồi các dòng GPIO0=1 GPIO3=… GPIO45=0 GPIO46=0.', neu_khong: 'Không nạp được: giữ nút BOOT, nhấn RST, thả BOOT rồi nạp lại.' } },
           K.rutUsb(['Xong bài thì rút 3 dây đực–cái.']),

@@ -15,7 +15,7 @@
   const kep = (tu, den) => K.dh('DCA 20m', tu, den, '—', 'mA');
   const buocDong = (ten, bo, tu, den, hien, thay, lai) => [
     K.thaoPin([`Rút dây ${bo === 'wt' ? 'đen 14j → thanh −' : bo === 'w1' ? 'xanh 5j → 14g' : 'cam 9j → 14h'}. Cắm lại dây đã rút ở lần trước (nếu có).`], { bo: [bo], them: lai || [] }),
-    { ten: 'Kẹp đồng hồ mA vào chỗ hở', kiem_truoc: true, lam: [`Que đỏ lỗ mA, núm <code>DCA 20m</code>. Que đỏ vào dây ở ${tu}, que đen vào dây ở ${den}.`], board: { them: [kep(tu, den)] },
+    { ten: 'Kẹp đồng hồ mA vào chỗ hở', kiem_truoc: true, lam: [`Que đỏ lỗ mA, núm <code>DCA 20m</code>. Que đỏ vào dây ở ${tu}, que đen vào dây ở ${den.replace(/^B-:(\d+)$/, 'thanh − dưới (cột $1)')}.`], board: { them: [kep(tu, den)] },
       kiem: { thay: 'Không que nào chạm thanh +.', neu_khong: 'Sửa trước khi lắp pin.' } },
     K.lapPin(ten, ['Đọc, ghi, tháo pin.'], { them: [K.dh('DCA 20m', tu, den, hien, 'mA')] }, { thay, neu_khong: 'Số âm: đảo que, không sao.' }),
   ];

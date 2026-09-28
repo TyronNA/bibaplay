@@ -16,11 +16,11 @@ Linh kiện (đơn Shopee shop Peter-ic, 2026-09):
 | Diode 1N4007 | 50 | Diode chỉnh lưu 1A — chống xung ngược motor |
 | Transistor S8050 NPN | 50 | Công tắc cho tải vài trăm mA |
 | Dây nhảy đực–đực | 65 | |
-| Breadboard MB-102 830 lỗ | 1 | ESP32-S3 44 pin cần ghép **2** cái (xem `xiaozhi-bom.md`) |
+| Breadboard MB-102 830 lỗ | 1 | ESP32-S3 44 pin cần ghép **2** cái |
 
 Dụng cụ: đồng hồ vạn năng, kẹp cá sấu × 5.
 
 Nguồn: 10 pin AAA 1.5V + 2 hộp pin 3 ô → 1 hộp = **4.5V** (pin mới đo ~4.7V, gần hết ~3.3V). Không nối 2 hộp với nhau.
 
 Khác: quạt cầm tay 5V dự phòng (pin 1S "4000mAh" + mạch sạc Type-C, motor DC — để dành tháo).
-Chưa có ESP32 hay module nào (giỏ hàng: `xiaozhi-bom.md`).
+Chưa có ESP32 hay module nào.

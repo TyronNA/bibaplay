@@ -27,7 +27,7 @@
       ten: 'Phần 1 · Ráp, đổi chiều', cot: 34,
       buoc: [
         K.buocPin(),
-        { ten: 'Cắm driver, đọc chữ in', kiem_truoc: true, lam: ['Cắm module vào 10a–15a (hoặc theo số chân thật). Ghi tên từng cột theo chữ in: VM (hoặc VCC/+), GND, IN1, IN2, OUT1, OUT2.'], board: { them: [DRV] }, kiem: { thay: 'Biết chắc cột VM, GND, IN1, IN2, OUT1, OUT2.', neu_khong: 'Module có thêm chân (STBY/nSLEEP/EN): đọc trang shop, thường phải nối lên VCC mới chạy. Hỏi Claude trước.' } },
+        { ten: 'Cắm driver, đọc chữ in', kiem_truoc: true, lam: ['Cắm module vào 10a–15a (hoặc theo số chân thật). Ghi tên từng cột theo chữ in: VM (hoặc VCC/+), GND, IN1, IN2, OUT1, OUT2.'], board: { them: [DRV] }, kiem: { thay: 'Biết chắc cột VM, GND, IN1, IN2, OUT1, OUT2.', neu_khong: 'Module có thêm chân (STBY/nSLEEP/EN): đọc trang shop, thường phải nối lên VCC mới chạy. Chưa chắc thì chưa cấp điện.' } },
         { ten: 'Nguồn motor, motor', lam: ['Dây đỏ thanh + → cột VM. Cột GND xuống −: dây đen 11e → 11f, 11j → thanh −. Motor vào cột OUT1, OUT2.'], board: { them: [...D, M] } },
         { ten: 'Dây từ board', lam: ['USB rút. <code>GND</code> → thanh − (cột 20). <code>9</code> → IN1, <code>10</code> → IN2. Không nối 3V3/5V vào driver (module logic lấy từ VM; loại cần VCC riêng thì hỏi trước).'], board: { them: [ESP] } },
         K.buocOm('Ω 200k', '> 0.1', 'Không dưới ~100Ω ở tiếp điểm hộp pin.', 'Gần 0: VM chạm GND.', ['Thêm: cột OUT1 ↔ OUT2 ≈ R motor (vài Ω). Cột IN1 ↔ thanh + → không gần 0.']),

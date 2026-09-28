@@ -8,7 +8,7 @@
   const ESP1 = K.esp({ '5V': '10c', GND: 'B-:3', G17: '11c', G18: '16b' });
   const sd = SD;
   const soDo = sd.svg(300, 200, sd.hop(20, 40, 80, 70, 'HC-SR04') + sd.chu(106, 58, 'Trig ← GPIO17', 'sd-chu') + sd.day('100,80 150,80') + sd.chu(106, 76, 'Echo (5V)', 'sd-mo')
-    + sd.tro(150, 80, 40, '10k') + sd.cham(150, 120) + sd.day('150,120 240,120') + sd.chu(246, 124, 'GPIO18', 'sd-chu') + sd.chu(160, 116, '≈ 3.3V', 'sd-mo') + sd.tro(150, 120, 40, '20k') + sd.day('150,160 150,172') + sd.dat(150, 172),
+    + sd.tro(150, 80, 40, '10k') + sd.cham(150, 120) + sd.day('150,120 240,120') + sd.chu(246, 124, 'GPIO18', 'sd-chu') + sd.chu(196, 136, '≈ 3.3V', 'sd-mo') + sd.tro(150, 120, 40, '20k') + sd.day('150,160 150,172') + sd.dat(150, 172),
   'Echo 5V qua cầu 10k/20k xuống ~3.3V vào GPIO18');
   BAI.dangKy({
     id: '14.3',
@@ -26,7 +26,7 @@
         ten: 'Phần 1 · Module + cầu phân áp, chưa nối GPIO', cot: 24,
         buoc: [
           { ten: 'Cắm HC-SR04, đọc chữ in', kiem_truoc: true, lam: ['USB rút. Cắm 4 chân vào 10a–13a, 2 ống tròn hướng ra ngoài mép board. Đọc chữ in: phải là VCC · Trig · Echo · GND từ cột 10 tới 13.'], board: { them: [SR] },
-            kiem: { thay: 'Cột 10 = VCC, 11 = Trig, 12 = Echo, 13 = GND.', neu_khong: 'Thứ tự khác: chưa đi tiếp, gửi ảnh cho Claude để đổi lỗ các bước sau.' } },
+            kiem: { thay: 'Cột 10 = VCC, 11 = Trig, 12 = Echo, 13 = GND.', neu_khong: 'Thứ tự khác: vẫn cắm vào 10–13 nhưng ghi lại cột nào là chân nào, rồi đổi số lỗ ở mọi bước sau theo tên chân.' } },
           { ten: 'Cầu phân áp cho Echo', lam: ['10k (nâu-đen-cam) từ <b>12d → 16d</b>. 20k (đỏ-đen-cam) vắt qua rãnh <b>16e → 16f</b>. Dây đen <b>16j → thanh −</b>. Dây đen <b>13e → thanh −</b> (GND module).'], board: { them: [R1, R2, D2, DG] } },
           { ten: 'Dây 5V và GND từ board', lam: ['<code>5V</code> → <b>10c</b> (cột VCC, không phải thanh +). <code>GND</code> → thanh − dưới (cột 3). Chưa nối Trig/Echo vào GPIO.'], board: { them: [ESP0] } },
           { ten: 'Đo trước khi cắm USB', kiem_truoc: true, lam: ['Núm <code>Ω 200k</code>. (1) Que đỏ 10b (5V), que đen thanh −. (2) Que đỏ 16b, que đen thanh −. (3) Que đỏ 12b, que đen 16b.'], board: { them: [K.dh('Ω 200k', '16b', 'B-:18', '≤ 20')] },

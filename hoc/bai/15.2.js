@@ -14,7 +14,7 @@
     nguon: 'USB (board) + 3×AAA (motor)',
     can: [...K.coBanEsp(6), K.can.pin(), K.can.drv8833(), K.can.motorTT(), K.can.kheQuang()],
     kien_thuc: `<p>Khe quang = LED hồng ngoại và phototransistor đối diện nhau qua một khe. Lỗ đĩa lọt vào khe → ánh sáng qua → OUT đổi mức. 20 lỗ → 20 xung/vòng. <code>vòng/phút = xung mỗi giây ÷ 20 × 60</code>.</p>
-      <p><b>Module khe quang shop ghi khác nhau</b>: có loại chỉ chạy 5V và ra 5V (HC-020K). Cấp 3V3 và đo OUT trước: đổi mức được và ≤ 3.3V thì dùng thẳng. Không đổi mức ở 3V3 → loại 5V: dừng lại, cần cấp 5V + cầu 10k/20k (9.5), hỏi Claude đổi hình.</p>
+      <p><b>Module khe quang shop ghi khác nhau</b>: có loại chỉ chạy 5V và ra 5V (HC-020K). Cấp 3V3 và đo OUT trước: đổi mức được và ≤ 3.3V thì dùng thẳng. Không đổi mức ở 3V3 → loại 5V: dừng lại, cần cấp 5V + cầu 10k/20k cho chân OUT (như 9.5) — mạch khác hình trên trang này.</p>
       <p><b>DRV8833</b> (TI) thay module "driver chung" của chương 13: VM 2.7–10.8V nên chạy được hộp 4.5V; IN1=1 IN2=0 tiến, PWM vào IN1 để chỉnh tốc độ (code 13.x dùng y hệt). Chân ngủ <b>nSLEEP</b> (module in EEP/SLP) bị chip kéo xuống bên trong → <b>phải nối lên 3V3</b>, không thì motor không chạy.</p>
       <p>Motor TT (Adafruit): 185 vòng/phút ở 4.5V không tải, kéo 150mA; <b>kẹt kéo 1.2A</b>. Motor shop khác: đo mới biết. Dòng kẹt vượt xa S8050 (7.4) → đây là lý do dùng driver.</p>
       <p>PCNT: bộ đếm xung trong chip, có bộ lọc bỏ gai ngắn (code đặt 1µs). CPU chỉ việc đọc số mỗi giây.</p>`,

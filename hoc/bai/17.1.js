@@ -4,19 +4,21 @@
   const GN = K.day('gn', 'T-:2', 'B-:2', 'den');
   const DRV = { id: 'drv', loai: 'mod', ten: 'DRV8833', mau: 'do', chan: [['SLP', '4a'], ['IN1', '5a'], ['IN2', '6a'], ['IN3', '7a'], ['IN4', '8a'], ['OUT1', '9a'], ['OUT2', '10a'], ['OUT3', '11a'], ['OUT4', '12a'], ['VM', '13a'], ['GND', '14a']] };
   const DDRV = [K.day('slp', '4c', 'B+:4', 'do', 5), K.day('vm', 'T+:13', '13c', 'do', 3), K.day('gd', '14c', 'T-:14', 'den', 3)];
-  const MT = { id: 'mt', loai: 'ngoai', kieu: 'motor', x: 530, chan: { 1: '9e', 2: '10e' }, mau: ['cam', 'tim'], nhan: 'motor trái' };
-  const MP = { id: 'mp', loai: 'ngoai', kieu: 'motor', x: 610, chan: { 1: '11e', 2: '12e' }, mau: ['cam', 'tim'], nhan: 'motor phải' };
+  const MT = { id: 'mt', loai: 'ngoai', kieu: 'motor', x: 560, chan: { 1: '9e', 2: '10e' }, mau: ['cam', 'tim'], nhan: 'motor trái' };
+  const MP = { id: 'mp', loai: 'ngoai', kieu: 'motor', x: 640, chan: { 1: '11e', 2: '12e' }, mau: ['cam', 'tim'], nhan: 'motor phải' };
   const SR = { id: 'sr', loai: 'mod', ten: 'HC-SR04', mau: 'xanhduong', chan: [['VCC', '18a'], ['Trig', '19a'], ['Echo', '20a'], ['GND', '21a']] };
   const DSR = [K.day('v5', '16d', '18d', 'do', 3), K.tro('e1', ['20c', '24c'], '10k'), K.tro('e2', ['24e', '24f'], '20k'), K.day('e3', '24j', 'B-:24', 'den'), K.day('sg', '21e', 'B-:21', 'den', 3)];
   const IR = { id: 'ir', loai: 'mod', ten: 'FC-51', mau: 'xanhduong', chan: [['VCC', '28a'], ['GND', '29a'], ['OUT', '30a']] };
   const DIR = [K.day('iv', '28e', 'B+:28', 'do', 4), K.day('ig', '29e', 'B-:29', 'den', 3)];
-  const SW = { id: 'sw', loai: 'ngoai', kieu: 'hop', chu: 'KW11', x: 690, chan: { COM: 'T-:34', NO: '34e' }, mau: ['den', 'vang'], nhan: 'va chạm' };
+  const SW = { id: 'sw', loai: 'ngoai', kieu: 'hop', chu: 'KW11', x: 722, chan: { COM: 'T-:34', NO: '34e' }, mau: ['den', 'vang'], nhan: 'va chạm' };
   const DPIN = [K.tro('p1', ['T+:38', '38a'], '20k'), K.tro('p2', ['38e', '38f'], '10k'), K.day('p3', '38j', 'B-:38', 'den')];
-  const BUCK = { id: 'buck', loai: 'ngoai', kieu: 'hop', chu: 'LM2596', x: 790, chan: { 'IN+': 'T+:42', 'IN−': 'T-:42', 'OUT+': '16a', 'OUT−': 'B-:16' }, mau: ['do', 'den', 'cam', 'den'], nhan: 'ra 5.0V' };
-  const PACK = { id: 'pack', loai: 'ngoai', kieu: 'hop', chu: 'pack 2S', x: 905, chan: { 'P+': 'T+:44', 'P−': 'T-:44' }, mau: ['do', 'den'], nhan: 'P+/P−' };
+  const BUCK = { id: 'buck', loai: 'ngoai', kieu: 'hop', chu: 'LM2596', x: 830, chan: { 'IN+': 'T+:42', 'IN−': 'T-:42', 'OUT+': '16a', 'OUT−': 'B-:16' }, mau: ['do', 'den', 'cam', 'den'], nhan: 'ra 5.0V' };
+  const PACK = { id: 'pack', loai: 'ngoai', kieu: 'hop', chu: 'pack 2S', x: 935, chan: { 'P+': 'T+:44', 'P−': 'T-:44' }, mau: ['do', 'den'], nhan: 'P+/P−' };
   const E = { GND: 'B-:3', '3V3': 'B+:3', G9: '5c', G10: '6c', G14: '7c', G21: '8c' };
   const ESP1 = K.esp(E, { x: 30 });
   const ESP2 = K.esp({ ...E, G17: '19c', G18: '24a', G8: '30c', G12: '34c', G1: '38c' }, { x: 30 });
+  // Nối pack để đo 5V khi board chưa có điện: tạm rút GPIO1, không thì cầu đo pin đưa ~2.8V vào chân của chip đang tắt.
+  const ESP2b = K.esp({ ...E, G17: '19c', G18: '24a', G8: '30c', G12: '34c' }, { x: 30 });
   const ESP3 = K.esp({ ...E, G17: '19c', G18: '24a', G8: '30c', G12: '34c', G1: '38c', '5V': '16c' }, { x: 30 });
   BAI.dangKy({
     id: '17.1',
@@ -40,7 +42,7 @@
             kiem: { thay: 'Biết chắc cột của từng chân driver.', neu_khong: 'Thứ tự khác hình: ghi lại, nối theo tên chân.' } },
           { ten: 'SLP, VM, GND driver, 2 motor', lam: ['Dây đỏ <b>4c → thanh + dưới</b> (SLP lên 3V3). Dây đỏ <b>thanh + trên → 13c</b> (VM). Dây đen <b>14c → thanh − trên</b>. Motor trái → 9e, 10e. Motor phải → 11e, 12e.'], board: { them: [...DDRV, MT, MP] } },
           { ten: 'Dây từ board', lam: ['USB rút. <code>GND</code> → thanh − dưới (cột 3). <code>3V3</code> → <b>thanh + dưới</b> (cột 3). <code>9</code> → 5c, <code>10</code> → 6c, <code>14</code> → 7c, <code>21</code> → 8c.'], board: { them: [ESP1] } },
-          K.buocOmEsp('Không dưới 100Ω; thanh + trên (pin, đang trống) ↔ thanh −: rất lớn.', 'Thanh + dưới gần 0 với thanh −: 3V3 chạm GND.', ['Thêm: que đỏ thanh + <b>trên</b>, que đen thanh + <b>dưới</b> → không gần 0 (pin và 3V3 không được dính nhau).']),
+          K.buocOmEsp('Không dưới 100Ω; thanh + trên (pin, đang trống) ↔ thanh −: rất lớn.', 'Thanh + dưới gần 0 với thanh −: 3V3 chạm GND.', ['Thêm: que đỏ thanh + <b>trên</b>, que đen thanh + <b>dưới</b> → không gần 0 (pin và 3V3 không được dính nhau).'], { thanh3v3: 'dưới' }),
           K.camUsb('Cắm USB, nạp 17.1, xem monitor', ['<code>idf.py menuconfig</code> → 17.1, <code>flash monitor</code>. Motor chưa có điện nên đứng yên; cảm biến chưa nối nên code có thể báo né liên tục — bình thường ở bước này.'], {}, { thay: 'Monitor in trạng thái và "pin = … mV" (≈ 0 vì chưa có pin).', neu_khong: '' }),
           K.rutUsb(),
         ],
@@ -52,7 +54,7 @@
           { ten: 'FC-51, công tắc va chạm', lam: ['FC-51 vào 28a–30a (đọc chữ in VCC/GND/OUT). Dây đỏ <b>28e → thanh + dưới</b> (3V3). Dây đen <b>29e → thanh −</b>. Công tắc (đã dò chân ở 14.1): COM → thanh − trên (cột 34), NO → <b>34e</b>.'], board: { them: [IR, ...DIR, SW] } },
           { ten: 'Cầu đo pin', lam: ['20k từ <b>thanh + trên (cột 38) → 38a</b>. 10k <b>38e → 38f</b>. Dây đen <b>38j → thanh −</b>.'], board: { them: DPIN } },
           { ten: 'Dây tín hiệu', lam: ['USB rút. <code>17</code> → 19c, <code>18</code> → <b>24a</b> (điểm giữa cầu Echo), <code>8</code> → 30c, <code>12</code> → 34c, <code>1</code> → <b>38c</b>.'], board: { bo: ['esp'], them: [ESP2] } },
-          K.buocOmEsp(null, null, ['Thêm: 20b ↔ 24b ≈ 10k (Echo không nối thẳng GPIO18). 38b ↔ thanh − ≈ 10k song song phần còn lại.']),
+          K.buocOmEsp(null, null, ['Thêm: 20b ↔ 24b ≈ 10k (Echo không nối thẳng GPIO18). 38b ↔ thanh − ≈ 10k song song phần còn lại.'], { thanh3v3: 'dưới' }),
           K.camUsb('Cắm USB, thử từng cảm biến', ['<code>flash monitor</code>. HC-SR04 chưa có 5V (cột 16 chưa nối) nên báo "het gio" — bình thường. Thử: che FC-51 bằng tay; gạt công tắc.'], {}, { thay: 'Che FC-51 → in "ne: hong ngoai". Gạt công tắc → in "ne: va cham".', neu_khong: 'Không in: kiểm dây 8 / 12 như bài 14.1, 14.2.' }),
           K.rutUsb(),
         ],
@@ -61,11 +63,11 @@
         ten: 'Phần 3 · Pin + LM2596, bánh nhấc khỏi mặt bàn', ke_thua: true,
         gioi_thieu: 'Kê khung lên hộp/cuốn sách cho 2 bánh quay trên không. LM2596 đã chỉnh 5.0V ở 16.3 — đo lại trước.',
         buoc: [
-          { ten: 'LM2596 vào thanh pin, OUT → cột 16', lam: ['USB rút, pack chưa nối. IN+ → thanh + trên (cột 42), IN− → thanh − trên (cột 42). OUT+ → <b>16a</b>, OUT− → thanh − dưới (cột 16). Chân 5V board chưa nối.'], board: { them: [BUCK] } },
+          { ten: 'LM2596 vào thanh pin, OUT → cột 16', lam: ['USB rút, pack chưa nối. IN+ → thanh + trên (cột 42), IN− → thanh − trên (cột 42). OUT+ → <b>16a</b>, OUT− → thanh − dưới (cột 16). Chân 5V board chưa nối.', 'Tạm rút đầu dây <code>1</code> khỏi <b>38c</b>: bước sau nối pack khi board chưa có điện, cầu đo pin sẽ đưa ~2.8V vào chân của chip đang tắt.'], board: { bo: ['esp'], them: [BUCK, ESP2b] } },
           { ten: 'Nối pack, đo 5V trước khi nối board', cap_dien: true, kiem_truoc: true, lam: ['Dây P− → thanh − trên (cột 44), rồi P+ → thanh + trên (cột 44). <code>DCV 20</code>: que đỏ 16b, que đen thanh −. Motor phải <b>đứng yên</b> (board chưa có điện, SLP = 0).'], board: { them: [PACK, K.dh('DCV 20', '16b', 'B-:18', '≈ 5.0')] },
             kiem: { thay: '16b = 4.95–5.05V. Không gì nóng.', neu_khong: 'Khác 5V: rút P+, chỉnh lại LM2596 như 16.3. Motor quay: SLP đang nối nhầm vào thanh pin — rút P+ ngay.' } },
-          { ten: 'Rút P+, nối chân 5V board', lam: ['Rút P+. <code>5V</code> → <b>16c</b>. Cáp USB: <b>rút khỏi board</b>.'], board: { bo: ['pack', 'esp'], them: [ESP3] } },
-          K.buocOmEsp('3V3 ↔ − không dưới 100Ω, và 16b ↔ − (5V) không dưới 100Ω.', null, ['Thêm: 16b ↔ thanh − (mạch 5V).']),
+          { ten: 'Rút P+, nối chân 5V board', lam: ['Rút P+. <code>5V</code> → <b>16c</b>. Cắm lại <code>1</code> → <b>38c</b>. Cáp USB: <b>rút khỏi board</b>.'], board: { bo: ['pack', 'esp'], them: [ESP3] } },
+          K.buocOmEsp('3V3 ↔ − không dưới 100Ω, và 16b ↔ − (5V) không dưới 100Ω.', null, ['Thêm: 16b ↔ thanh − (mạch 5V).'], { thanh3v3: 'dưới' }),
           { ten: 'Cắm P+: robot chạy (bánh trên không)', cap_dien: true, lam: ['Không có USB. P+ → thanh + trên (cột 44). Nhìn 2 bánh. Đưa tay trước HC-SR04 ~10cm, rồi che FC-51, rồi gạt công tắc. Sau 1 phút sờ DRV8833, LM2596.'], board: { them: [PACK] },
             kiem: { thay: '2 bánh quay tiến; mỗi lần có vật: dừng → lùi → 2 bánh ngược nhau → tiến lại. Driver/LM2596 chỉ ấm.', neu_khong: 'Một bánh quay lùi khi "tiến": đảo 2 dây motor đó. Không bánh nào quay: SLP, VM. Dừng hẳn ngay: pin < 6.6V — sạc lại. Nóng: rút P+.' } },
           { ten: 'Thả xuống sàn', cap_dien: true, lam: ['Rút P+. Đặt robot trên sàn trống, cách tường 1m, xa cầu thang. Cắm P+. Quan sát. Muốn dừng: nhấc robot lên, rút P+.'], board: {},
@@ -77,6 +79,6 @@
     bang_do: [{ ten: 'Thử né (bánh trên không)', cot: ['Phản ứng?', 'Lý do in ra (khi có USB)'], hang: [{ ten: 'Tay trước HC-SR04 10cm', du_doan: ['dừng-lùi-quay', 'sieu am'] }, { ten: 'Che FC-51', du_doan: ['dừng-lùi-quay', 'hong ngoai'] }, { ten: 'Gạt công tắc', du_doan: ['dừng-lùi-quay', 'va cham'] }] },
       { ten: 'Nguồn', cot: ['Pin (V)', '5V (16b)'], hang: [{ ten: 'Lúc chạy', du_doan: ['7.4–8.4', '4.95–5.05'] }] }],
     bay: ['Cắm USB khi P+ đang nối: 2 nguồn đấu nhau trên chân 5V.', 'Cắm cảm biến 3V3 (FC-51, SLP) nhầm vào thanh + trên (pin 8.4V): hỏng module/chip.', 'Chạy thử lần đầu trên sàn: robot lao đi, rơi, đứt dây. Luôn bánh trên không trước.', 'Duty 100% với pack đầy: motor TT 8.4V, quá định mức 6V.', 'Để pack cạn dưới 6V: LM2596 tụt áp, board reset, robot giật cục.'],
-    robot: ['Bước tiếp: encoder 2 bánh để đi thẳng (15.2), gyro quay đúng góc (15.3), TCRT5000 chống rơi (14.4), rồi cho xiaozhi điều khiển qua MCP (<code>xiaozhi-esp32/docs/mcp-usage.md</code>).'],
+    robot: ['Bước tiếp: encoder 2 bánh để đi thẳng (15.2), gyro quay đúng góc (15.3), TCRT5000 chống rơi (14.4), rồi cho xiaozhi điều khiển qua MCP (tài liệu MCP trong repo xiaozhi-esp32).'],
   });
 })();

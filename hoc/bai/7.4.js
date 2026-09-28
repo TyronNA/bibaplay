@@ -19,7 +19,7 @@
     muc_tieu: 'Bật motor bằng transistor, có diode chống xung ngược. Đo dòng motor trước để biết transistor có chịu được không.',
     can: [K.can.motor(), K.can.npn(), K.can.d4007(), K.can.tro('470'), K.can.tro('10k'), ...K.coBan(10)],
     kien_thuc: `<p>Cuộn dây motor đang có dòng mà bị ngắt đột ngột thì sinh xung áp rất cao (hàng chục volt) ở chân C: có thể giết transistor. Diode 1N4007 song song motor, <b>vạch (cathode) về phía +</b>, cho dòng đó chạy vòng qua diode rồi tắt dần.</p>
-      <p><b>Cắm ngược diode là nối tắt:</b> lúc transistor dẫn, dòng đi thẳng + → diode → transistor → −, không qua motor. Diode và transistor nóng tới cháy. Bước 2.2 kiểm chiều diode bằng đồng hồ trước khi cắm motor.</p>
+      <p><b>Cắm ngược diode là nối tắt:</b> lúc transistor dẫn, dòng đi thẳng + → diode → transistor → −, không qua motor. Diode và transistor nóng tới cháy. Bước 3 của phần 2 kiểm chiều diode bằng đồng hồ trước khi cắm motor.</p>
       <p>S8050 chịu ~0.5A liên tục. Phần 1 đo dòng motor chạy không tải: <b>trên 400mA thì dừng</b>, chờ driver (chương 13). Dòng khởi động (bài 7.3) lớn hơn nhưng chỉ vài trăm ms; <b>không để trục bị kẹt</b> khi dùng transistor.</p>
       <p>Chân B: tải ~0.3A, hFE ở dòng lớn ~100 → Ib ≥ 3mA, dư 3 lần → ~8mA → <code>(4.78 − 0.8)/8mA ≈ 500Ω</code>: dùng 470Ω.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Motor ở phía C (phía +), transistor ở phía − (low-side).' }],

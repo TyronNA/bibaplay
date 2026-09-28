@@ -31,7 +31,7 @@
             { them: [K.dh('DCV 20', 'pin+', 'pin-', '≈ 4.78')] },
             { thay: '≈ 4.7–4.8V với pin mới.', neu_khong: 'Dưới 4.2V: pin yếu, đo từng viên (mỗi viên ~1.5V). Số âm: 2 que đang đảo.' }),
           { ten: 'Đảo que', lam: ['Que đỏ chạm tiếp điểm −, que đen chạm tiếp điểm +.'], board: { them: [K.dh('DCV 20', 'pin-', 'pin+', '-4.78')] }, kiem: { thay: 'Cùng số nhưng có dấu trừ.', neu_khong: 'Khác số: que tì chưa chắc, chạm lại.' } },
-          { ten: 'Đo trên thanh nguồn của breadboard', lam: ['Cắm 1 dây nhảy vào thanh + ở cột 10, 1 dây vào thanh − dưới ở cột 10. Chạm que đỏ vào đầu dây +, que đen vào đầu dây −.'], board: { them: [K.dh('DCV 20', 'T+:10', 'B-:10', '≈ 4.78')] }, kiem: { thay: 'Bằng số ở tiếp điểm hộp pin: thanh nguồn dẫn điện suốt chiều dài.', neu_khong: '0: board của ông có thanh nguồn đứt ở giữa, đo lại ở cột gần dây pin hơn.' } },
+          { ten: 'Đo trên thanh nguồn của breadboard', lam: ['Cắm 1 dây nhảy vào thanh + ở cột 10, 1 dây vào thanh − dưới ở cột 10. Chạm que đỏ vào đầu dây +, que đen vào đầu dây −.'], board: { them: [K.dh('DCV 20', 'T+:10', 'B-:10', '≈ 4.78')] }, kiem: { thay: 'Bằng số ở tiếp điểm hộp pin: thanh nguồn dẫn điện suốt chiều dài.', neu_khong: '0: board của bạn có thanh nguồn đứt ở giữa, đo lại ở cột gần dây pin hơn.' } },
           K.thaoPin(),
         ],
       },

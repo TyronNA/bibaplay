@@ -52,13 +52,13 @@
         buoc: [
           { ten: '3 nút', lam: ['3 nút vắt qua rãnh ở cột 32/34, 36/38, 40/42 (hướng đã kiểm như 6.1). Cột 34, 38, 42: dây đen hàng j → thanh − dưới. <code>47</code> → 32b, <code>40</code> → 36b, <code>39</code> → 40b.'], board: { bo: BO, them: [...NUT, ESP] } },
           buocOm('Đo lần cuối, cả lúc nhấn từng nút', []),
-          { ...K.camUsb('Cắm USB, build + nạp firmware', ['Theo <code>firmware/boards/ares-bread/README.md</code>: <code>firmware/setup.sh</code>, <code>source firmware/idf-env.sh</code>, build <code>ares-bread</code> (hoặc bản gốc <code>bread-compact-wifi-128x64</code>), <code>idf.py -p /dev/cu.usbmodem… flash monitor</code>.', 'Server riêng phải đang chạy trên mini-pc.'], {}, { thay: 'OLED hiện thanh trạng thái; nói vào mic thì nghe trả lời qua loa.', neu_khong: 'Từng module đã chạy ở 12.1–12.3 → lỗi ở phần ghép: so từng dây với bảng chân. OLED/ampli ấm: rút USB.' }) },
+          { ...K.camUsb('Cắm USB, build + nạp firmware', ['Build firmware xiaozhi-esp32 từ source (ESP-IDF v6.0.1 trở lên) cho board <code>bread-compact-wifi-128x64</code>, rồi <code>idf.py -p /dev/cu.usbmodem… flash monitor</code>.', 'Cần một server xiaozhi đang chạy để board kết nối tới.'], {}, { thay: 'OLED hiện thanh trạng thái; nói vào mic thì nghe trả lời qua loa.', neu_khong: 'Từng module đã chạy ở 12.1–12.3 → lỗi ở phần ghép: so từng dây với bảng chân. OLED/ampli ấm: rút USB.' }) },
           K.rutUsb(),
         ],
       },
     ],
     bang_do: [{ ten: 'Ω 3V3–GND sau mỗi module', cot: ['Ω'], hang: [{ ten: 'Mốc 8.1', du_doan: [''] }, { ten: '+ OLED', du_doan: ['≤ mốc'] }, { ten: '+ mic', du_doan: ['≤ trên'] }, { ten: '+ ampli', du_doan: ['≤ trên'] }, { ten: '+ nút (nhấn từng nút)', du_doan: ['như trên'] }] }],
     bay: ['5V cắm vào thanh + (đang là 3V3): 2 nguồn đấu nhau, OLED/mic nhận 5V.', 'Cắm module đảo chiều (VCC ↔ GND): đo Ω sau từng module để bắt ngay.', 'Nút nối vào thanh + thay vì GND: nhấn là cấp 3.3V vào chân đang bật pull-up — không hỏng nhưng nút không ăn.'],
-    robot: ['Bước tiếp theo trong progress.md: gắn board này lên robot, thêm tool MCP điều khiển motor (docs/mcp-usage.md của xiaozhi).'],
+    robot: ['Bước tiếp theo: gắn board này lên robot, thêm tool MCP để xiaozhi điều khiển motor (tài liệu MCP trong repo xiaozhi-esp32).'],
   });
 })();

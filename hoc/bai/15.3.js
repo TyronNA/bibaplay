@@ -17,11 +17,11 @@
       ten: 'Phần 1 · Ráp, đọc, xoay', cot: 24,
       buoc: [
         { ten: 'Cắm GY-521, đọc chữ in', kiem_truoc: true, lam: ['USB rút. Cắm 8 chân vào 10a–17a, chip nằm ngửa. Đọc chữ in: phải là VCC, GND, SCL, SDA, XDA, XCL, AD0, INT từ cột 10.'], board: { them: [IMU] },
-          kiem: { thay: 'Cột 10 = VCC, 11 = GND, 12 = SCL, 13 = SDA.', neu_khong: 'Thứ tự khác: chưa đi tiếp, gửi ảnh cho Claude.' } },
+          kiem: { thay: 'Cột 10 = VCC, 11 = GND, 12 = SCL, 13 = SDA.', neu_khong: 'Thứ tự khác: nối theo tên chân in trên module, không theo số cột trên hình.' } },
         { ten: '4 dây theo tên chân', lam: ['<code>3V3</code> → <b>10c</b> (VCC). <code>GND</code> → <b>11c</b>. <code>42</code> → <b>12c</b> (SCL). <code>41</code> → <b>13c</b> (SDA). AD0, INT, XDA, XCL để trống.'], board: { them: [ESP] } },
         { ten: 'Đo trước khi cắm USB', kiem_truoc: true, lam: ['Núm <code>Ω 200k</code>. Que đỏ 10d (VCC), que đen 11d (GND).'], board: { them: [K.dh('Ω 200k', '10d', '11d', '> 0.1')] },
           kiem: { thay: 'Không dưới ~100Ω.', neu_khong: 'Gần 0: VCC chạm GND. Không cắm USB.' } },
-        K.camUsb('Cắm USB, nạp 15.3, để yên 2 giây', ['<code>idf.py menuconfig</code> → 15.3, <code>flash monitor</code>. <b>Không chạm board</b> trong 2 giây đầu (code đo sai lệch lúc đứng yên).'], {}, { thay: '"WHO_AM_I = 0x68", "sai lech = …", rồi "goc = 0.x" in đều.', neu_khong: '"khong thay 0x68": kiểm SCL/SDA có đảo không, VCC có 3.3V không. Đọc ra 0x72/0x70: chip là bản khác (MPU-6500/9250 clone) — báo Claude.' }),
+        K.camUsb('Cắm USB, nạp 15.3, để yên 2 giây', ['<code>idf.py menuconfig</code> → 15.3, <code>flash monitor</code>. <b>Không chạm board</b> trong 2 giây đầu (code đo sai lệch lúc đứng yên).'], {}, { thay: '"WHO_AM_I = 0x68", "sai lech = …", rồi "goc = 0.x" in đều.', neu_khong: '"khong thay 0x68": kiểm SCL/SDA có đảo không, VCC có 3.3V không. Đọc ra 0x72/0x70: chip là bản khác (MPU-6500/9250 clone) — địa chỉ và thanh ghi có thể khác, code bài này chưa chắc chạy.' }),
         { ten: 'Xoay 90° rồi để yên 1 phút', lam: ['Xoay cả breadboard 90° trên mặt bàn (dùng mép bàn làm thước góc vuông), giữ yên. Ghi góc. Xoay về chỗ cũ, ghi góc. Để yên 1 phút, ghi góc.'], board: { sua: { esp: { usb: true } } } },
         K.rutUsb(),
       ],

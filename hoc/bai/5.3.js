@@ -11,7 +11,7 @@
     kien_thuc: `<p>Tải: LED + 220Ω → Ic ≈ 12.6mA. hFE nhỏ nhất ~100 → cần Ib ≥ 0.13mA; dư 4–5 lần cho chắc → ~0.6mA → <code>R_B = (4.78 − 0.7)/0.6mA ≈ 6.8k</code>. Dùng <b>4.7k</b> (Ib ≈ 0.87mA).</p>
       <p>100k từ B xuống −: khi rút dây bật, B không thả nổi mà bị kéo về 0 → tắt chắc chắn (poster bài 26 thiếu con này).</p>
       <p>Dây vàng <b>thanh + → 13a</b> là nút bật: bài này rút/cắm đúng dây đó khi có pin. 4.7k luôn đứng giữa nên cắm vào không nối tắt gì.</p>`,
-    du_doan: '<p>Bật: U_CE ≈ 0.05–0.2V, U_220 ≈ 2.7V (Ic ≈ 12mA). Tắt: U_CE ≈ áp pin trừ áp LED lúc không dẫn, LED tắt.</p>',
+    du_doan: '<p>Bật: U_CE ≈ 0.05–0.2V, U_220 ≈ 2.7V (Ic ≈ 12mA). Tắt: LED tắt, U_CE cỡ 3–3.5V — không bằng áp pin, vì dòng rất nhỏ của đồng hồ đi qua LED và LED vẫn giữ lại ~1.3–1.6V.</p>',
     phan: [{
       ten: 'Phần 1 · Ráp và bật/tắt',
       buoc: [

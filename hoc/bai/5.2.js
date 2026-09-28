@@ -14,7 +14,7 @@
     id: '5.2',
     muc_tieu: 'Dòng nhỏ vào chân B điều khiển dòng lớn gấp hFE lần ở chân C, tới khi transistor <b>bão hoà</b>. Chỉ đo áp, không cần chuyển đồng hồ sang mA.',
     can: [K.can.npn(), K.can.bientro(), K.can.tro('100k'), K.can.tro('220'), K.can.led(), ...K.coBan(7)],
-    kien_thuc: `<p>Làm 5.1 trước: hình dưới giả sử chân <b>E-B-C</b> từ trái sang phải; nếu của ông khác thì cắm theo kết quả 5.1.</p>
+    kien_thuc: `<p>Làm 5.1 trước: hình dưới giả sử chân <b>E-B-C</b> từ trái sang phải; nếu của bạn khác thì cắm theo kết quả 5.1.</p>
       <p><code>Ib = U_100k / 100k</code>, <code>Ic = U_220 / 220</code>. Vùng khuếch đại: <code>Ic ≈ hFE · Ib</code>. Tăng Ib mãi thì Ic chạm trần <code>(4.78 − 1.9 − 0.1)/220 ≈ 12.6mA</code>: bão hoà, C–E còn ~0.1V.</p>
       <p>Biến trở dùng <b>kiểu B</b> (bài 2.3): A → thanh +, B → thanh −, W chỉ nối vào 100k. 100k giữ Ib ≤ 41µA dù vặn hết cỡ.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'W → 100k → B. C → LED → 220Ω → +. E → −.' }],

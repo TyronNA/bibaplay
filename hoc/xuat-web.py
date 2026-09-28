@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 HOC = ROOT / "hoc"
 WEB = "https://bibaplay.com"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mua.js", "mo-phong.js", "mo-phong-ui.js", "luu-web.js", "app.js"]
+JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mua.js", "mo-phong.js", "mo-phong-ui.js", "luu-web.js", "dau-trang.js", "app.js"]
 NOTES = ["notes/giao-trinh-dien.md", "notes/do-dang-co.md"]
 # Bản chia sẻ cho người khác: nói rõ ai soạn và mức đã kiểm, vì hướng dẫn ráp sai là cháy đồ thật.
 GHI_AI = """<footer class="ghi-ai to">
@@ -39,6 +39,14 @@ GHI_AI = """<footer class="ghi-ai to">
 </footer>"""
 # Chỉ chèn khi mua.js có ít nhất một link: chưa gắn link thì không nhắc tới affiliate.
 GHI_AFFILIATE = '''<p>Nút <b>"Mua trên Shopee"</b> là <b>link affiliate</b>: bạn mua qua đó thì người soạn nhận hoa hồng từ Shopee, giá bạn trả không đổi. Không có hãng nào trả tiền để được nhắc tên trong bài.</p>'''
+
+# Hộp hỏi lại trước khi tải PDF (dau-trang.js mở nó khi bấm link có data-hoi): file ~57 MB, bấm nhầm trên 4G là tốn.
+HOI_PDF = """<dialog id="hoi-pdf" class="hoi to" aria-labelledby="hoi-pdf-ten"><form method="dialog">
+<h2 id="hoi-pdf-ten">Tải cả bộ PDF?</h2>
+<p>File <b>khoảng {mb} MB</b> (mọi bài, hình breadboard từng bước). Đang dùng 4G thì nên chờ có Wi-Fi.</p>
+<p class="mo">Đọc trên web không cần tải: mỗi bài đã có đủ hình.</p>
+<p class="do-nut"><button value="tai" class="chinh">Tải PDF</button> <button value="" autofocus>Thôi</button></p>
+</form></dialog>"""
 
 # Chỉ chèn khi cau-hinh-web.json có ung_ho.link hoặc ung_ho.qr.
 GHI_UNG_HO = """<p class="ung-ho"><b>Ủng hộ.</b> {chu}{link}</p>{qr}"""
@@ -77,12 +85,13 @@ def main(ra):
 
     goc = (HOC / "index.html").read_text()
     assert '<script src="luu-server.js"></script>' in goc and '<base href="/hoc/">' in goc
-    nav = '<a href="linh-kien/" data-r="linh-kien">Linh kiện</a>'
+    nav = '<a href="mo-phong/" data-r="mo-phong">Mô phỏng</a>'
     assert nav in goc
     # ban-rap.pdf: xuat-pdf.py in từ chính thư mục này, nằm trên R2, hoc/worker.js phát ra (deploy-web.sh).
     web = goc.replace('<script src="luu-server.js"></script>', '<script src="luu-web.js"></script>') \
         .replace('<base href="/hoc/">', '<base href="/">') \
-        .replace(nav, nav + '<a href="ban-rap.pdf" download>Tải PDF</a>')
+        .replace(nav, nav + '<a href="ban-rap.pdf" class="nav-pdf" download data-hoi>Tải PDF</a>') \
+        .replace("</body>", HOI_PDF.format(mb=co_pdf()) + "\n</body>", 1)
     them_dau = ""
     if cfg.get("gsc"):
         them_dau += f'<meta name="google-site-verification" content="{html.escape(cfg["gsc"])}">\n'
@@ -123,6 +132,12 @@ def main(ra):
 
     json.dump(files, sys.stdout, ensure_ascii=False)
     print()
+
+
+def co_pdf():
+    """Cỡ PDF ghi trong hộp hỏi: lấy từ bản in lần trước (deploy-web.sh in lại ngay sau), chưa có thì số ước."""
+    f = ROOT / "build" / "ban-rap.pdf"
+    return round(f.stat().st_size / 2**20) if f.exists() else 57
 
 
 def routes(ra):

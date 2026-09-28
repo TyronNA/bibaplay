@@ -22,6 +22,6 @@
     }],
     bang_do: [{ ten: 'Ω', cot: ['Tính', 'Đo'], hang: [{ ten: 'Nối tiếp', du_doan: ['2000', '≈ 2k'] }, { ten: 'Song song', du_doan: ['500', '≈ 500'] }] }],
     bay: ['2 LED nối tiếp ở 4.78V: 2 LED đỏ còn rất mờ, LED xanh dương/trắng nối tiếp thì không sáng (poster bài 8 tính với 5V).'],
-    robot: ['Ghép pin: nối tiếp thì áp cộng lại (2 cell lithium = 8.4V), song song thì dung lượng cộng lại. Pin lithium ghép sai là nguy hiểm: xem notes/pin-lithium.md.'],
+    robot: ['Ghép pin: nối tiếp thì áp cộng lại (2 cell lithium = 8.4V), song song thì dung lượng cộng lại. Pin lithium ghép sai là nguy hiểm: làm theo bài 16.1–16.2.'],
   });
 })();

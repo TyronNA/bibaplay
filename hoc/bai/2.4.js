@@ -50,7 +50,7 @@
       <tr><td>20k</td><td>10k</td><td>≈ 30.0</td><td>4.78 × 10/30 ≈ 1.59 V</td></tr>
       <tr><td>10k</td><td>quang trở</td><td>> 10.0, tuỳ ánh sáng</td><td>phòng ≈ 1.6–3.2 V · che tay ≈ 4.3–4.7 V · rọi đèn ≈ 0.4–1 V</td></tr>
       </tbody></table></div>
-      <p>Dùng 22k thay 20k: 3.29 V và 1.49 V. Khoảng số của quang trở chỉ là ước lượng, vì nó tuỳ đèn phòng ông; GL5528 cỡ vài kΩ tới vài chục kΩ khi sáng, lên cỡ MΩ khi tối.</p>`,
+      <p>Dùng 22k thay 20k: 3.29 V và 1.49 V. Khoảng số của quang trở chỉ là ước lượng, vì nó tuỳ đèn phòng bạn; GL5528 cỡ vài kΩ tới vài chục kΩ khi sáng, lên cỡ MΩ khi tối.</p>`,
     phan: [
       {
         ten: 'Phần 1 · 10k + 10k',

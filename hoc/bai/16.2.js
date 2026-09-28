@@ -14,7 +14,9 @@
     return sd.dongHo(180, 140, 'V') + sd.day(`${ax},${ay} ${ax},140 196,140`, true) + sd.day(`${bx},${by} ${bx},160 180,160 180,156`) + sd.cham(ax, ay) + sd.cham(bx, by)
       + sd.chu(10, 150, `que đỏ ${a} · que đen ${b}`, 'sd-mo'); };
   const hinh = (cell, do_, chu) => sd.svg(360, 170, HOP(cell) + BMS + (do_ ? dongHo(...do_) : '') + sd.chu(10, 12, chu, 'sd-mo'), chu);
-  const hCell = sd.svg(340, 110, [0, 1].map(i => `<rect x="${40 + i * 150}" y="30" width="110" height="28" rx="6" class="sd-net"/>` + sd.chu(95 + i * 150, 49, `cell ${i + 1}`, 'sd-mo', 'middle') + sd.dongHo(95 + i * 150, 88, 'V')).join('') + sd.chu(170, 106, 'đo DCV 20 từng cell trần, lệch ≤ 0.1V', 'sd-mo', 'middle'), 'Đo áp từng cell trước khi ghép');
+  const hCell = sd.svg(340, 150, [0, 1].map(i => { const x = 40 + i * 150; return `<rect x="${x}" y="30" width="110" height="28" rx="6" class="sd-net"/>` + sd.chu(x + 55, 49, `cell ${i + 1}`, 'sd-mo', 'middle')
+    + sd.chu(x + 4, 24, '−', 'sd-neg') + sd.chu(x + 98, 24, '+', 'sd-pos') + sd.day(`${x + 8},58 ${x + 8},100 ${x + 39},100`) + sd.day(`${x + 102},58 ${x + 102},100 ${x + 71},100`) + sd.dongHo(x + 55, 100, 'V'); }).join('')
+    + sd.chu(170, 140, 'đo DCV 20 từng cell trần, lệch ≤ 0.1V', 'sd-mo', 'middle'), 'Đo áp từng cell trước khi ghép');
   BAI.dangKy({
     id: '16.2',
     muc_tieu: 'Robot cần khoảng 7–8V (motor mạnh hơn, đủ dư cho hạ áp 5V): 2 cell nối tiếp = pack <b>2S</b>. Ráp pack với mạch bảo vệ BMS 2S theo thứ tự không bao giờ để hở cực pin, và đo được áp từng cell.',
@@ -35,7 +37,7 @@
         buoc: [
           { ten: 'Đo 2 cell, chọn cặp', kiem_truoc: true, lam: ['Sạc đầy cả 2 cell bằng 16.1 (từng cell một). Nghỉ 1 giờ. Đo <code>DCV 20</code> từng cell trần, ghi lại.'], hinh: hCell, kiem: { thay: 'Mỗi cell ≥ 4.1V và 2 cell lệch nhau ≤ 0.1V.', neu_khong: 'Lệch > 0.1V: sạc lại cell thấp; vẫn lệch → không ghép cặp, dùng cell khác.' } },
           { ten: 'Tìm 3 điểm trên hộp 2 ô', kiem_truoc: true, lam: ['Hộp rỗng. Dây đỏ = B+ (dương ô trên), dây đen = B− (âm ô dưới). Điểm giữa = lá kim loại nối 2 ô ở đầu kia hộp (có hộp có sẵn dây thứ 3). Thang thông mạch: xác nhận lá giữa không thông với dây đỏ hay đen khi hộp rỗng.'], hinh: hinh([0, 0], null, 'hộp rỗng: tìm B−, điểm giữa, B+'),
-            kiem: { thay: 'Biết chắc 3 điểm, không cặp nào thông nhau.', neu_khong: 'Không tìm ra điểm giữa: chưa đi tiếp, gửi ảnh cho Claude.' } },
+            kiem: { thay: 'Biết chắc 3 điểm, không cặp nào thông nhau.', neu_khong: 'Không tìm ra điểm giữa: chưa đi tiếp, chụp ảnh nhờ người biết điện tử xem.' } },
           { ten: 'Hàn 3 dây vào BMS', lam: ['Hộp vẫn rỗng. Đen (B− hộp) → miếng <b>B−</b>. Dây từ lá giữa → <b>BM</b>. Đỏ (B+ hộp) → <b>B+</b>. Hàn thêm 2 dây ra ở <b>P−</b> (đen), <b>P+</b> (đỏ), đầu kia để tách xa nhau, bọc băng keo đầu.'], hinh: hinh([0, 0], null, 'hàn 3 dây khi hộp còn rỗng'),
             kiem: { thay: 'Mối hàn không dính sang miếng bên cạnh. Ω B−↔BM, BM↔B+, P−↔P+ đều không gần 0.', neu_khong: 'Cặp nào gần 0Ω: có thiếc dính — sửa trước khi có cell.' } },
         ],
@@ -48,7 +50,7 @@
           { ten: 'Lắp cell trên, đo 3 cặp', kiem_truoc: true, lam: ['Lắp cell thứ hai, đúng dấu (thường ngược chiều cell dưới trong hộp). Đo: BM↔B+, B−↔B+.'], hinh: hinh([1, 1], ['B+', 'B−'], 'đủ 2 cell: đo B+ ↔ B− (và B+ ↔ BM)'),
             kiem: { thay: 'BM↔B+ ≈ cell trên. B−↔B+ ≈ tổng 2 cell (≈ 8.3–8.4V khi đầy).', neu_khong: 'B−↔B+ ≈ 0 trong khi mỗi cell có áp: cell trên lắp ngược — <b>tháo ngay</b> (2 cell đang xả vào nhau), sờ xem có ấm không.' } },
           { ten: 'Đo đầu ra P−/P+', lam: ['Bóc băng keo 2 dây P, đo DCV P−↔P+ rồi bọc lại ngay, tách xa nhau.'], hinh: hinh([1, 1], ['P+', 'P−'], 'đầu ra cho robot: P+ ↔ P−'),
-            kiem: { thay: 'P−↔P+ ≈ B−↔B+.', neu_khong: '0V: BMS đang ngắt. Một số BMS cần "đánh thức" lần đầu bằng áp sạc — hỏi Claude trước, không tự nối tắt để mở.' } },
+            kiem: { thay: 'P−↔P+ ≈ B−↔B+.', neu_khong: '0V: BMS đang ngắt. Một số BMS cần "đánh thức" lần đầu bằng áp sạc — làm theo trang shop, không tự nối tắt để mở.' } },
           { ten: 'Cất pack', lam: ['Tháo cell trên ra khi chưa dùng (pack không còn nối tiếp). Ghi áp 2 cell vào bảng.'], hinh: hinh([0, 1], null, 'cất: tháo cell trên') },
         ],
       },

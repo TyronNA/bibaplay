@@ -1,7 +1,8 @@
-// Bài 3.3 — Tụ nối tiếp: 2 tụ 100µF, + tụ 1 ở 5g, − tụ 1 ở 6g = + tụ 2 ở 6i, − tụ 2 ở 7i.
+// Bài 3.3 — Tụ nối tiếp: 2 tụ 100µF, + tụ 1 ở 5h, − tụ 1 ở 7h = + tụ 2 ở 7i, − tụ 2 ở 9i.
+// Mỗi tụ bẻ chân rộng 2 lỗ: thân tụ vẽ đứng cao hơn chân, 2 tụ sát cột nhau thì thân tụ này che chân tụ kia trên hình.
 (function () {
   const DA = K.day('dA', 'T+:5', '5a', 'do'), R = K.tro('r', ['5e', '5f'], '100k');
-  const C1 = { id: 'c1', loai: 'tu', p: ['5g', '6g'], nhan: '' }, C2 = { id: 'c2', loai: 'tu', p: ['6i', '7i'], nhan: '' }, DK = K.day('dK', '7j', 'B-:7', 'den');
+  const C1 = { id: 'c1', loai: 'tu', p: ['5h', '7h'], nhan: '' }, C2 = { id: 'c2', loai: 'tu', p: ['7i', '9i'], nhan: '' }, DK = K.day('dK', '9j', 'B-:9', 'den');
   BAI.dangKy({
     id: '3.3',
     muc_tieu: 'Hai tụ nối tiếp có điện dung <b>nhỏ hơn</b> một tụ: τ còn một nửa. Ngược với điện trở.',
@@ -14,10 +15,10 @@
       ten: 'Phần 1 · 2 tụ nối tiếp',
       buoc: [
         K.buocPin(),
-        { ten: 'Cắm 100k và 2 tụ', lam: ['Dây đỏ thanh + → 5a. 100k 5e → 5f.', 'C1 (tụ trên): <b>chân dài 5g</b>, chân ngắn 6g. C2 (tụ dưới): <b>chân dài 6i</b>, chân ngắn 7i. Dây đen 7j → thanh −.'], board: { them: [DA, R, C1, C2, DK] } },
+        { ten: 'Cắm 100k và 2 tụ', lam: ['Dây đỏ thanh + → 5a. 100k 5e → 5f.', 'Bẻ 2 chân mỗi tụ rộng ra cho cách nhau 2 lỗ. C1: <b>chân dài 5h</b>, chân ngắn 7h. C2: <b>chân dài 7i</b>, chân ngắn 9i — cột 7 nối − của C1 với + của C2. Dây đen 9j → thanh −.'], board: { them: [DA, R, C1, C2, DK] } },
         K.buocOm('Ω 200k', '≈ 100 → 1', 'Số tăng dần tới OL.', 'Gần 0: nối tắt.', ['Xả 2 tụ: chạm que vào chân + C1 và chân − C2 vài giây.']),
-        K.lapPin('Lắp pin, bấm giờ, đo áp cả chuỗi', ['Que đỏ 5g, que đen 7i. Ghi số ở 5, 10, 25 giây.'], { them: [K.dh('DCV 20', 'c1.P', 'c2.N', '0 → 4.78')] }, { thay: 'Sau 5 giây ≈ 3.0V: nhanh gấp đôi bài 3.1.', neu_khong: 'Tụ ấm: tháo pin, có tụ cắm ngược.' }),
-        { ten: 'Đo áp từng tụ', lam: ['Đầy rồi thì đo C1 (5g–6g) và C2 (6i–7i).'], board: { them: [K.dh('DCV 20', 'c1.P', 'c1.N', '≈ 2.4')] }, kiem: { thay: 'Mỗi tụ ~2.4V, cộng ≈ 4.78. Lệch nhau chút là do 2 tụ không giống hệt.', neu_khong: '' } },
+        K.lapPin('Lắp pin, bấm giờ, đo áp cả chuỗi', ['Que đỏ 5g, que đen 9g. Ghi số ở 5, 10, 25 giây.'], { them: [K.dh('DCV 20', 'c1.P', 'c2.N', '0 → 4.78')] }, { thay: 'Sau 5 giây ≈ 3.0V: nhanh gấp đôi bài 3.1.', neu_khong: 'Tụ ấm: tháo pin, có tụ cắm ngược.' }),
+        { ten: 'Đo áp từng tụ', lam: ['Đầy rồi thì đo C1 (5g–7g) và C2 (7g–9g).'], board: { them: [K.dh('DCV 20', 'c1.P', 'c1.N', '≈ 2.4')] }, kiem: { thay: 'Mỗi tụ ~2.4V, cộng ≈ 4.78. Lệch nhau chút là do 2 tụ không giống hệt.', neu_khong: '' } },
         K.thaoPin(),
       ],
     }],

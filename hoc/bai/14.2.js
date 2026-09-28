@@ -6,7 +6,7 @@
   const ESP1 = K.esp({ GND: '11c', '3V3': '10c', G8: '12c' });
   const sd = SD;
   const soDo = sd.svg(300, 180, sd.chu(20, 20, 'VCC = 3V3', 'sd-pos') + sd.day('40,26 200,26') + sd.tro(200, 26, 50, '10k') + sd.cham(200, 76) + sd.day('200,76 262,76') + sd.chu(230, 70, 'OUT', 'sd-chu')
-    + sd.hop(120, 70, 60, 40, 'LM393') + sd.day('180,90 200,90 200,76') + sd.chu(40, 150, 'thấy hồng ngoại dội về → LM393 kéo OUT xuống 0', 'sd-mo'),
+    + sd.hop(120, 70, 60, 40, 'LM393') + sd.day('180,90 200,90 200,76') + sd.chu(40, 146, 'thấy hồng ngoại dội về', 'sd-mo') + sd.chu(40, 164, '→ LM393 kéo OUT xuống 0', 'sd-mo'),
   'Ngõ ra FC-51: LM393 chỉ kéo xuống; mức cao là nhờ điện trở 10k lên VCC');
   BAI.dangKy({
     id: '14.2',

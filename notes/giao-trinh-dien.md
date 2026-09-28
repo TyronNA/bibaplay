@@ -2,7 +2,7 @@
 
 Mục tiêu: nắm chắc điện, **nghiêng về robot + nhúng**. Bài nào không dẫn tới mạch nhúng/robot thì không vào đây
 (vd thí nghiệm vật lý thuần như motor đồng cực).
-Chỉ dùng đồ trong `do-dang-co.md`. Nguồn: 1 hộp 3×AAA (~4.5V) — tính theo áp **đo thực tế**, không theo số danh nghĩa.
+Chỉ dùng đồ trong danh sách Đồ đang có. Nguồn: 1 hộp 3×AAA (~4.5V) — tính theo áp **đo thực tế**, không theo số danh nghĩa.
 Mỗi bài: **đoán trước** kết quả bằng công thức → ráp → đo → so. Lệch nhiều thì dừng lại tìm vì sao, đó mới là bài học.
 
 Tiến độ đánh dấu ngay trong bảng (✅ xong). Web tự học đọc thẳng bảng này: http://localhost:4300 (`hoc/`).
@@ -65,7 +65,7 @@ Tiến độ đánh dấu ngay trong bảng (✅ xong). Web tự học đọc th
 
 ## 7. Cuộn dây & motor
 
-Cần mua thêm: dây đồng emay, nam châm, đinh sắt — xem `can-mua.md`.
+Cần mua thêm: dây đồng emay, nam châm, đinh sắt.
 Bài 7.1–7.2 là **nối tắt pin có chủ đích** (cuộn dây gần như 0Ω): chỉ dùng pin AAA kiềm, chạm vài giây rồi nhả vì dây và pin nóng nhanh.
 **Không bao giờ làm với pin lithium (18650, pin quạt)**: nối tắt kéo hàng chục ampe → cháy.
 
@@ -84,13 +84,13 @@ Bài 7.1–7.2 là **nối tắt pin có chủ đích** (cuộn dây gần như 
 - **Đọc datasheet**: mỗi linh kiện mới tra 3 số — áp tối đa, dòng tối đa, công suất tối đa.
 - **Điện 220V trong nhà: không đụng.** Mọi bài ở đây ≤ 4.5V, chạm tay vô hại; 220V qua người là chết người.
 
-## Phần 2 — Điện cho mạch nhúng (khi có ESP32 + đồ trong `xiaozhi-bom.md`)
+## Phần 2 — Điện cho mạch nhúng (khi có ESP32 + mic, ampli, OLED của xiaozhi)
 
 Nguồn đổi: USB 5V từ máy tính cấp cho board, board tự hạ xuống 3.3V. Chân GPIO của ESP32-S3 là **3.3V, không chịu 5V**.
 Mọi bài: rút USB rồi mới cắm/rút dây; chưa cắm USB thì đo Ω `3V3`–`GND` và `5V`–`GND` — không bao giờ gần 0Ω.
 Số liệu chip đã đối chiếu datasheet ESP32-S3 v2.2 + ESP-IDF docs (2026-09-28): mọi chân chịu tối đa 3.6V; mức 1 ≥ 2.48V, mức 0 ≤ 0.83V;
 mặc định 20mA/chân (GPIO17/18: 10mA); ADC suy hao 12dB đo đúng 0–2.9V. Code các bài: `sandbox/esp32-bai/` (đã build, chưa chạy trên chip).
-Chân của mic/ampli/OLED/nút lấy theo `bread-compact-wifi` (`xiaozhi-bom.md`).
+Chân của mic/ampli/OLED/nút lấy theo board `bread-compact-wifi` của xiaozhi.
 
 ## 8. Nguồn
 
@@ -152,11 +152,11 @@ Chỉ dùng chân ADC1 (GPIO1–10); ADC2 bị WiFi chiếm. Áp vào chân ADC 
 Mua thêm khi tới Phần 2: **logic analyzer** 8 kênh 24MHz (rẻ, nhìn được I2C/I2S), máy hiện sóng giá rẻ (vd kit DSO138 — kiêm bài tập hàn),
 ổn áp AMS1117, module driver motor. IC 555 / op-amp LM358: chỉ khi muốn đào sâu analog.
 
-## Phần 3 — Robot: cảm biến, chuyển động, pin (khi có đồ trong `can-mua.md` đợt 4)
+## Phần 3 — Robot: cảm biến, chuyển động, pin (khi có đồ đợt 4)
 
-Mục tiêu: robot 2 bánh kiểu robot hút bụi tự tránh vật. Số liệu từng linh kiện đã đối chiếu datasheet: `datasheet-robot.md`.
+Mục tiêu: robot 2 bánh kiểu robot hút bụi tự tránh vật. Số liệu từng linh kiện đã đối chiếu datasheet.
 Quy tắc mới cho mọi module cảm biến: **đo áp chân OUT bằng đồng hồ trước khi nối vào GPIO** — phải ≤ 3.3V. Module cấp 5V thì chân OUT thường cũng lên 5V.
-Từ chương 16 có **pin lithium**: nối tắt = hàng chục ampe, cháy thật. Đọc `pin-lithium.md` trước, làm trên mặt bàn không có đồ dễ cháy, không bỏ đi khi đang sạc.
+Từ chương 16 có **pin lithium**: nối tắt = hàng chục ampe, cháy thật. Làm trên mặt bàn không có đồ dễ cháy, không bỏ đi khi đang sạc.
 
 ## 14. Cảm biến tránh vật
 
@@ -189,7 +189,7 @@ Từ chương 16 có **pin lithium**: nối tắt = hàng chục ampe, cháy th�
 |---|---|---|---|
 | 17.1 | Robot tự tránh vật | Khung 2WD: DRV8833 + 2 motor TT từ pack 2S, LM2596 → 5V board, HC-SR04 + FC-51 + công tắc va chạm; chạy thử khi **bánh nhấc khỏi mặt bàn** | Gặp vật / chạm → dừng, lùi, quay rồi đi tiếp. Pin dưới 6.6V (3.3V/cell) → tự dừng |
 
-Mua thêm (đợt 4): danh sách + lý do trong `can-mua.md`.
+Mua thêm (đợt 4): đồ của Phần 3 — mục Đồ cần của từng bài liệt kê đủ.
 
 ## Sách đọc kèm
 - *Lessons in Electric Circuits* (Tony Kuphaldt) — miễn phí, trên allaboutcircuits.com; tập I (DC) khớp chương 1–3.

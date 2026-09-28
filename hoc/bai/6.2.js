@@ -11,7 +11,7 @@
     ten: `Thử đủ tổ hợp đầu vào (${ten})`,
     lam: [`Đầu vào là dây ở cột 5${hai ? ' và cột 8' : ''}: đầu ở thanh nguồn cắm <b>thanh + trên = 1</b>, <b>thanh − trên = 0</b>. Chỉ được dời đúng đầu dây đó khi có pin; mạch đã đo Ω ở mọi tổ hợp.`, `Mỗi tổ hợp đo áp ra (${ket}) so với thanh −, <code>DCV 20</code>.`],
     board: { ...doi(1, hai ? 0 : undefined), them: [...doi(1, hai ? 0 : undefined).them, K.dh('DCV 20', '12c', 'B-:16', '?')] },
-    kiem: { thay: 'Ra đúng bảng chân trị (bảng cuối trang).', neu_khong: 'Sai: kiểm chiều diode (vạch = cathode).' },
+    kiem: { thay: 'Ra đúng bảng chân trị (bảng cuối trang).', neu_khong: ten === 'NOT' ? 'Sai: kiểm chân E-B-C của transistor (bài 5.1) và 10k kéo lên ở cột 12.' : 'Sai: kiểm chiều diode (vạch = cathode).' },
   });
   const omDu = (hai, nguong) => K.buocOm('Ω 200k', `> ${nguong}`, `Ở <b>mọi</b> tổ hợp đầu vào: không dưới ${nguong}k.`, 'Có tổ hợp ra gần 0: đầu vào đang nối thẳng thanh + với thanh −.',
     [`Đo ${hai ? '4 tổ hợp (0,0) (0,1) (1,0) (1,1)' : '2 trường hợp 0 và 1'}: dời đầu dây đầu vào khi hộp vẫn rỗng.`]);
@@ -32,11 +32,11 @@
       { ten: 'Phần 2 · AND', buoc: [
         K.buocPin(), { ten: 'Ráp AND', lam: ['Dây đen nối 2 thanh − như phần 1.', 'D1: <b>vạch 5b</b>, anode 12b. D2: <b>vạch 8d</b>, anode 12d. 10k từ thanh + (cột 12) xuống 12a.', 'Đầu vào A, B như phần 1.'],
           board: { them: [NOI, ...AND, vao('a', 5, 0), vao('b', 8, 0)] } },
-        omDu(true, 10), K.lapPin('Lắp pin', [], {}, { thay: '', neu_khong: '' }), bangThu('AND', true, 'cột 12'), K.thaoPin(['Rút hết trừ hộp pin và dây nối 2 thanh −.']) ] },
+        omDu(true, 10), K.lapPin('Lắp pin', [], {}, { thay: 'Không có gì nóng.', neu_khong: 'Diode hoặc điện trở ấm: tháo pin, có đầu vào đang nối thẳng thanh + với thanh −.' }), bangThu('AND', true, 'cột 12'), K.thaoPin(['Rút hết trừ hộp pin và dây nối 2 thanh −.']) ] },
       { ten: 'Phần 3 · NOT', cot: 24, buoc: [
         K.buocPin(), { ten: 'Ráp NOT', lam: ['Dây đen nối 2 thanh −.', 'Đầu vào dây ở cột 5 → 10k 5c → 11c → dây vàng 11e → 11f → chân B (11h). S8050: E 10h, B 11h, C 12h; dây đen 10j → thanh −.', 'Kéo lên: 10k vắt qua rãnh 12e → 12f, dây đỏ thanh + → 12a. Đầu ra đo ở cột 12.'],
           board: { them: [NOI, ...NOT, vao('a', 5, 0)] } },
-        omDu(false, 10), K.lapPin('Lắp pin', [], {}, { thay: '', neu_khong: '' }), bangThu('NOT', false, 'cột 12'), K.thaoPin() ] },
+        omDu(false, 10), K.lapPin('Lắp pin', [], {}, { thay: 'Không có gì nóng.', neu_khong: 'Transistor ấm: tháo pin, kiểm chân E-B-C.' }), bangThu('NOT', false, 'cột 12'), K.thaoPin() ] },
     ],
     bang_do: [
       { ten: 'OR (V ra)', cot: ['A=0 B=0', 'A=0 B=1', 'A=1 B=0', 'A=1 B=1'], hang: [{ ten: 'Đo', du_doan: ['≈ 0', '≈ 4.1', '≈ 4.1', '≈ 4.1'] }] },

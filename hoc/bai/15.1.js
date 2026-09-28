@@ -6,8 +6,8 @@
   const ESP = K.esp({ GND: 'B-:3', G14: '20a' });
   const sd = SD;
   const xung = (x, rong, t) => `<polyline points="${x},60 ${x},30 ${x + rong},30 ${x + rong},60 ${x + 100},60" class="sd-net"/>` + sd.chu(x + rong / 2, 24, t, 'sd-chu', 'middle');
-  const soDo = sd.svg(320, 110, sd.day('10,60 20,60') + xung(20, 10, '1ms') + xung(120, 15, '1.5ms') + xung(220, 20, '2ms')
-    + sd.chu(20, 84, 'một đầu', 'sd-mo') + sd.chu(120, 84, 'giữa', 'sd-mo') + sd.chu(220, 84, 'đầu kia', 'sd-mo') + sd.chu(20, 104, 'mỗi xung cách nhau 20ms (50Hz); hình không đúng tỉ lệ', 'sd-mo'),
+  const soDo = sd.svg(320, 128, sd.day('10,60 20,60') + xung(20, 10, '1ms') + xung(120, 15, '1.5ms') + xung(220, 20, '2ms')
+    + sd.chu(20, 84, 'một đầu', 'sd-mo') + sd.chu(120, 84, 'giữa', 'sd-mo') + sd.chu(220, 84, 'đầu kia', 'sd-mo') + sd.chu(20, 104, 'mỗi xung cách nhau 20ms (50Hz)', 'sd-mo') + sd.chu(20, 120, 'hình không đúng tỉ lệ', 'sd-mo'),
   'Xung 1ms, 1.5ms, 2ms mỗi 20ms tương ứng 3 góc của servo');
   BAI.dangKy({
     id: '15.1',
@@ -27,7 +27,7 @@
         K.buocPin(),
         { ten: '1k và dây từ board', lam: ['USB rút. 1k (nâu-đen-đỏ) từ <b>20c → 24c</b>. <code>GND</code> → thanh − dưới (cột 3). <code>14</code> → <b>20a</b>.'], board: { them: [R, ESP] } },
         { ten: 'Cắm 3 dây servo', kiem_truoc: true, lam: ['Đầu cắm servo có 3 lỗ: dùng 3 dây đực–đực. Dây <b>cam</b> → <b>24e</b>. Dây <b>đỏ</b> → thanh + trên (cột 22). Dây <b>nâu</b> → thanh − dưới (cột 26). Kiểm lại màu: bản clone vàng = tín hiệu, đen = GND.'], board: { them: [SV] },
-          kiem: { thay: 'Cam ở 24e, đỏ ở thanh +, nâu ở thanh −.', neu_khong: 'Không chắc dây nào là tín hiệu: chưa đi tiếp, gửi ảnh cho Claude.' } },
+          kiem: { thay: 'Cam ở 24e, đỏ ở thanh +, nâu ở thanh −.', neu_khong: 'Không chắc dây nào là tín hiệu: chưa đi tiếp, tra trang shop bán hoặc chụp ảnh nhờ người biết điện tử xem.' } },
         K.buocOm('Ω 200k', '> 0.1', 'Không dưới ~100Ω giữa 2 tiếp điểm hộp pin.', 'Gần 0: dây đỏ servo chạm thanh −.', ['Thêm: que đỏ 24d, que đen thanh + → phải ≈ 0 là <b>sai</b> (dây cam đang ở thanh +). Đúng thì ra số lớn.']),
         K.camUsb('Cắm USB trước, nạp 15.1', ['<code>idf.py menuconfig</code> → 15.1, <code>flash monitor</code>. Hộp pin vẫn rỗng: code đã chạy nhưng servo chưa có điện.'], {}, { thay: 'Monitor in "xung 1000us / 1500us / 2000us" mỗi 2 giây. Servo đứng im.', neu_khong: '' }),
         K.lapPin('Rồi lắp pin', ['Nhìn tay quay. Khi servo đang đứng yên ở một góc, đẩy nhẹ tay quay bằng ngón tay (không bẻ mạnh).'], {}, { thay: 'Servo nhảy qua 3 góc theo monitor. Đẩy nhẹ: cưỡng lại, buông ra thì về góc cũ.', neu_khong: 'Rung liên tục / kêu è è: pin yếu hoặc thiếu GND chung. Không nhúc nhích: dây cam chưa tới 24e. Servo nóng: tháo pin.' }),

@@ -79,9 +79,33 @@ b,strong{font-weight:600}
 .luot-xem[hidden]{display:none}
 .luot-xem .an-chu{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-/* màn hẹp: logo một hàng, nav xuống hàng dưới và tự xuống dòng thay vì gãy chữ trong từng mục */
-@media (max-width:640px){.top{grid-template-columns:1fr auto}.top nav{grid-column:1/-1;grid-row:2}.top .du-an{display:none}.top>*+*{border-left:0;border-top:1px solid var(--line-dam)}
-  .top nav{flex-wrap:wrap}.top>.top-phu{border-top:0;border-left:1px solid var(--line-dam)}.top nav a{flex:1 1 auto;height:auto;justify-content:center;white-space:nowrap;padding:12px 10px;border-bottom:1px solid var(--line);margin-bottom:-1px}}
+/* nút sáng/tối + nút menu: icon mono, đổi hình theo trạng thái */
+.nut-dau{display:grid;place-items:center;width:34px;height:34px;padding:0;margin:-6px 0;cursor:pointer;color:var(--ink);background:none;border:1px solid transparent;border-radius:1px}
+.nut-dau:hover{border-color:var(--line-dam)}
+.nut-dau:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.nut-dau svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#nut-mau .mat-troi,#nut-mau[aria-pressed="true"] .mat-trang{display:none}
+#nut-mau[aria-pressed="true"] .mat-troi{display:inline}
+#nut-menu{display:none}
+#nut-menu .dau-x,#nut-menu[aria-expanded="true"] .ba-gach{display:none}
+#nut-menu[aria-expanded="true"] .dau-x{display:inline}
+/* Tải PDF (chỉ bản web): tách khỏi các mục điều hướng, bấm vào có hộp hỏi lại (dau-trang.js) */
+.top nav .nav-pdf{color:var(--muted);border-left-style:dashed}
+.top nav .nav-pdf::before{content:"↓";margin-right:6px}
+
+/* màn hẹp: một hàng logo + nút, dính đầu màn khi cuộn; nav gập sau nút ☰, mở ra thành danh sách dọc */
+@media (max-width:640px){
+  .top{grid-template-columns:1fr auto;margin-top:12px;position:sticky;top:0;z-index:20}
+  .top .du-an{display:none}
+  .top>.top-phu{gap:6px;padding:6px 8px}
+  .top-phu .luot-xem{margin-right:6px}
+  #nut-menu{display:grid}
+  .top nav{display:none;grid-column:1/-1;grid-row:2;flex-direction:column;align-items:stretch;border-left:0;border-top:1px solid var(--line-dam)}
+  .top.mo-menu nav{display:flex}
+  .top nav a{height:auto;padding:14px 16px;font-size:13px}
+  .top nav a+a{border-left:0;border-top:1px solid var(--line)}
+  .top nav .nav-pdf{border-top:1px dashed var(--line-dam)}
+}
 
 main{max-width:1100px;margin:0 auto;padding-block:36px 80px;display:flex;flex-direction:column;gap:40px}
 h1{font-size:34px;line-height:1.15;margin:0;text-wrap:balance;letter-spacing:-.015em}
@@ -305,7 +329,7 @@ tbody th{font-weight:600}
 .bb-to92{fill:#23282E} .bb-to92-chu{fill:#DDE3E8;font:7.5px var(--mono)}
 .bb-nut{fill:#3B4148;stroke:#15191D} .bb-nut-num{fill:#15191D;stroke:#8A949E} .bb-nut-num.nhan{fill:var(--moi)}
 .bb-nutchu{fill:var(--muted);font:9px var(--mono)}
-.bb-modten{fill:#fff;font:600 10px var(--mono)} .bb-modchan{fill:#fff;font:600 9px var(--mono)}
+.bb-modten{fill:#fff;font:600 10px var(--mono)} .bb-modchan{fill:#fff;font:600 9px var(--mono)} .bb-modso{fill:rgba(255,255,255,.72);font:9px var(--mono)}
 .bb-esp{fill:#1E2328;stroke:#15191D} .bb-usb{fill:#B8BEC4;stroke:#6E767E} .bb-header{fill:#E0B84C}
 .bb-espchan{fill:#fff;font:600 9.5px var(--mono)} .bb-espten{fill:#9AA3AD;font:9px var(--mono)}
 .bb-motor{fill:#B8BEC4;stroke:#6E767E} .bb-truc{fill:#6E767E} .bb-motorchu{fill:#23282E;font:700 14px var(--mono)}
@@ -373,6 +397,14 @@ line.mp-thong{stroke:var(--accent);stroke-width:12;stroke-opacity:.18;stroke-lin
 @keyframes khoi{from{transform:translateY(0);opacity:.8}to{transform:translateY(-18px);opacity:0}}
 @keyframes quay{to{transform:rotate(360deg)}}
 @media (max-width:900px){.mp{grid-template-columns:minmax(0,1fr)}}
+
+/* hộp hỏi lại (tải PDF) */
+.hoi{max-width:min(92vw,440px);padding:20px 22px;color:var(--ink);overflow:visible}
+.hoi::backdrop{background:rgba(11,20,34,.55)}
+.hoi h2{margin-bottom:12px}
+.hoi p{margin:0 0 10px}
+.hoi .do-nut{margin:16px 0 0;justify-content:flex-end}
+.hoi .do-nut .chinh{color:var(--panel);background:var(--ink)}
 
 /* In / xuất PDF (hoc/xuat-pdf.py): nền trắng, bỏ phần bấm được, giữ màu dây/linh kiện vì màu mang nghĩa (+/−).
    "có / thiếu" là đồ của người xem → không in. Bước ráp không bị cắt đôi qua 2 trang. */

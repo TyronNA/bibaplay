@@ -17,7 +17,7 @@
     can: [K.can.ldr(), K.can.bientro(), K.can.tro('47k'), K.can.tro('220'), K.can.npn(), K.can.led(), ...K.coBan(7)],
     kien_thuc: `<p>Cầu phân áp: phía trên = biến trở + 47k, phía dưới = quang trở. <code>U_giữa = U · R_dưới/(R_trên + R_dưới)</code>. Tối → quang trở lớn → U_giữa lên → qua ~0.65V thì transistor dẫn. <b>Quang trở phải ở dưới</b>; poster bài 27/30 vẽ ở trên nên chạy ngược.</p>
       <p>47k là để khi vặn biến trở về 0Ω, chân B vẫn không nối thẳng vào +: dòng B tối đa ~0.1mA.</p>
-      <p>Ngưỡng bật: <code>R_quang ≈ 0.16 × R_trên</code> ≈ 7.5k–9k. Phòng sáng quá (quang trở vẫn < 7k khi che) → đổi 47k thành 100k; phòng tối quá (LED luôn sáng) → đổi thành 22k.</p>
+      <p>Ngưỡng bật: <code>R_quang ≈ 0.16 × R_trên</code> ≈ 7.5k–9k. Phòng sáng quá (che tay mà quang trở vẫn < 7k, LED không bật) → đổi 47k thành <b>22k</b> cho ngưỡng xuống ~3.5k; phòng tối quá (LED luôn sáng) → đổi thành <b>100k</b> cho ngưỡng lên ~16k.</p>
       <p>Biến trở chỉ dùng A và W (kiểu A, bài 2.3). Chân B của biến trở bỏ trống.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Trên: biến trở + 47k. Dưới: quang trở. Giữa → chân B.' }],
     du_doan: '<p>Sáng phòng (quang trở 5–20k): LED mờ hoặc tắt. Che bằng tay (≥ 100k): LED sáng hẳn, U_B ≈ 0.7V.</p>',

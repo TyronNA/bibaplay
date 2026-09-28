@@ -13,7 +13,7 @@
     kien_thuc: `<p>NPN nhìn từ đồng hồ giống 2 diode quay lưng vào nhau: B → E và B → C đều dẫn (~0.6–0.7V), còn E ↔ C thì không dẫn chiều nào.</p>
       <p>Tìm B: chân mà khi que <b>đỏ</b> đặt vào đó, que đen chạm 2 chân kia đều ra số. Phân biệt E và C: B–E thường cao hơn B–C vài chục mV.</p>
       <p>Đồng hồ có lỗ <code>hFE</code> (4 lỗ E B C E ghi NPN/PNP): cắm đúng chiều ra 100–400; E và C đảo chỗ thì ra số nhỏ (~5–20). Đây là cách xác nhận chắc nhất.</p>
-      <p>Poster ghi B-C-E; S8050 TO-92 thường là <b>E-B-C</b> (mặt phẳng hướng về mình, chân chúc xuống, trái sang phải). Lô của ông phải đo mới biết.</p>`,
+      <p>Poster ghi B-C-E; S8050 TO-92 thường là <b>E-B-C</b> (mặt phẳng hướng về mình, chân chúc xuống, trái sang phải). Lô của bạn phải đo mới biết.</p>`,
     so_do: [{ nhan: 'Nhìn bằng đồng hồ', svg: soDo, chu: 'Que đỏ ở B: dẫn sang cả E và C.' }],
     phan: [{
       ten: 'Phần 1 · Dò 6 cặp chân',
@@ -28,7 +28,7 @@
     }],
     bang_do: [
       { ten: 'Thang diode (que đỏ → que đen)', cot: ['1→2', '2→1', '1→3', '3→1', '2→3', '3→2'], hang: [{ ten: 'Số đo', du_doan: ['1', '≈ 0.70', '1', '1', '≈ 0.68', '1'] }] },
-      { ten: 'Kết luận', cot: ['Chân 1', 'Chân 2', 'Chân 3', 'hFE đúng chiều', 'hFE đảo E/C'], hang: [{ ten: 'Của ông', du_doan: ['E?', 'B?', 'C?', '100–400', '< 30'] }] },
+      { ten: 'Kết luận', cot: ['Chân 1', 'Chân 2', 'Chân 3', 'hFE đúng chiều', 'hFE đảo E/C'], hang: [{ ten: 'Của bạn', du_doan: ['E?', 'B?', 'C?', '100–400', '< 30'] }] },
     ],
     bay: ['Tin thứ tự chân trên poster/hình mạng: mỗi hãng/lô một kiểu.', 'Đo lúc transistor còn trong mạch: đường song song làm số sai.'],
     robot: ['Mọi transistor/MOSFET mới mua: dò chân trước khi hàn.'],

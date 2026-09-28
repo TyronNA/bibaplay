@@ -2,9 +2,9 @@
 // Dùng lại code 9.4 (đếm nhấn có chống dội) — công tắc hành trình về điện chỉ là một nút nhấn.
 (function () {
   const sd = SD;
-  const hinhDo = (cap, thay) => sd.svg(300, 150, sd.hop(90, 30, 120, 50, 'KW11') + sd.day('114,80 114,110') + sd.day('150,80 150,110') + sd.day('186,80 186,110')
-    + sd.chu(114, 126, 'chân 1', 'sd-mo', 'middle') + sd.chu(150, 126, 'chân 2', 'sd-mo', 'middle') + sd.chu(186, 126, 'chân 3', 'sd-mo', 'middle')
-    + sd.day(`${cap[0]},110 ${cap[0]},140 40,140`, true) + sd.day(`${cap[1]},110 ${cap[1]},144 260,144`) + sd.chu(10, 144, 'que đỏ', 'sd-pos') + sd.chu(262, 148, 'que đen', 'sd-chu')
+  const hinhDo = (cap, thay) => sd.svg(330, 160, sd.hop(90, 30, 120, 50, 'KW11') + sd.day('114,80 114,110') + sd.day('150,80 150,110') + sd.day('186,80 186,110')
+    + sd.chu(86, 100, 'chân', 'sd-mo', 'end') + sd.chu(119, 100, '1', 'sd-mo') + sd.chu(155, 100, '2', 'sd-mo') + sd.chu(191, 100, '3', 'sd-mo')
+    + sd.day(`${cap[0]},110 ${cap[0]},136 64,136`, true) + sd.day(`${cap[1]},110 ${cap[1]},144 262,144`) + sd.chu(58, 140, 'que đỏ', 'sd-pos', 'end') + sd.chu(268, 148, 'que đen', 'sd-chu')
     + sd.chu(150, 20, thay, 'sd-mo', 'middle'), 'Que đồng hồ chạm 2 chân của công tắc hành trình');
   const SW = { id: 'sw', loai: 'ngoai', kieu: 'hop', chu: 'KW11', x: 470, chan: { COM: 'B-:14', NO: '12e' }, mau: ['den', 'vang'], nhan: 'công tắc (COM, NO)' };
   const ESP = K.esp({ GND: 'B-:3', G12: '12c' });
@@ -29,7 +29,7 @@
           { ten: 'Thử cặp chân 1–2 và 1–3 khi nhả', kiem_truoc: true, lam: ['Núm thang thông mạch. Chạm que đỏ chân 1, que đen chân 2 — nghe có kêu không. Rồi chân 1–3, rồi 2–3. Ghi cặp nào kêu khi <b>nhả</b>.'], hinh: hinhDo([114, 150], 'nhả: tìm cặp kêu'),
             kiem: { thay: 'Đúng 1 cặp kêu khi nhả: đó là <b>COM–NC</b>.', neu_khong: 'Không cặp nào kêu, hoặc cả 3 cặp kêu: thử lại với que chạm chắc vào kim loại; vẫn vậy thì công tắc hỏng.' } },
           { ten: 'Giữ nhấn, thử lại', kiem_truoc: true, lam: ['Giữ cần công tắc (nghe "tách"). Thử lại 3 cặp. Cặp vừa kêu lúc nhả giờ phải im; một cặp khác kêu.'], hinh: hinhDo([150, 186], 'nhấn giữ: cặp mới kêu'),
-            kiem: { thay: 'Nhấn: cặp mới kêu = <b>COM–NO</b>. Chân có mặt trong cả 2 cặp là <b>COM</b>. Ghi lại: COM = chân ?, NO = chân ?, NC = chân ?', neu_khong: 'Không tìm ra chân chung: chưa đi tiếp. Gửi ảnh + các cặp đã thử cho Claude.' } },
+            kiem: { thay: 'Nhấn: cặp mới kêu = <b>COM–NO</b>. Chân có mặt trong cả 2 cặp là <b>COM</b>. Ghi lại: COM = chân ?, NO = chân ?, NC = chân ?', neu_khong: 'Không tìm ra chân chung: chưa đi tiếp. Ghi lại các cặp đã thử, đo lại từ đầu với que tì chắc vào lá kim loại.' } },
         ],
       },
       {

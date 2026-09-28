@@ -7,8 +7,8 @@
   const pin = (x, y) => `<rect x="${x}" y="${y}" width="90" height="30" rx="4" style="fill:#3B4652"/><rect x="${x + 90}" y="${y + 9}" width="6" height="12" style="fill:#B8BEC4"/>` + sd.chu(x + 45, y + 20, 'AAA 1.5V', 'lk-trang', 'middle') + sd.chu(x + 104, y + 20, '+', 'sd-pos') + sd.chu(x - 12, y + 20, '−', 'sd-neg');
   const h1 = svg(360, 150, dinh(60, 50) + cuon(90, 50, 16) + sd.chu(90, 30, 'quấn cùng một chiều, sát nhau', 'sd-mo') + `<path d="M84 55 C 60 70, 40 90, 40 120" class="sd-net"/><path d="M186 55 C 220 70, 250 90, 260 120" class="sd-net"/>`
     + sd.chu(80, 138, 'đầu 1: cạo men 1cm', 'sd-mo', 'middle') + sd.chu(270, 138, 'đầu 2: cạo men 1cm', 'sd-mo', 'middle'), 'Đinh sắt quấn dây emay, 2 đầu cạo men');
-  const h2 = svg(360, 170, dinh(60, 30) + cuon(90, 30, 16) + `<path d="M84 35 C 60 60, 40 80, 60 120" class="sd-net"/><path d="M186 35 C 230 60, 250 90, 230 120" class="sd-net"/>` + pin(100, 118)
-    + sd.chu(40, 112, 'băng dính', 'sd-mo') + sd.chu(262, 112, 'kẹp cá sấu:', 'sd-mo') + sd.chu(262, 126, 'chạm 2–3 giây', 'sd-xau') + `<path d="M200 70l30 20M215 70l20 25" class="sd-net"/>` + sd.chu(250, 64, 'kẹp giấy', 'sd-mo'),
+  const h2 = svg(360, 170, dinh(60, 30) + cuon(90, 30, 16) + `<path d="M84 35 C 60 60, 40 110, 99 133" class="sd-net"/><path d="M186 35 C 240 60, 250 120, 197 133" class="sd-net"/>` + pin(100, 118)
+    + sd.chu(92, 164, 'băng dính ở −', 'sd-mo', 'middle') + sd.chu(262, 112, 'kẹp cá sấu:', 'sd-mo') + sd.chu(262, 126, 'chạm 2–3 giây', 'sd-xau') + `<path d="M262 30l26 14M270 26l22 20" class="sd-net"/>` + sd.chu(298, 40, 'kẹp giấy', 'sd-mo'),
   'Một đầu dây dán vào cực âm pin, đầu kia chạm cực dương 2 đến 3 giây');
   BAI.dangKy({
     id: '7.1',

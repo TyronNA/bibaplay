@@ -9,6 +9,7 @@
   const MAU_LED = { do: '#E5372C', xanhla: '#2FA84F', vang: '#E8B90C', xanhduong: '#2F6FE0', trang: '#F2F2F2' };
   const PIN0 = { x: 56, y: 378, w: 180, h: 62 };
   let PIN = PIN0;
+  let DAT = {}; // id → x thật của ESP32 / đồ ngoài sau khi ve() dời cho khỏi chồng (mô phỏng vẽ hiệu ứng theo đây)
   const ESP_Y = 392, ESP_BUOC = 36;
   // ESP32 vẽ tách khỏi breadboard, chỉ các chân bài dùng: board thật để trên bàn, nối bằng dây đực–cái.
   const tenChanEsp = k => k.replace(/^G(\d+)$/, 'IO$1').replace(/^GND\d$/, 'GND');
@@ -158,6 +159,8 @@
     s += `<rect x="${x1}" y="${y1}" width="${x2 - x1}" height="${y2 - y1}" rx="4" style="fill:${mau};opacity:.94"/>`;
     s += `<text x="${(x1 + x2) / 2}" y="${y1 + 13}" text-anchor="middle" class="bb-modten">${esc(it.ten)}</text>`;
     ps.forEach(p => { s += `<text transform="translate(${p.x + 3.5} ${y2 - 4}) rotate(-90)" class="bb-modchan">${esc(p.ten)}</text>`; });
+    // thân module che dòng số cột của board: vẽ lại số (1, 5, 10…) lên thân, bài ghi chân theo số cột
+    ps.filter(p => p.cot === 1 || p.cot % 5 === 0).forEach(p => { s += `<text x="${p.x}" y="${y1 + 27}" text-anchor="middle" class="bb-modso">${p.cot}</text>`; });
     return { s, bb: [x1 - 6, y1 - 4, x2 + 6, Math.max(...ps.map(p => p.y)) + 8] };
   }
 
@@ -184,22 +187,25 @@
   // Đồ nằm ngoài board (motor, loa, cuộn dây): 2 dây nối vào lỗ.
   function veNgoai(it) {
     const x = it.x != null ? it.x : 300, y = 420, ks = Object.keys(it.chan), mau = it.mau || ['do', 'den'];
+    // hộp: chân giãn theo nhãn dài nhất (chữ 9px mono ≈ 5.5px/ký tự), không thì "IN+IN−OUT+OUT−" dính liền
+    const buoc = it.kieu === 'hop' ? Math.max(ks.length > 2 ? 18 : 24, Math.max(...ks.map(k => k.length)) * 5.5 + 4) : ks.length > 2 ? 18 : 24;
+    const w = it.kieu === 'hop' ? Math.max(70, ks.length * buoc + 16) : 52;
     let s = '';
     ks.forEach((k, i) => {
-      const d = lo(it.chan[k]), sx = x + (i - (ks.length - 1) / 2) * (ks.length > 2 ? 18 : 24), m = MAU_DAY[mau[i] || 'vang'];
+      const d = lo(it.chan[k]), sx = x + (i - (ks.length - 1) / 2) * buoc, m = MAU_DAY[mau[i] || 'vang'];
       s += `<path d="M${sx} ${y - 22} C ${sx} ${y - 70}, ${d.x} ${d.y + 60}, ${d.x} ${d.y}" style="stroke:${m}" class="bb-daypin"/><circle cx="${d.x}" cy="${d.y}" r="4.5" style="fill:${m}"/>`;
     });
     if (it.kieu === 'hop') {
-      const w = Math.max(70, ks.length * 18 + 16);
       s += `<rect x="${x - w / 2}" y="${y - 22}" width="${w}" height="44" rx="5" class="bb-esp"/><text x="${x}" y="${y + 4}" text-anchor="middle" class="bb-espchan">${esc(it.chu || '')}</text>`;
-      ks.forEach((k, i) => { s += `<text x="${x + (i - (ks.length - 1) / 2) * 18}" y="${y - 26}" text-anchor="middle" class="bb-nutchu">${esc(k)}</text>`; });
+      ks.forEach((k, i) => { s += `<text x="${x + (i - (ks.length - 1) / 2) * buoc}" y="${y - 26}" text-anchor="middle" class="bb-nutchu">${esc(k)}</text>`; });
     } else if (it.kieu === 'loa') {
       s += `<circle cx="${x}" cy="${y}" r="24" class="bb-loa"/><circle cx="${x}" cy="${y}" r="10" class="bb-loa-giua"/>`;
     } else {
       s += `<rect x="${x - 26}" y="${y - 22}" width="52" height="44" rx="20" class="bb-motor"/><rect x="${x + 26}" y="${y - 3}" width="16" height="6" class="bb-truc"/><text x="${x}" y="${y + 5}" text-anchor="middle" class="bb-motorchu">M</text>`;
     }
     if (it.nhan) s += `<text x="${x}" y="${y + 42}" text-anchor="middle" class="bb-ghichu">${esc(it.nhan)}</text>`;
-    return { s, bb: [x - 32, y - 28, x + 46, y + 48] };
+    const nua = Math.max(w / 2 + 6, it.nhan ? it.nhan.length * 3.4 : 0);
+    return { s, bb: [x - Math.max(32, nua), y - 28, x + Math.max(it.kieu === 'hop' ? 0 : 46, nua), y + 48] };
   }
 
   function veDay(it, a, b) {
@@ -245,8 +251,12 @@
     return { s, bb: [x - 16, y - 8, x + w + 16, y + h + 28] };
   }
 
-  function veDongHo(it, W, theoId) {
-    const w = 200, h = 108, mx = W - w - 16, my = 378;
+  // ngoai: khung của hộp pin / ESP32 / đồ ngoài board đã vẽ. Đồng hồ mặc định ở góc phải dưới; chồng lên món nào
+  // (LM2596, pack, công tắc… bài đặt x ở đó) thì xuống hàng riêng bên dưới, không thì món đó bị che mất.
+  function veDongHo(it, W, theoId, ngoai) {
+    const w = 200, h = 108, mx = W - w - 16;
+    const chong = ngoai.filter(b => b[0] < mx + w + 6 && b[2] > mx - 32 && b[3] > 372);
+    const my = chong.length ? Math.max(...chong.map(b => b[3])) + 18 : 378;
     const com = { x: mx + 60, y: my + 90 }, cong = { x: mx + 140, y: my + 90 };
     let s = '';
     // Dây que đi xuống khỏi cổng rồi vòng sang trái đồng hồ, để không vẽ đè lên màn LCD.
@@ -263,7 +273,7 @@
     s += `<circle cx="${com.x}" cy="${com.y}" r="7" class="bb-cong-den"/><text x="${com.x - 12}" y="${com.y + 4}" text-anchor="end" class="bb-dhchu">COM</text>`;
     s += `<circle cx="${cong.x}" cy="${cong.y}" r="7" class="bb-cong-do"/><text x="${cong.x + 12}" y="${cong.y + 4}" class="bb-dhchu">${esc(it.cong || 'VΩ')}</text>`;
     s += que(cong, it.do_, 'bb-que-do', my + h + 24, mx - 26) + que(com, it.den, 'bb-que-den', my + h + 12, mx - 12);
-    return { s, bb: [mx - 6, my - 6, mx + w + 6, my + h + 6] };
+    return { s, bb: [mx - 6, my - 6, mx + w + 6, my + h + 6], day: my + h + 34 };
   }
 
   function veNhan(it) {
@@ -277,7 +287,26 @@
     const hop = items.find(i => i.loai === 'pin');
     PIN = hop && hop.x != null ? { ...PIN0, x: hop.x } : PIN0;
     const coNgoai = items.some(i => ['pin', 'dh', 'esp', 'ngoai'].includes(i.loai));
-    const H = items.some(i => i.loai === 'dh') ? 520 : coNgoai ? 500 : 362;
+    let H = items.some(i => i.loai === 'dh') ? 520 : coNgoai ? 500 : 362;
+    // Khung các món dưới board đã đặt chỗ. Hộp pin đứng yên (dây pin + que đo tới tiếp điểm hộp tính theo PIN);
+    // ESP32 / đồ ngoài mà bài đặt x chồng lên món trước thì dời sang phải tới khi hết chồng.
+    DAT = {};
+    const ngoai = hop ? [[PIN.x - 16, PIN.y - 8, PIN.x + PIN.w + 16, PIN.y + PIN.h + 28]] : [];
+    const giao = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
+    // Dời mà tràn mép phải thì thôi, giữ chỗ bài đặt: chồng một góc còn hơn mất hẳn khỏi hình.
+    const datCho = (veMon, it, xMacDinh) => {
+      const goc = veMon(it);
+      let r = goc, moi = it;
+      for (let k = 0; k < 12; k++) {
+        const b = ngoai.find(q => giao(q, r.bb));
+        if (!b) break;
+        moi = { ...moi, x: (moi.x != null ? moi.x : xMacDinh) + b[2] - r.bb[0] + 6 };
+        r = veMon(moi);
+      }
+      if (r.bb[2] > W) { r = goc; moi = it; }
+      if (it.id) DAT[it.id] = moi.x != null ? moi.x : xMacDinh;
+      return r;
+    };
     const theoId = {};
     items.forEach(i => { if (i.id) theoId[i.id] = i; });
 
@@ -317,6 +346,8 @@
       if (!r) return;
       lop[it.loai === 'dh' || it.loai === 'nhan' || it.loai === 'cam' ? 'tren' : 'duoi'] += r.s;
       if (r.bb) lop.moi += khung(r.bb, it.moi);
+      if (r.bb && ['esp', 'ngoai'].includes(it.loai)) ngoai.push(r.bb);
+      if (r.day) H = Math.max(H, r.day);
     };
     const thuTu = ['mod', 'tro', 'ldr', 'diode', 'bientro', 'npn', 'nut', 'led', 'tu', 'day', 'ngoai', 'esp', 'pin', 'cam', 'dh', 'nhan'];
     [...items].sort((a, b) => thuTu.indexOf(a.loai) - thuTu.indexOf(b.loai)).forEach(it => {
@@ -328,14 +359,14 @@
         case 'npn': them(veNpn(it, [p('E'), p('B'), p('C')]), it); break;
         case 'nut': them(veNut(it, c), it); break;
         case 'mod': them(veMod(it), it); break;
-        case 'esp': them(veEsp(it), it); break;
-        case 'ngoai': them(veNgoai(it), it); break;
+        case 'esp': them(datCho(veEsp, it, 40), it); break;
+        case 'ngoai': them(datCho(veNgoai, it, 300), it); break;
         case 'led': them(veLed(it, p('A'), p('K')), it); break;
         case 'bientro': them(veBienTro(it, p('A'), p('W'), p('B')), it); break;
         case 'day': them(veDay(it, p(1), p(2)), it); break;
         case 'cam': them(veCam(it, p(1), p(2)), it); break;
         case 'pin': them(vePin(it, theoId), it); break;
-        case 'dh': them(veDongHo(it, W, theoId), it); break;
+        case 'dh': them(veDongHo(it, W, theoId, ngoai), it); break;
         case 'nhan': them(veNhan(it), it); break;
       }
       // chấm chân cắm
@@ -348,7 +379,7 @@
   }
 
   // lo/chan/diem cho trang mô phỏng dò lỗ dưới con trỏ; diem('pin±') theo vị trí hộp pin của lần ve() gần nhất.
-  window.Board = { ve, lo, chan, diem, HANG, THANH, PIN: () => PIN };
+  window.Board = { ve, lo, chan, diem, HANG, THANH, PIN: () => PIN, xNgoai: id => DAT[id] };
 })();
 
 // Sơ đồ nguyên lý vẽ tay bằng vài khối cơ bản; mọi nét theo currentColor nên ăn theo theme.

@@ -25,7 +25,7 @@
     nguon: 'cục sạc 5V · 1 cell 18650',
     can: [K.can.cell(1), K.can.de18650(1), K.can.tp4056(), K.can.sac5v(), K.can.dh(), K.can.moHan()],
     kien_thuc: `<p><b>Khác hẳn pin AAA:</b> cell 18650 hãng xả được 10–20A (Samsung 25R: 20A liên tục). Nối tắt 2 cực — bằng dây, kẹp cá sấu, tua vít, đồng xu — là hàng chục ampe: dây đỏ rực, cháy vỏ, cell có thể xì khói. Mọi bước dưới đây sắp xếp để <b>không bao giờ có lúc 2 dây của pin nằm hở gần nhau</b>.</p>
-      <p>Số của cell: sạc đầy <b>4.2V</b>, danh nghĩa 3.6–3.7V, cạn 2.5–3.0V. Đo trước khi dùng (<code>pin-lithium.md</code>): ≥ 3.0V dùng được; 2.5–3.0V xả sâu; <b>dưới 2.5V hoặc phồng, móp, rách vỏ → bỏ</b>, không sạc.</p>
+      <p>Số của cell: sạc đầy <b>4.2V</b>, danh nghĩa 3.6–3.7V, cạn 2.5–3.0V. Đo trước khi dùng: ≥ 3.0V dùng được; 2.5–3.0V xả sâu; <b>dưới 2.5V hoặc phồng, móp, rách vỏ → bỏ</b>, không sạc.</p>
       <p>TP4056 (NanJing Top Power): vào 4.0–8V, sạc tới 4.2V ±1.5%, dòng 1A với điện trở 1.2k có sẵn trên module; pin dưới 2.9V thì sạc nhỏ giọt 130mA trước. Đèn đỏ = đang sạc, xanh = đầy. Chip <b>chỉ cho 1 cell</b> và bản thân không chống xả cạn — module 6 chân có thêm DW01A + MOSFET 8205A: ngắt khi cell xuống ~2.5V hoặc quá dòng ở ngõ <b>OUT</b>. Tải phải lấy ở OUT, không lấy ở B+/B−.</p>
       <p>TP4056 là sạc tuyến tính: 1A × (5V − 3.7V) ≈ 1.3W biến thành nhiệt trên module → module <b>nóng</b> là bình thường; chip tự giảm dòng khi quá nóng. Nóng tới mức không giữ tay được 3 giây thì rút sạc.</p>
       <p><b>Cắm cell ngược vào B+/B−</b> (chip không chịu đảo cực) có thể làm module cháy. Vì vậy phải đo cực dây đế pin bằng DCV trước khi nối.</p>`,
@@ -37,7 +37,7 @@
         ten: 'Phần 1 · Kiểm cell, chuẩn bị module (chưa có pin trong mạch)',
         gioi_thieu: 'Làm trên mặt bàn trống, không có kẹp, dây, tua vít vương vãi. Tháo nhẫn/đồng hồ kim loại.',
         buoc: [
-          { ten: 'Nhìn vỏ cell', kiem_truoc: true, lam: ['Nhìn kỹ cả thân và 2 đầu. Vỏ nhựa bọc phải kín, nhất là quanh đầu + (vòng cách điện giấy/nhựa). Không phồng, móp, rỉ, ướt.'], hinh: h0, kiem: { thay: 'Vỏ lành, cell thẳng, không mùi.', neu_khong: 'Rách vỏ, móp, phồng: <b>bỏ</b> theo <code>pin-lithium.md</code> — không sạc.' } },
+          { ten: 'Nhìn vỏ cell', kiem_truoc: true, lam: ['Nhìn kỹ cả thân và 2 đầu. Vỏ nhựa bọc phải kín, nhất là quanh đầu + (vòng cách điện giấy/nhựa). Không phồng, móp, rỉ, ướt.'], hinh: h0, kiem: { thay: 'Vỏ lành, cell thẳng, không mùi.', neu_khong: 'Rách vỏ, móp, phồng: <b>bỏ</b> — không sạc, mang tới điểm thu pin cũ, không vứt thùng rác.' } },
           { ten: 'Đo áp cell trần', kiem_truoc: true, lam: ['Núm <code>DCV 20</code>, que ở cổng COM/V. Que đỏ chạm núm lồi (+), que đen chạm đầu phẳng (−). Chỉ dùng thang <b>DCV</b>: thang A gần như nối tắt cell.'], hinh: h1,
             kiem: { thay: '≥ 3.0V: dùng được. 2.5–3.0V: xả sâu, sạc được nhưng theo dõi sát.', neu_khong: '<b>Dưới 2.5V: bỏ</b>, không sạc (sạc lại có thể gây chập trong). Số âm: đảo que — đầu kia mới là +.' } },
           { ten: 'Hàn 2 dây vào B+ / B− của module', kiem_truoc: true, lam: ['Module chưa nối gì, <b>chưa có cell trong đế</b>. Hàn 2 dây rời (~10cm): đỏ vào miếng <b>B+</b>, đen vào <b>B−</b> (đọc chữ in cạnh miếng hàn). Đầu kia 2 dây để tách xa nhau. Không dùng kẹp cá sấu trên module: 2 kẹp nhỏ rất dễ chạm nhau.', 'Chưa nối 2 dây này với dây của đế pin — phải đo cực đế ở bước sau đã.'], hinh: h2,

@@ -49,7 +49,7 @@
       <p>Bên trong biến trở là một <b>dải than 10k</b>. Hai đầu dải nối ra 2 chân, gọi là <b>A</b> và <b>B</b>. Chân thứ 3 là <b>con trượt W</b>, tì lên dải than; vặn thì W chạy dọc dải.</p>
       <p>Nên lúc nào cũng có: <code>R(A–W) + R(W–B) = R(A–B) ≈ 10k</code>. Vặn W về sát A thì R(A–W) ≈ 0.</p>
       <p><code>103</code> nghĩa là 10 × 10³ = 10 000Ω. RM065 vặn được khoảng dưới 1 vòng và có chặn ở 2 đầu: tới chặn thì dừng, vặn cố là gãy.</p>
-      <p>Chân nào là W phải <b>đo</b> mới biết (phần 1). Trên hình, W luôn ở cột 12. Nếu con của ông cắm ra khác thì dùng số cột của ông.</p>`,
+      <p>Chân nào là W phải <b>đo</b> mới biết (phần 1). Trên hình, W luôn ở cột 12. Nếu con của bạn cắm ra khác thì dùng số cột của bạn.</p>`,
     so_do: [
       { nhan: 'ĐÚNG · kiểu A', svg: soDoA, chu: 'Biến trở nối tiếp với 220Ω và LED. 220Ω giữ dòng khi biến trở vặn về 0.' },
       { nhan: 'ĐÚNG · kiểu B', svg: soDoB, chu: 'Dòng đi qua toàn bộ 10k từ A xuống B. Đồng hồ đo áp gần như không lấy dòng.' },
@@ -84,7 +84,7 @@
             board: { them: [{ id: 'dh', loai: 'dh', che_do: 'Ω 200k', do_: 'bt.A', den: 'bt.B', hien: '≈ 10.0 ?' }] },
             kiem: {
               thay: 'Đúng 1 cặp ra ≈ <code>10.0</code> và vặn thế nào cũng <b>không đổi</b>: đó là A và B. Chân còn lại là W; 2 cặp có W thì vặn là đổi số, và cộng lại ≈ 10.0.',
-              neu_khong: 'Một cặp luôn ra <code>00.0</code>: 2 chân đó đang chung cột, rút ra cắm lại. Cả 3 cặp ra 0: 2 que đang chạm nhau hoặc chạm 2 chân cùng lúc, kẹp cá sấu mỗi que vào 1 chân rồi đo lại. Vẫn sai thì gửi số cho Claude, <b>chưa đi tiếp</b>.',
+              neu_khong: 'Một cặp luôn ra <code>00.0</code>: 2 chân đó đang chung cột, rút ra cắm lại. Cả 3 cặp ra 0: 2 que đang chạm nhau hoặc chạm 2 chân cùng lúc, kẹp cá sấu mỗi que vào 1 chân rồi đo lại. Vẫn sai thì <b>chưa đi tiếp</b>: lấy biến trở khác, đo lại.',
             },
           },
         ],
@@ -96,7 +96,7 @@
           {
             ten: 'Nối hộp pin rỗng vào breadboard',
             lam: ['Tháo hết pin ra khỏi hộp. Dây đỏ của hộp cắm vào thanh <b>+ phía trên</b>, dây đen cắm vào thanh <b>− phía dưới</b>.',
-              'Thanh nào + thanh nào − thì theo vạch đỏ/xanh in trên board của ông. Có loại board mà thanh nguồn đứt ở giữa chiều dài, nên cắm mọi thứ ở nửa trái.'],
+              'Thanh nào + thanh nào − thì theo vạch đỏ/xanh in trên board của bạn. Có loại board mà thanh nguồn đứt ở giữa chiều dài, nên cắm mọi thứ ở nửa trái.'],
             board: { them: [PIN_RONG] },
           },
           {
@@ -119,7 +119,7 @@
             board: { them: [{ id: 'dh', loai: 'dh', che_do: 'Ω 200k', do_: 'pin+', den: 'pin-', hien: '1  (OL)' }] },
             kiem: {
               thay: '<code>1</code> (OL), hoặc một số lớn, ở cả 2 lần. LED chặn dòng nhỏ của đồng hồ nên mạch trông như hở; LED có thể le lói rất mờ, vậy là bình thường.',
-              neu_khong: 'Dưới <code>0.20</code> (200Ω) ở lần nào đó: có chỗ nối tắt, 220Ω đang bị bỏ qua. <b>Không lắp pin</b>, chụp ảnh gửi Claude.',
+              neu_khong: 'Dưới <code>0.20</code> (200Ω) ở lần nào đó: có chỗ nối tắt, 220Ω đang bị bỏ qua. <b>Không lắp pin</b>, dò lại từng dây với hình.',
             },
           },
           {
@@ -162,7 +162,7 @@
             board: { bo: ['cam'], them: [{ id: 'dh', loai: 'dh', che_do: 'Ω 200k', do_: 'pin+', den: 'pin-', hien: '≈ 10.0' }] },
             kiem: {
               thay: '≈ <code>10.0</code> (bằng số cặp A–B ở phần 1), và vặn thì số <b>không đổi</b>.',
-              neu_khong: 'Gần <code>00.0</code>, hoặc vặn mà số thay đổi: W đang nối vào pin, đúng kiểu lần đã cháy. <b>Không lắp pin</b>, gửi ảnh cho Claude.',
+              neu_khong: 'Gần <code>00.0</code>, hoặc vặn mà số thay đổi: W đang nối vào pin, đúng kiểu lần đã cháy. <b>Không lắp pin</b>, rút hết ráp lại từ đầu theo hình.',
             },
           },
           {

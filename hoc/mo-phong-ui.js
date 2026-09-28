@@ -91,7 +91,7 @@
     const oLo = ref => S.items.find(it => chanCam(it).includes(ref));
     const giua = it => {
       if (it.loai === 'pin') { const P = Board.PIN(); return { x: P.x + P.w / 2, y: P.y + P.h / 2 }; }
-      if (it.loai === 'ngoai') return { x: it.x != null ? it.x : 300, y: 420 };
+      if (it.loai === 'ngoai') return { x: Board.xNgoai(it.id) ?? (it.x != null ? it.x : 300), y: 420 };
       const ps = chanCam(it).map(Board.lo);
       return { x: ps.reduce((t, p) => t + p.x, 0) / ps.length, y: ps.reduce((t, p) => t + p.y, 0) / ps.length - (it.loai === 'bientro' ? 26 : 0) };
     };

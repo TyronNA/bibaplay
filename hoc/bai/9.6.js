@@ -9,7 +9,7 @@
       <div class="cuon"><table><thead><tr><th>Chân</th><th>Vì sao tránh</th></tr></thead><tbody>
       <tr><td>0, 3, 45, 46</td><td>Strapping: chip đọc mức lúc reset để chọn chế độ khởi động / áp flash / nguồn JTAG. GPIO0 pull-up yếu (=1), 45 và 46 pull-down (=0), 3 thả nổi. Mạch ngoài kéo sai mức lúc cấp điện → không khởi động hoặc vào chế độ nạp.</td></tr>
       <tr><td>26–32</td><td>Nối flash (và PSRAM) bên trong module.</td></tr>
-      <tr><td>33–37</td><td>Bản <b>R8</b> (PSRAM octal, như N16R8) dùng thêm các chân này cho PSRAM. Board của ông là N16R8 → tránh 26–37.</td></tr>
+      <tr><td>33–37</td><td>Bản <b>R8</b> (PSRAM octal, như N16R8) dùng thêm các chân này cho PSRAM. Board của bạn là N16R8 → tránh 26–37.</td></tr>
       <tr><td>19, 20</td><td>USB D−/D+. Dùng làm GPIO là mất cổng USB native.</td></tr>
       <tr><td>43, 44</td><td>UART0 TX/RX — cổng COM dùng để nạp và in log.</td></tr>
       <tr><td>38 hoặc 48</td><td>LED RGB trên nhiều board DevKitC (tuỳ bản). Xiaozhi dùng 48.</td></tr></tbody></table></div>

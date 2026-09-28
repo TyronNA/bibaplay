@@ -191,7 +191,7 @@
         ${g(152, 78, 196, 78, 'núm thang')}${g(132, 124, 70, 118, 'đen → COM', 'end')}${g(162, 124, 196, 124, 'đỏ → VΩ')}
         ${g(92, 30, 70, 30, 'hiện 1 = quá', 'end')}`, 'Đồng hồ vạn năng: màn LCD, núm xoay chọn thang, 3 lỗ cắm que 10A, COM, VΩmA'),
       kh: kh('<circle cx="60" cy="28" r="16" class="lk-net"/>' + net('8,28 44,28') + net('76,28 112,28') + chu(60, 33, 'V', 'lk-chu-kh'), 'vôn kế'),
-      chan: ['Que đen luôn ở COM. Que đỏ ở VΩ để đo áp/Ω; chỉ chuyển sang lỗ mA khi đo dòng, đo xong trả về VΩ ngay.', 'Vị trí 3 lỗ khác nhau giữa các đời máy — đọc chữ in cạnh lỗ trên máy của ông.'],
+      chan: ['Que đen luôn ở COM. Que đỏ ở VΩ để đo áp/Ω; chỉ chuyển sang lỗ mA khi đo dòng, đo xong trả về VΩ ngay.', 'Vị trí 3 lỗ khác nhau giữa các đời máy — đọc chữ in cạnh lỗ trên máy của bạn.'],
       gioi_han: 'Lỗ mA thường có cầu chì ~200mA; lỗ 10A không cầu chì.',
       bay: 'Que đỏ ở lỗ mA mà đặt song song đo áp pin = nối tắt pin qua đồng hồ.',
       bai: null },
@@ -601,7 +601,7 @@
       kh: kh(net('10,28 46,28') + net('46,14 46,42') + '<rect x="54" y="20" width="4" height="16" class="lk-dac"/>' + net('58,28 110,28') + chu(38, 12, '+', 'lk-chu-kh') + chu(70, 12, '−', 'lk-chu-kh'), 'pin 1 cell'),
       chan: ['Đầu có <b>núm lồi = +</b>, đầu phẳng = −. Đo DCV để chắc: que đỏ vào đầu nghĩ là +, ra số dương là đúng.'],
       gioi_han: 'Danh nghĩa 3.6–3.7V, sạc đầy <b>4.2V</b>, cạn 2.5–3.0V (Samsung 25R cắt ở 2.5V). Cell hãng xả được 10–20A — nghĩa là nối tắt sẽ ra hàng chục ampe. Cell không rõ hãng: số mAh/A trên vỏ thường sai.',
-      bay: '<b>Nối tắt 2 cực</b> (dây, kẹp, đồng xu trong túi): nóng đỏ dây, cháy. Vỏ nhựa rách ở đầu +: vỏ kim loại cả thân là cực −, chạm + là chập. Cell < 2.5V, phồng, móp: bỏ theo <code>pin-lithium.md</code>.', bai: ['16.1', '16.2', '16.3', '17.1'] },
+      bay: '<b>Nối tắt 2 cực</b> (dây, kẹp, đồng xu trong túi): nóng đỏ dây, cháy. Vỏ nhựa rách ở đầu +: vỏ kim loại cả thân là cực −, chạm + là chập. Cell < 2.5V, phồng, móp: bỏ, không sạc.', bai: ['16.1', '16.2', '16.3', '17.1'] },
 
     { id: 'tp4056', nhom: 'pin', ten: 'Module sạc TP4056 có bảo vệ (6 chân)', tim: 'TP4056', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="50" y="40" width="160" height="60" rx="3" fill="#1F5AA8" ${vien}/><rect x="34" y="56" width="22" height="28" rx="3" fill="#B8BEC4"/>
@@ -630,7 +630,7 @@
         ${[[64, 'B−'], [96, 'BM'], [128, 'B+'], [164, 'P−'], [196, 'P+']].map(([x, t]) => `<rect x="${x - 7}" y="84" width="14" height="8" fill="#C9A640"/>${chu(x, 112, t, 'lk-chu')}`).join('')}
         ${g(128, 54, 128, 22, 'IC bảo vệ + MOSFET', 'middle')}${chu(96, 130, 'B = phía pin', 'lk-mo')}${chu(180, 130, 'P = phía tải/sạc', 'lk-mo')}`, 'Mạch BMS 2S: mạch in dài, 5 miếng hàn B- BM B+ P- P+'),
       kh: '',
-      chan: ['<b>B−</b> = cực − cell dưới, <b>BM</b> = điểm giữa 2 cell, <b>B+</b> = cực + cell trên. <b>P−/P+</b> = đầu ra cho tải (và vào sạc 2S). Tên in trên board có thể là B−/B1/B+ hoặc 0V/4.2V/8.4V.', 'B+ ↔ BM = áp cell trên, BM ↔ B− = áp cell dưới (<code>pin-lithium.md</code>).'],
+      chan: ['<b>B−</b> = cực − cell dưới, <b>BM</b> = điểm giữa 2 cell, <b>B+</b> = cực + cell trên. <b>P−/P+</b> = đầu ra cho tải (và vào sạc 2S). Tên in trên board có thể là B−/B1/B+ hoặc 0V/4.2V/8.4V.', 'B+ ↔ BM = áp cell trên, BM ↔ B− = áp cell dưới.'],
       gioi_han: 'Chỉ cho <b>2 cell nối tiếp</b>. Ngắt khi 1 cell quá thấp/quá cao hoặc quá dòng (ngưỡng tuỳ board — đọc trang shop). Board rẻ thường <b>không cân bằng</b> 2 cell.',
       bay: 'Hàn/kẹp sai thứ tự B−, BM, B+: nối tắt 1 cell qua board. Nối dây BM trước khi đo: luôn đo từng điểm bằng DCV rồi mới nối. Đầu ra P đọc 0V trong khi cell còn áp = bảo vệ đang ngắt.', bai: ['16.2', '16.3', '17.1'] },
 

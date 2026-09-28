@@ -29,7 +29,7 @@
       <p><b>Đo áp</b> là so 2 điểm, nên chạm que <b>song song</b> lên linh kiện. Ở chế độ V, bên trong đồng hồ gần như hở mạch (cỡ 10MΩ), nên chạm đâu cũng không sao.</p>
       <p><b>Đo dòng</b> là bắt dòng chạy <b>xuyên qua</b> đồng hồ, nên phải mở mạch ra một chỗ và đặt đồng hồ vào chỗ hở, tức <b>nối tiếp</b>. Ở chế độ mA, bên trong đồng hồ gần như một sợi dây (vài Ω).</p>
       <p>Vì thế đồng hồ đang ở chế độ mA mà chạm thẳng 2 cực pin là <b>nối tắt pin qua đồng hồ</b>: cháy cầu chì trong đồng hồ, có khi hỏng luôn thang đo.</p>
-      <p>Lỗ cắm que đỏ khác nhau tuỳ đồng hồ. Nhìn mặt đồng hồ của ông: có lỗ riêng ghi <code>mA</code> thì chuyển que đỏ sang đó; lỗ đỏ ghi chung <code>VΩmA</code> thì giữ nguyên, chỉ vặn núm. <b>Không dùng lỗ 10A</b> cho bài này.</p>`,
+      <p>Lỗ cắm que đỏ khác nhau tuỳ đồng hồ. Nhìn mặt đồng hồ của bạn: có lỗ riêng ghi <code>mA</code> thì chuyển que đỏ sang đó; lỗ đỏ ghi chung <code>VΩmA</code> thì giữ nguyên, chỉ vặn núm. <b>Không dùng lỗ 10A</b> cho bài này.</p>`,
     so_do: [
       { nhan: 'ĐÚNG · nối tiếp', svg: soDoDung, chu: 'Dòng đi từ + qua 220Ω, vào que đỏ, qua đồng hồ, ra que đen, qua LED về −.' },
       { nhan: 'SAI · chạm 2 cực pin', xau: true, svg: soDoSai, chu: 'Không có gì cản dòng ngoài vài ôm bên trong đồng hồ.' },

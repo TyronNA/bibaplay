@@ -10,7 +10,7 @@
     nguon: '3×AAA → AMS1117 → 3.3V',
     can: [{ ten: 'Module AMS1117-3.3', tim: 'AMS1117', lk: 'ams1117', sl: 1 }, K.can.tro('330'), K.can.d4007(), ...K.coBan(6)],
     kien_thuc: `<p>Ổn áp tuyến tính là một "điện trở tự chỉnh": ăn phần áp dư <code>U_vào − 3.3V</code> thành nhiệt. Muốn giữ 3.3V ở đầu ra thì đầu vào phải cao hơn ít nhất <b>~1.1V</b> (sụt áp tối thiểu, dropout): ≥ 4.4V.</p>
-      <p><b>Thứ tự chân mỗi module một khác</b> (VIN-GND-VOUT, GND-VOUT-VIN…). Hình vẽ VIN–GND–VOUT; đọc chữ in trên module của ông và nối theo <b>tên chân</b>, không theo vị trí trên hình. Cấp nhầm vào VOUT: module nóng, hỏng.</p>
+      <p><b>Thứ tự chân mỗi module một khác</b> (VIN-GND-VOUT, GND-VOUT-VIN…). Hình vẽ VIN–GND–VOUT; đọc chữ in trên module của bạn và nối theo <b>tên chân</b>, không theo vị trí trên hình. Cấp nhầm vào VOUT: module nóng, hỏng.</p>
       <p>Tải 330Ω ở 3.3V = 10mA, công suất ổn áp <code>(4.78 − 3.3) × 0.01 ≈ 15mW</code>: nguội. Phần 2 thêm 1N4007 phía trước để giả lập pin yếu (mất 0.7V).</p>`,
     du_doan: '<p>Pin 4.78V: VOUT ≈ 3.30V. Qua diode (VIN ≈ 4.05V < 4.4V): VOUT tụt ≈ 2.9–3.0V — ổn áp "hết dư".</p>',
     phan: [
@@ -18,8 +18,8 @@
         ten: 'Phần 1 · Pin đầy', cot: 20,
         buoc: [
           K.buocPin(),
-          { ten: 'Cắm module, đọc chữ in', kiem_truoc: true, lam: ['Cắm 3 chân module vào 10a, 11a, 12a. Đọc chữ in cạnh từng chân, viết ra giấy: cột 10 = ?, cột 11 = ?, cột 12 = ?', 'Các bước sau gọi theo tên chân. Nếu module của ông khác thứ tự, đổi số cột theo tên.'], board: { them: [MOD] },
-            kiem: { thay: 'Biết chắc cột nào là VIN, GND, VOUT.', neu_khong: 'Không đọc được chữ: tra ảnh shop bán, hoặc hỏi Claude kèm ảnh. <b>Chưa đi tiếp.</b>' } },
+          { ten: 'Cắm module, đọc chữ in', kiem_truoc: true, lam: ['Cắm 3 chân module vào 10a, 11a, 12a. Đọc chữ in cạnh từng chân, viết ra giấy: cột 10 = ?, cột 11 = ?, cột 12 = ?', 'Các bước sau gọi theo tên chân. Nếu module của bạn khác thứ tự, đổi số cột theo tên.'], board: { them: [MOD] },
+            kiem: { thay: 'Biết chắc cột nào là VIN, GND, VOUT.', neu_khong: 'Không đọc được chữ: tra ảnh trang shop bán, hoặc chụp ảnh nhờ người biết điện tử xem. <b>Chưa đi tiếp.</b>' } },
           { ten: 'VIN, GND, tải', lam: ['Dây đỏ thanh + → cột VIN (10c). GND xuống −: dây đen 11e → 11f, dây đen 11j → thanh −.', 'Tải 330Ω vắt qua rãnh ở cột VOUT (12e → 12f), dây đen 12j → thanh −.'], board: { them: [VIN, ...G, ...TAI] } },
           K.buocOm('Ω 200k', '> 0.1', 'Không dưới ~100Ω (con số cụ thể tuỳ module). Đo thêm VOUT–GND (12c với thanh −): ≈ 330Ω hoặc thấp hơn chút.', 'Gần 0: VIN chạm GND.'),
           K.lapPin('Lắp pin, đo VIN và VOUT', ['<code>DCV 20</code>, que đen thanh −. Que đỏ 10b (VIN), rồi 12c (VOUT). Sờ module.'], { them: [K.dh('DCV 20', '12c', 'B-:15', '≈ 3.30')] },

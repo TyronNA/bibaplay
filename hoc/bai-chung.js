@@ -87,11 +87,12 @@
     // Phần 2: board ESP32 để ngoài breadboard, nối bằng dây đực–cái. Chân 3V3/GND đi vào thanh nguồn.
     esp: (chan, them) => ({ id: 'esp', loai: 'esp', chan, usb: false, ...them }),
     // Mốc Ω 3V3–GND đo ở bài 8.1 khi board chưa nối gì; mạch ngoài chỉ được làm số này nhỏ đi chút ít.
-    buocOmEsp: (thay, neuKhong, lamThem) => ({
+    // o.thanh3v3 = 'dưới' cho bài dùng thanh + trên cho nguồn khác (17.1: thanh + trên là pin 8.4V).
+    buocOmEsp: (thay, neuKhong, lamThem, o = {}) => ({
       ten: 'Đo trước khi cắm USB', kiem_truoc: true,
-      lam: ['Cáp USB <b>chưa cắm</b>. Núm <code>Ω 200k</code>. Que đỏ chạm thanh + trên (đang nối 3V3), que đen chạm thanh − dưới (GND).',
+      lam: [`Cáp USB <b>chưa cắm</b>. Núm <code>Ω 200k</code>. Que đỏ chạm thanh + ${o.thanh3v3 || 'trên'} (đang nối 3V3), que đen chạm thanh − dưới (GND).`,
         'So với <b>mốc</b> đã ghi ở bài 8.1 (board chưa nối gì). Số có thể chạy dần lên vài giây: tụ trên board đang được đồng hồ nạp, đợi số đứng rồi đọc.', ...(lamThem || [])],
-      board: { them: [K.dh('Ω 200k', 'T+:2', 'B-:2', '≥ mốc 8.1')] },
+      board: { them: [K.dh('Ω 200k', o.thanh3v3 === 'dưới' ? 'B+:6' : 'T+:2', 'B-:2', '≥ mốc 8.1')] },
       kiem: { thay: thay || 'Gần bằng mốc 8.1 hoặc thấp hơn chút ít, và <b>không dưới 100Ω</b>.', neu_khong: (neuKhong || 'Dưới 100Ω hoặc gần 0: 3V3 đang chạm GND ở đâu đó.') + ' <b>Không cắm USB</b>, rút từng dây ra đo lại để tìm chỗ.' },
     }),
     camUsb: (ten, lam, board, kiem) => ({

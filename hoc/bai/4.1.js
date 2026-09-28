@@ -7,7 +7,7 @@
   BAI.dangKy({
     id: '4.1',
     poster: [10, 18, 19, 20],
-    muc_tieu: 'Đo sụt áp thuận của diode silicon và 5 màu LED, và thấy áp đó gần như đứng yên khi dòng đổi 50 lần. Đó là lý do U/I của LED không phải hằng số.',
+    muc_tieu: 'Đo sụt áp thuận của diode silicon và 5 màu LED, và thấy áp đó gần như đứng yên khi dòng đổi khoảng 45 lần. Đó là lý do U/I của LED không phải hằng số.',
     can: [K.can.d4148(), K.can.d4007(), K.can.led('5 màu', 5), K.can.tro('220'), K.can.tro('1k'), K.can.tro('10k'), ...K.coBan(3)],
     kien_thuc: `<p>Diode chỉ cho dòng đi một chiều: từ <b>anode</b> sang <b>cathode</b> (đầu có vạch). Khi dẫn, nó "ăn" một áp gần như cố định: silicon ~0.6–0.7V, LED đỏ ~1.8–2V, LED xanh dương/trắng ~2.8–3.2V.</p>
       <p>Thang diode (ký hiệu ▶|) của đồng hồ đẩy một dòng nhỏ (~1mA) và hiện <b>áp</b> trên diode, đơn vị mV hoặc V. Chiều ngược hiện <code>1</code>.</p>
