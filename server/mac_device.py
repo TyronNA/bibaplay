@@ -191,7 +191,7 @@ async def main(a) -> int:
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
-    p.add_argument("--ota", default="http://<IP-LAN-SERVER>:8000/xiaozhi/ota/")
+    p.add_argument("--ota", default="http://127.0.0.1:8000/xiaozhi/ota/")
     p.add_argument("--wav", help="dùng file WAV 16 kHz mono thay mic (tự test)")
     p.add_argument("--out", help="ghi câu trả lời ra WAV thay vì phát loa")
     p.add_argument("--no-face", action="store_true", help="không mở cửa sổ mặt robot")
