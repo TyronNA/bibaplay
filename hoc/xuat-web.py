@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 HOC = ROOT / "hoc"
 WEB = "https://bibaplay.com"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mua.js", "mo-phong.js", "mo-phong-ui.js", "xiaozhi.js", "luu-web.js", "dau-trang.js", "app.js"]
+JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mua.js", "mo-phong.js", "mo-phong-ui.js", "xiaozhi.js", "luu-web.js", "dau-trang.js", "tim-nhanh.js", "app.js"]
 NOTES = ["notes/giao-trinh-dien.md", "notes/do-dang-co.md"]
 # Ảnh trang /xiaozhi/ (xiaozhi.js), giữ nguyên đường dẫn trong repo như NOTES.
 ANH = ["sandbox/robot-face/sheet.png", "sandbox/sensor-panel/shot.png"]

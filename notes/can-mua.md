@@ -58,3 +58,21 @@ Số liệu và nguồn từng món: `datasheet-robot.md`. Chưa kiểm giá/sho
 | Mạch bảo vệ BMS **2S** × 1 | Có cọc B−, BM, B+, P−, P+; dòng ≥ 3A | 16.2 — không dùng BMS 3S/4S cho pack 2S |
 | Module hạ áp LM2596 × 1 | Loại có biến trở chỉnh (ADJ) | 16.3 |
 | Điện trở 20k (nếu kit thiếu) | | Cầu đo pin 2S (16.3) |
+
+## Nên có thêm (chưa bài nào bắt buộc)
+Có hình + cách dùng + bẫy trong thư viện linh kiện (`hoc/linhkien.js`, nhóm `nen`).
+
+| Món | Vì sao |
+|---|---|
+| Thảm silicon cách điện chịu nhiệt | Lót bàn khi hàn/ráp: không dẫn điện, thiếc rơi không cháy bàn, có ngăn giữ ốc |
+| Que đo đầu kẹp móc | Móc vào chân linh kiện, rảnh 2 tay khi đo |
+| Kìm mỏ nhọn mini | Uốn chân, giữ chân khi hàn (tản bớt nhiệt) |
+| Kính bảo hộ | Chân cắt văng, thiếc bắn, tụ nổ |
+| Quạt hút khói hàn | Khói nhựa thông gây kích ứng |
+| Bơm hút thiếc | Gỡ header/linh kiện nhiều chân |
+| Đế kẹp bo mạch | Giữ bo phẳng khi hàn, chắc hơn "bàn tay thứ ba" |
+| Ống co nhiệt + băng keo điện | Bọc mối nối dây pin/motor |
+| Hộp chia ngăn | Điện trở lẫn nhau là mạch sai mà không biết |
+| Pin header đực/cái, bo đục lỗ, dây cái–cái | Hàn module, chuyển mạch từ breadboard lên bo cố định |
+| S8550 (PNP), IRLZ44N (MOSFET), zener 3.3V, 1N5819, LED RGB, còi chip, relay 5V, công tắc gạt, cầu chì 5×20 + đế | Linh kiện hay gặp ở mạch nhúng/robot; MOSFET + cầu chì cần khi lên pin lithium |
+| NE555, LM358 | Tuỳ chọn, khi muốn đào sâu analog |

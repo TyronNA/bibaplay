@@ -22,7 +22,8 @@
     dat('meta[property="og:title"]', tieuDe); dat('meta[property="og:url"]', url); dat('link[rel="canonical"]', url);
   }
 
-  window.BAI = { dangKy: b => { S.bai[b.id] = b; } };
+  // ds: cho tìm nhanh (tim-nhanh.js) — rỗng tới khi giáo trình tải xong.
+  window.BAI = { dangKy: b => { S.bai[b.id] = b; }, ds: () => (S.gt ? tatCaBai() : []) };
 
   async function taiChung() {
     const [gt, soan, doText] = await Promise.all([
@@ -130,7 +131,7 @@
     app.innerHTML = `<section class="dau"><p class="eyebrow">Lưu trong trình duyệt của bạn</p><h1>Đồ đang có</h1>
       <p class="lede">Tick món bạn đang có. Trang bài dựa vào đây để báo <b>có / thiếu</b> ở mục "Đồ cần". Danh sách chỉ nằm trên máy này, không gửi đi đâu.${window.MUA && Object.values(MUA).some(Boolean) ? ' Món chưa có thì bấm "Mua trên Shopee" ngay tại đây.' : ''}</p>
       <p class="do-nut"><button type="button" id="do-kit">Chọn theo bộ kit gốc (${kitGoc.length} món)</button> <button type="button" id="do-xoa">Bỏ hết</button> <span class="mo" id="do-dem"></span></p></section>
-      ${Object.entries(LINHKIEN.nhom).map(([k, ten]) => `<section><h2>${ten}</h2><ul class="do-luoi">${LINHKIEN.ds.filter(l => l.nhom === k).map(l => `
+      ${Object.entries(LINHKIEN.loai).map(([k, ten]) => `<section><h2>${ten}</h2><ul class="do-luoi">${LINHKIEN.ds.filter(l => l.loai === k).map(l => `
         <li><label class="to do-chon" for="co-${l.id}"><figure>${l.anh}</figure>
           <div class="do-chu"><span><input type="checkbox" id="co-${l.id}" data-id="${l.id}"${co.has(l.id) ? ' checked' : ''}> <b>${l.ten}</b></span>
           <a href="${R(`linh-kien/${l.id}`)}" class="mo">cách nhận chân →</a>${nutMua(l.id)}</div></label></li>`).join('')}</ul></section>`).join('')}
@@ -146,7 +147,7 @@
   function trangLinhKien(chon) {
     const tatCa = tatCaBai();
     const tenBai = id => { const b = tatCa.find(x => x.id === id); return b ? `<a href="${R(`bai/${id}`)}">${id} ${dong(b.ten)}</a>` : id; };
-    const the = l => `<article class="lk-the to${l.id === chon ? ' chon' : ''}" id="lk-${l.id}">
+    const the = l => `<article class="lk-the to${l.id === chon ? ' chon' : ''}" id="lk-${l.id}" data-id="${l.id}">
       <header><h3>${l.id === chon ? l.ten : `<a href="${R(`linh-kien/${l.id}`)}">${l.ten}</a>`}</h3>${coLK(l) ? '<span class="pill ok">có</span>' : `${l.mua && !LUU.web ? `<span class="pill mo">${l.mua.replace(/\s*·\s*\S+\.md$/, '')}</span>` : ''}<span class="pill xau">chưa có</span>`}${nutMua(l.id)}</header>
       <div class="lk-hinh${l.kh ? '' : ' mot'}"><figure>${l.anh}<figcaption>Hình minh hoạ</figcaption></figure>${l.kh ? `<figure>${l.kh}<figcaption>Ký hiệu trên sơ đồ</figcaption></figure>` : ''}</div>
       <dl class="lk-tt">
@@ -158,19 +159,22 @@
     // /linh-kien/<id>/ là trang riêng của một món (mỗi món một URL để search ra), không phải cả thư viện cuộn tới món đó.
     const l = chon && LINHKIEN.theoId(chon);
     if (l) {
-      const cungNhom = LINHKIEN.ds.filter(x => x.nhom === l.nhom && x.id !== l.id);
+      const cungNhom = LINHKIEN.ds.filter(x => x.loai === l.loai && x.id !== l.id);
       datMeta(`${bo(l.ten)}: cách nhận chân, giới hạn, bẫy · Bàn Ráp`, `${l.ten}: ${l.chan.join(' ')}`);
-      app.innerHTML = `<section class="dau"><p class="eyebrow"><a href="${R('linh-kien')}">Thư viện linh kiện</a> · ${LINHKIEN.nhom[l.nhom]}</p><h1>${l.ten}</h1>
+      app.innerHTML = `<section class="dau"><p class="eyebrow"><a href="${R('linh-kien')}">Thư viện linh kiện</a> · ${LINHKIEN.loai[l.loai]}</p><h1>${l.ten}</h1>
         <p class="lede">Hình minh hoạ có chú thích chân, ký hiệu trên sơ đồ, cách nhận chân và bẫy. Chỗ nào ghi <b>đo mới biết</b> thì phải đo trước khi ráp.</p></section>
         <div class="lk-luoi lk-mot">${the(l)}</div>
-        ${cungNhom.length ? `<section><h2>Cùng nhóm</h2><ul class="lk-lien">${cungNhom.map(x => `<li><a href="${R(`linh-kien/${x.id}`)}">${x.ten}</a></li>`).join('')}</ul></section>` : ''}
+        ${cungNhom.length ? `<section><h2>Cùng nhóm · ${LINHKIEN.loai[l.loai]}</h2><ul class="tim-lk lk-cung">${cungNhom.map(x => `<li><a href="${R(`linh-kien/${x.id}`)}"><span class="tim-hinh">${x.anh}</span><span class="tim-chu"><b>${x.ten}</b></span></a></li>`).join('')}</ul></section>` : ''}
         <p><a href="${R('linh-kien')}">← Toàn bộ thư viện linh kiện</a></p>`;
       return;
     }
     datMeta('Thư viện linh kiện điện tử: nhận chân, ký hiệu, bẫy · Bàn Ráp', `${LINHKIEN.ds.length} linh kiện cho người mới học điện tử và robot: hình minh hoạ có chú thích chân, ký hiệu trên sơ đồ, giới hạn và bẫy hay gặp.`);
     app.innerHTML = `<section class="dau"><p class="eyebrow">Thư viện linh kiện · ${LINHKIEN.ds.length} món</p><h1>Linh kiện</h1>
       <p class="lede">Mỗi món có hình minh hoạ với chú thích chân, ký hiệu trên sơ đồ mạch, cách nhận chân và bẫy. Chỗ nào ghi <b>đo mới biết</b> là chỗ hình không dám vẽ chắc: phải đo trước khi ráp.</p></section>
-      ${Object.entries(LINHKIEN.nhom).map(([k, ten]) => `<section><h2>${ten}</h2><div class="lk-luoi">${LINHKIEN.ds.filter(x => x.nhom === k).map(the).join('')}</div></section>`).join('')}`;
+      <div class="lk-cong to"><label class="lk-loc"><span>Lọc</span><input type="search" id="lk-loc" placeholder="tên, tiếng Anh, không dấu cũng được" autocomplete="off"></label><span class="mo" id="lk-dem"></span>
+        <nav class="lk-chip" aria-label="Nhóm linh kiện">${Object.entries(LINHKIEN.loai).map(([k, ten]) => `<button type="button" data-toi="${k}">${ten} <span class="mo">${LINHKIEN.ds.filter(x => x.loai === k).length}</span></button>`).join('')}</nav></div>
+      ${Object.entries(LINHKIEN.loai).map(([k, ten]) => `<section id="loai-${k}" data-loai="${k}"><h2>${ten}</h2><div class="lk-luoi">${LINHKIEN.ds.filter(x => x.loai === k).map(the).join('')}</div></section>`).join('')}`;
+    if (window.TIM) TIM.ganThuVien(app);
   }
 
   // Trạng thái breadboard sau từng bước: bước sau kế thừa bước trước. Phần mới ráp lại từ đầu,
