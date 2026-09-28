@@ -1,5 +1,5 @@
 // Trang /xiaozhi/: robot trợ lý tự build (firmware ares-bread + server riêng nối Gemini Live).
-// Chỉ trang này link GitHub — người xem cần code server/firmware để làm theo; các trang bài vẫn không link.
+// Link GitHub ở đây trỏ thẳng vào thư mục server/firmware — người xem cần code để làm theo (footer có link repo chung).
 // Số và hành vi ghi ở đây lấy từ server/app.py, firmware/boards/ares-bread/, sandbox/*: sửa code thì soát lại trang.
 (function () {
   const GH = 'https://github.com/TyronNA/bibaplay';

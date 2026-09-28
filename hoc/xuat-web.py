@@ -38,6 +38,7 @@ ANH = ["sandbox/robot-face/sheet.png", "sandbox/sensor-panel/shot.png"]
 GHI_AI = """<footer class="ghi-ai to">
 <p><b>Chia sẻ miễn phí.</b> Nội dung, hình vẽ và code do AI (Claude của Anthropic) soạn theo yêu cầu của một người đang tự học điện tử.</p>
 <p>Phần lớn bài <b>chưa được ráp thử để kiểm</b>, code Phần 2 đã build nhưng chưa chạy trên chip, nên có thể sai. Luôn đo Ω trước khi cấp điện, đối chiếu datasheet trước khi tin số trong bài. Thấy khói, mùi khét hoặc linh kiện nóng thì rút nguồn ngay.</p>
+<p>Mã nguồn mở (MIT): <a href="https://github.com/TyronNA/bibaplay" target="_blank" rel="noopener">github.com/TyronNA/bibaplay ↗</a> — web, bài, firmware, server. Thấy sai thì mở issue.</p>
 </footer>"""
 # Chỉ chèn khi mua.js có ít nhất một link: chưa gắn link thì không nhắc tới affiliate.
 GHI_AFFILIATE = '''<p>Nút <b>"Mua trên Shopee"</b> là <b>link affiliate</b>: bạn mua qua đó thì người soạn nhận hoa hồng từ Shopee, giá bạn trả không đổi. Không có hãng nào trả tiền để được nhắc tên trong bài.</p>'''
