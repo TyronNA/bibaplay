@@ -1,6 +1,6 @@
 # Poster "30 bài học điện tử cơ bản" + bài 2.3 biến trở
 
-Nguồn: 5 ảnh ChatGPT trong `~/Desktop/Robotis/` (2026-09-23). Ảnh do AI vẽ nên **hình ráp không đáng tin**:
+Nguồn: 5 ảnh poster do ChatGPT vẽ (2026-09-23). Ảnh do AI vẽ nên **hình ráp không đáng tin**:
 dùng làm bản đồ tổng quan, còn cách ráp và con số thì theo `giao-trinh-dien.md` + tự đo.
 
 ## Bài 2.3 — Biến trở (học tiếp)

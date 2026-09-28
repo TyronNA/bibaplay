@@ -73,11 +73,12 @@ idf.py -p /dev/cu.usbmodem… flash monitor            # Linux: /dev/ttyACM0, Wi
         <p>Key: vào <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey ↗</a> bằng tài khoản Google, tạo key — gói miễn phí dùng được Gemini Live, có giới hạn số lượt theo ngày/phút (Google đổi theo thời gian). Chưa có key thì server chạy chế độ <b>echo</b>: nghe hết câu rồi phát lại, đủ để kiểm mic/loa/mạng.</p></div>
         ${LENH(`cd server
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-GEMINI_API_KEY=… ARES_TOKEN=chuoi-bi-mat .venv/bin/python app.py      # in ra OTA URL cho firmware
+GEMINI_API_KEY=… ARES_DEVICES=aa:bb:cc:dd:ee:ff .venv/bin/python app.py   # MAC chip; in ra OTA URL cho firmware
 
 # chưa có board: máy tính giả làm chip, đi đúng giao thức firmware
 .venv/bin/python fake_device.py                       # tự kiểm, không cần mic
 .venv/bin/pip install -r requirements-mac.txt && .venv/bin/python mac_device.py   # mic + loa máy Mac`)}
+        <p class="mo"><code>ARES_DEVICES</code> là MAC các chip được phép (cách nhau dấu phẩy). Chưa biết MAC: cứ cắm chip vào, server từ chối và in MAC của nó ra log — chép vào đây rồi chạy lại. Kết nối từ chính máy chạy server (chip giả ở trên) luôn được nhận.</p>
         <p class="mo">Tuỳ chọn: <code>ARES_PROMPT</code> đổi tính cách, <code>GEMINI_VOICE</code> đổi giọng, file <code>~/.config/ares/mcp.json</code> nối thêm tool MCP (lịch, mail, Jira…) cho robot gọi. <code>mac_device.py</code> chỉ nửa song công (tắt mic lúc robot nói) vì máy tính không khử vọng như chip.</p>
       </section>
 
@@ -85,14 +86,14 @@ GEMINI_API_KEY=… ARES_TOKEN=chuoi-bi-mat .venv/bin/python app.py      # in ra 
         <p class="mo">Server nhẹ: chỉ chuyển tiếp audio và nén/giải nén Opus, model chạy ở Google. Cái nó cần là <b>bật liên tục</b> và <b>cùng mạng Wi-Fi với robot</b>, IP không đổi.</p>
         <div class="cuon"><table class="xz-bang"><thead><tr><th>Chỗ chạy</th><th>Hợp khi</th><th>Lưu ý</th></tr></thead><tbody>
           <tr><td><b>Máy tính đang dùng</b></td><td>Thử nghiệm, mới ráp xong</td><td>Tắt máy là robot câm. Mac/Linux/Windows đều được.</td></tr>
-          <tr><td><b>Máy nhỏ trong nhà chạy 24/7</b><br><span class="mo">mini PC, Raspberry Pi, laptop cũ</span></td><td>Dùng hằng ngày — <span class="pill ok">nên chọn</span></td><td>Server này đang chạy 24/7 trên một mini PC Ubuntu bằng systemd (${gh('server', 'deploy-mini-pc.sh + ares-server.service')}; sửa <code>User=</code>, đường dẫn cho máy bạn). Raspberry Pi chưa thử. Đặt IP tĩnh cho máy trong router (DHCP reservation).</td></tr>
+          <tr><td><b>Máy nhỏ trong nhà chạy 24/7</b><br><span class="mo">mini PC, Raspberry Pi, laptop cũ</span></td><td>Dùng hằng ngày — <span class="pill ok">nên chọn</span></td><td>Máy Linux có systemd: <code>server/deploy.sh &lt;ssh-host&gt;</code> chép server lên, cài service chạy dưới user bạn SSH vào (${gh('server', 'server/')}). Đã thử trên Ubuntu; Raspberry Pi chưa thử. Đặt IP tĩnh cho máy trong router (DHCP reservation).</td></tr>
           <tr><td><b>VPS / cloud</b></td><td>Robot mang ra khỏi nhà</td><td><span class="pill xau">chưa nên</span> — xem bẫy đầu tiên bên dưới. Serverless (Cloudflare Workers, Lambda) không hợp: cần giữ WebSocket lâu và thư viện libopus.</td></tr>
         </tbody></table></div>
         <p class="mo">Chi phí: key miễn phí + máy sẵn có = 0đ. Hết hạn mức miễn phí hoặc cần giữ dữ liệu riêng tư thì bật tính phí trong Google AI Studio; server có ghi số phút audio + token từng lượt vào SQLite để ước tiền (<code>trace_report.py</code>).</p>
       </section>
 
       <section class="bay to"><h2>Bẫy</h2><ul>
-        <li><b>Đừng mở cổng server ra Internet.</b> Ai gọi <code>/xiaozhi/ota/</code> cũng nhận được token WebSocket (firmware xiaozhi cần thế để tự kết nối), nên token không chặn được người lạ: biết IP + cổng là xài key Gemini của bạn. Kết nối chip ↔ server là <code>ws://</code>, không mã hoá. Chỉ chạy trong mạng nhà, không port-forward.</li>
+        <li><b>Đừng mở cổng server ra Internet.</b> Token WebSocket được phát qua <code>/xiaozhi/ota/</code> (firmware xiaozhi cần thế để tự kết nối) nên không chặn được người lạ; thứ chặn là danh sách MAC <code>ARES_DEVICES</code>, mà MAC thì giả được. Kết nối chip ↔ server là <code>ws://</code>, không mã hoá. Chỉ chạy trong mạng nhà, không port-forward.</li>
         <li><b>Key miễn phí: Google được dùng dữ liệu</b> để cải thiện sản phẩm. Đừng nối mail/Jira/Slack công ty qua MCP khi đang dùng key miễn phí.</li>
         <li><b>IP server đổi</b> (router cấp IP mới) → chip không tìm thấy server. Đặt IP tĩnh cho máy chạy server, hoặc build lại firmware.</li>
         <li><b>Mặt robot bị âm bản</b> khi tự viết màn hình: thư viện màn hình của ESP-IDF bật điểm OLED khi màu <i>tối</i>, nên firmware vẽ mắt màu đen trên nền trắng. Xem trước đúng như trên chip bằng bản giả lập với <code>--device</code>.</li>

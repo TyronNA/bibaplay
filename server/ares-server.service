@@ -1,14 +1,14 @@
-# Server cho robot ARES (firmware ares-bread). Cài: xem firmware/../server/deploy-mini-pc.sh
+# Mẫu service cho server/app.py. Đừng cài tay: server/deploy.sh điền @USER@ / @HOME@ rồi mới chép vào systemd.
 [Unit]
 Description=ARES robot server (xiaozhi protocol <-> Gemini Live)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
-User=tyron
+User=@USER@
 WorkingDirectory=/opt/ares-server
 # Dấu "-": chưa có file key thì vẫn chạy, ở chế độ echo
-EnvironmentFile=-/home/<user>/.config/ares/gemini.env
+EnvironmentFile=-@HOME@/.config/ares/gemini.env
 ExecStart=/opt/ares-server/.venv/bin/python app.py --port 8000
 Restart=on-failure
 RestartSec=3

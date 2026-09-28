@@ -21,7 +21,8 @@ idf.py -p /dev/cu.usbmodem* flash monitor
 ## Bẫy
 
 - **`SERVER_IP` trong `config.json`** (`CONFIG_OTA_URL`): thay bằng IP LAN của máy chạy `server/app.py` trước khi build
-  (repo không giữ IP thật). DHCP đổi IP thì chip không gọi được server nữa: đặt IP tĩnh cho máy đó, hoặc build lại.
+  (repo không giữ IP thật — sửa xong đừng commit). DHCP đổi IP thì chip không gọi được server nữa: đặt IP tĩnh cho máy đó, hoặc build lại.
+- **Server trả 403**: chip chưa có trong `ARES_DEVICES` của server. Log server in MAC bị từ chối, chép vào đó.
 - **Màu trên OLED ngược với LVGL:** `esp_lvgl_port` bật điểm khi màu *tối*. Vì vậy
   `RobotFaceDisplay` vẽ mắt màu đen trên nền trắng. Xem trước đúng như trên chip bằng
   `./face --sheet a.bmp --device`.

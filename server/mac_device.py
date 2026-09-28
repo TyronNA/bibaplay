@@ -2,8 +2,8 @@
 Đi đúng giao thức firmware (OTA -> WebSocket hello -> listen auto -> Opus), nên server không phân biệt
 được đây là Mac hay ESP32.
 
-  .venv/bin/python mac_device.py                      # nói chuyện với server trên mini-pc
-  --ota http://127.0.0.1:8000/xiaozhi/ota/            # server khác
+  .venv/bin/python mac_device.py                      # server chạy trên chính máy này
+  --ota http://IP-server:8000/xiaozhi/ota/            # server máy khác (MAC giả ma:c0:de:vi:ce:01 phải có trong ARES_DEVICES)
   --wav hoi.wav --out reply.wav --no-face             # tự test: WAV thay mic, ghi file thay loa
 
 Nửa song công: mic TẮT trong lúc robot nói. Mac không có khử vọng (AEC) như chip, mở mic lúc loa

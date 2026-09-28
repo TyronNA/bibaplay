@@ -8,7 +8,7 @@ Có GEMINI_API_KEY: mỗi kết nối thiết bị = một phiên Gemini Live (n
 Không có key: chế độ ECHO — thu câu bạn nói, hết câu thì phát lại (để test đường truyền).
 Tool MCP (mail, Jira, Slack…): mcp_hub.py. Trace lượt/tool/token/chi phí vào SQLite: tracing.py.
 
-  GEMINI_API_KEY=... .venv/bin/python app.py [--port 8000]
+  GEMINI_API_KEY=... ARES_DEVICES=aa:bb:cc:dd:ee:ff .venv/bin/python app.py [--port 8000]
 """
 import argparse
 import asyncio
@@ -17,6 +17,7 @@ import json
 import logging
 import os
 import re
+import secrets
 import socket
 import time
 import uuid
@@ -81,7 +82,22 @@ def rms(pcm: bytes) -> float:
     return (total / n) ** 0.5
 
 
+def allowed(request: web.Request) -> bool:
+    """OTA phát token cho ai gọi tới, nên token không chặn được người lạ: chặn bằng Device-Id (MAC chip) ở
+    ARES_DEVICES. Gọi từ chính máy này (fake_device.py, mac_device.py) thì luôn cho qua."""
+    dev = (request.headers.get("Device-Id") or "").strip().lower()
+    return dev in request.app["devices"] or request.remote in ("127.0.0.1", "::1")
+
+
+def refuse(request: web.Request):
+    log.warning("từ chối Device-Id=%s từ %s — là chip của bạn thì thêm vào ARES_DEVICES",
+                request.headers.get("Device-Id"), request.remote)
+    raise web.HTTPForbidden(text="device not allowed")
+
+
 async def ota(request: web.Request) -> web.Response:
+    if not allowed(request):
+        refuse(request)
     body = await request.text()
     info = {}
     try:
@@ -477,6 +493,8 @@ class GeminiSession(Session):
 
 async def websocket(request: web.Request) -> web.WebSocketResponse:
     app = request.app
+    if not allowed(request):
+        refuse(request)
     want = app["token"]
     auth = request.headers.get("Authorization", "")
     if want and auth != f"Bearer {want}":
@@ -511,9 +529,11 @@ async def websocket(request: web.Request) -> web.WebSocketResponse:
     return ws
 
 
-def make_app(public_host: str, token: str, gemini_key: str = "", gemini_url: str = GEMINI_WS) -> web.Application:
+def make_app(public_host: str, token: str, gemini_key: str = "", gemini_url: str = GEMINI_WS,
+             devices: set[str] = frozenset()) -> web.Application:
     app = web.Application()
     app["public_host"], app["token"] = public_host, token
+    app["devices"] = {d.lower() for d in devices}
     app["gemini_key"], app["gemini_url"] = gemini_key, gemini_url
 
     async def http_ctx(app):
@@ -536,7 +556,8 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--port", type=int, default=8000)
     p.add_argument("--host", default=None, help="IP/host thiết bị dùng để gọi lại (mặc định: IP LAN)")
-    p.add_argument("--token", default=os.environ.get("ARES_TOKEN", "dev-token"))
+    # mặc định sinh mới mỗi lần chạy: chip lấy token qua OTA lúc khởi động, không cần cố định
+    p.add_argument("--token", default=os.environ.get("ARES_TOKEN") or secrets.token_urlsafe(16))
     a = p.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%H:%M:%S")
     if os.environ.get("ARES_DEBUG"):         # chỉ logger của mình, không kéo theo debug của aiohttp
@@ -546,4 +567,6 @@ if __name__ == "__main__":
     url = os.environ.get("GEMINI_WS_URL", GEMINI_WS)   # trỏ sang mock_gemini.py khi test
     log.info("OTA URL cho firmware: http://%s/xiaozhi/ota/", public)
     log.info("chế độ: %s", f"Gemini Live ({GEMINI_MODEL})" if key else "ECHO (chưa có GEMINI_API_KEY)")
-    web.run_app(make_app(public, a.token, key, url), host="0.0.0.0", port=a.port, print=None)
+    devices = {d.strip() for d in os.environ.get("ARES_DEVICES", "").split(",") if d.strip()}
+    log.info("chip được phép: %s", ", ".join(sorted(devices)) or "chưa có (ARES_DEVICES) — chỉ nhận kết nối từ máy này")
+    web.run_app(make_app(public, a.token, key, url, devices), host="0.0.0.0", port=a.port, print=None)

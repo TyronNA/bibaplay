@@ -5,7 +5,7 @@
   llm_calls  mỗi usageMetadata Gemini gửi về: token theo modality + chi phí USD lúc ghi
   tool_calls mỗi lần model gọi tool: tên, args, kết quả, lỗi, thời gian chạy
 
-DB mặc định nằm ngoài /opt/ares-server vì deploy-mini-pc.sh rsync --delete thư mục đó.
+DB mặc định nằm ngoài /opt/ares-server vì deploy.sh rsync --delete thư mục đó.
 Xem: .venv/bin/python trace_report.py
 """
 import json
