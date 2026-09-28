@@ -202,7 +202,8 @@
     });
   }
   // Link mô phỏng chỉ cho mạch toàn linh kiện rời: ESP32/module chưa mô phỏng.
-  const moPhongDuoc = bd => bd.items.some(i => i.loai === 'pin') && !bd.items.some(i => ['esp', 'mod'].includes(i.loai) || (i.loai === 'ngoai' && i.kieu === 'hop'));
+  // ic/rgb/coi, zener, PNP, MOSFET (khong_mp) cũng chưa có mô hình: link ra số sai còn tệ hơn không có link.
+  const moPhongDuoc = bd => bd.items.some(i => i.loai === 'pin') && !bd.items.some(i => ['esp', 'mod', 'ic', 'rgb', 'coi'].includes(i.loai) || i.khong_mp || (i.loai === 'ngoai' && i.kieu === 'hop'));
 
   function veBuoc(b, bd, n, pi, id) {
     const kiem = b.kiem && (b.kiem.thay || b.kiem.neu_khong) ? `<div class="gate">
@@ -276,6 +277,8 @@
       }).join(''); })()}
       ${bai.code ? `<section><h2>Code</h2><p class="mo">Code chạy trên ESP32 cho bài này (<code>${bai.code.split('/').pop()}</code>).</p><div class="cuon"><pre class="code" id="code">đang tải…</pre></div></section>` : ''}
       ${bai.bang_do ? `<section><h2>Ghi số đo</h2><p class="mo">${LUU.noiLuu(id)} <span id="luu"></span></p>${bangDo(bai, kq)}</section>` : ''}
+      ${bai.sau ? `<section><h2>Đào sâu</h2><div class="khung to sau">${bai.sau}</div></section>` : ''}
+      ${bai.hoi ? `<section><h2>Tự kiểm</h2><ol class="hoi to">${bai.hoi.map(([q, d]) => `<li><p>${q}</p><details><summary>Xem đáp án</summary><div>${d}</div></details></li>`).join('')}</ol></section>` : ''}
       ${bai.bay ? `<section class="bay to"><h2>Bẫy của bài này</h2><ul>${bai.bay.map(x => `<li>${x}</li>`).join('')}</ul></section>` : ''}
       <section class="alarm to"><h2>Khi có khói, mùi khét hoặc thấy nóng</h2><p>${bai.khoi ? bai.khoi : gt.chuong.phan > 1 ? 'Rút cáp USB (và tháo pin nếu bài có hộp pin) ngay.' : 'Tháo pin khỏi hộp ngay.'} Không sờ vào linh kiện đó cho tới khi nguội hẳn. Linh kiện đã bốc khói thì bỏ đi, kể cả khi còn chạy. Tìm ra chỗ nối sai rồi mới ráp lại.</p></section>
       ${LUU.web ? `<section class="tien-do"><h2>Tiến độ của bạn</h2><p class="do-nut"><button type="button" data-td="dang"${gt.dangO ? ' aria-pressed="true"' : ''}>Đang học bài này</button> <button type="button" data-td="xong"${gt.xong ? ' aria-pressed="true"' : ''}>Đã xong</button> <button type="button" data-td="">Bỏ đánh dấu</button></p><p class="mo">Lưu trong trình duyệt của bạn, hiện ở danh sách bài.</p></section>` : ''}

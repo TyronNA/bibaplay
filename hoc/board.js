@@ -36,6 +36,11 @@
       case 'npn': return { E: it.e, B: it.b, C: it.c };
       case 'nut': { const p = lo(it.o), c2 = p.cot + (it.rong || 2); return { 1: it.o, 2: c2 + 'e', 3: p.cot + 'f', 4: c2 + 'f' }; }
       case 'mod': return Object.fromEntries(it.chan.map(c => [c[0], c[1]]));
+      // IC DIP-8 vắt qua rãnh: chân 1 ở cột o hàng f, đếm ngược chiều kim đồng hồ → chân 8 ở cột o hàng e.
+      case 'ic': return Object.fromEntries([1, 2, 3, 4].flatMap(i => [[i, (it.o + i - 1) + 'f'], [9 - i, (it.o + i - 1) + 'e']]));
+      // LED RGB 4 chân thẳng hàng: p = [R, chung, G, B] (thứ tự theo hình của shop — dò lại ở bài 4.4)
+      case 'rgb': return { R: it.p[0], C: it.p[1], G: it.p[2], B: it.p[3] };
+      case 'coi': return { P: it.p[0], N: it.p[1] };
       case 'esp': case 'ngoai': return it.chan;
       default: return {};
     }
@@ -70,7 +75,7 @@
       });
     } else if (it.loai === 'diode') {
       // vạch = cathode, luôn ở đầu K (điểm b)
-      const t = Math.min(L - 14, 30), den = it.kieu === '4007';
+      const t = Math.min(L - 14, 30), den = it.kieu !== '4148';
       s += `<rect x="${mx - t / 2}" y="${my - 5}" width="${t}" height="10" rx="3" class="${den ? 'bb-d4007' : 'bb-d4148'}"/>`;
       s += `<rect x="${mx + t / 2 - 7}" y="${my - 5}" width="4" height="10" class="${den ? 'bb-vach-bac' : 'bb-vach-den'}"/>`;
     } else {
@@ -135,8 +140,41 @@
     const ten = it.ten_chan || ['E', 'B', 'C'];
     let s = `<path d="M${x1} ${y2}V${y1 + 8}Q${(x1 + x2) / 2} ${y1 - 8} ${x2} ${y1 + 8}V${y2}Z" class="bb-to92"/>`;
     ps.forEach((p, i) => { s += `<text x="${p.x}" y="${y + 4}" text-anchor="middle" class="bb-potchu">${esc(ten[i])}</text>`; });
-    s += `<text x="${(x1 + x2) / 2}" y="${y2 + 10}" text-anchor="middle" class="bb-to92-chu-ngoai">S8050${it.nhan ? ' · ' + esc(it.nhan) : ''}</text>`;
+    s += `<text x="${(x1 + x2) / 2}" y="${y2 + 10}" text-anchor="middle" class="bb-to92-chu-ngoai">${esc(it.chu || 'S8050')}${it.nhan ? ' · ' + esc(it.nhan) : ''}</text>`;
+    if (it.to220) s = `<rect x="${x1 - 2}" y="${y1 - 26}" width="${x2 - x1 + 4}" height="16" rx="2" class="bb-tai"/>` + s;
     return { s, bb: [x1 - 6, y1 - 10, x2 + 6, y2 + 14] };
+  }
+
+  // IC DIP-8 vắt qua rãnh giữa: thân che rãnh, khuyết bên trái, chấm ở chân 1.
+  function veIc(it, c) {
+    const p1 = lo(c[1]), p8 = lo(c[8]), p4 = lo(c[4]);
+    const x1 = p1.x - 11, x2 = p4.x + 11, y1 = p8.y + 5, y2 = p1.y - 5;
+    let s = `<rect x="${x1}" y="${y1}" width="${x2 - x1}" height="${y2 - y1}" rx="3" class="bb-ic"/>`
+      + `<path d="M${x1} ${(y1 + y2) / 2 - 7} a7 7 0 0 1 0 14" class="bb-ic-khuyet"/><circle cx="${p1.x}" cy="${y2 - 8}" r="2.6" class="bb-ic-cham"/>`
+      + `<text x="${(x1 + x2) / 2 + 4}" y="${(y1 + y2) / 2 + 4}" text-anchor="middle" class="bb-ic-chu">${esc(it.chu || 'IC')}</text>`;
+    for (let i = 1; i <= 8; i++) { const q = lo(c[i]); s += `<text x="${q.x}" y="${i <= 4 ? q.y + 15 : q.y - 8}" text-anchor="middle" class="bb-nutchu">${i}</text>`; }
+    if (it.nhan) s += `<text x="${x2 + 8}" y="${(y1 + y2) / 2 + 4}" class="bb-nhan">${esc(it.nhan)}</text>`;
+    return { s, bb: [x1 - 8, p8.y - 18, x2 + 8, p1.y + 20] };
+  }
+
+  // LED RGB nhìn từ trên: bóng trắng đục che 4 chân; chữ dưới mỗi chân theo tên chân của bài.
+  function veRgb(it, c) {
+    const ps = ['R', 'C', 'G', 'B'].map(k => ({ k, ...lo(c[k]) })), xs = ps.map(p => p.x), y = ps[0].y;
+    const cx = (Math.min(...xs) + Math.max(...xs)) / 2;
+    let s = '';
+    if (it.sang) s += `<circle cx="${cx}" cy="${y - 20}" r="26" style="fill:${it.sang};opacity:.35"/>`;
+    s += `<circle cx="${cx}" cy="${y - 20}" r="17" class="bb-rgb"/>`;
+    ps.forEach(p => { s += `<line x1="${p.x}" y1="${p.y}" x2="${cx + (p.x - cx) * .4}" y2="${y - 8}" class="bb-chan"/><text x="${p.x}" y="${p.y + 15}" text-anchor="middle" class="bb-nutchu">${esc((it.ten_chan || {})[p.k] || (p.k === 'C' ? '−' : p.k))}</text>`; });
+    if (it.nhan) s += `<text x="${Math.max(...xs) + 14}" y="${y - 16}" class="bb-nhan">${esc(it.nhan)}</text>`;
+    return { s, bb: [Math.min(...xs) - 16, y - 42, Math.max(...xs) + 16, y + 20] };
+  }
+
+  // Còi chip nhìn từ trên: hình tròn đen, dấu + ở chân P.
+  function veCoi(it, c) {
+    const a = lo(c.P), b = lo(c.N), mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    let s = `<circle cx="${mx}" cy="${my}" r="15" class="bb-coi"/><circle cx="${mx}" cy="${my}" r="3" class="bb-coi-lo"/><text x="${a.x - 4}" y="${a.y - 13}" text-anchor="middle" class="bb-cuc">+</text>`;
+    if (it.nhan) s += `<text x="${Math.max(a.x, b.x) + 18}" y="${my + 4}" class="bb-nhan">${esc(it.nhan)}</text>`;
+    return { s, bb: [Math.min(a.x, b.x) - 18, my - 18, Math.max(a.x, b.x) + 18, my + 18] };
   }
 
   // Nút 6×6 vắt qua rãnh giữa: 4 chân ở hàng e và f.
@@ -349,7 +387,7 @@
       if (r.bb && ['esp', 'ngoai'].includes(it.loai)) ngoai.push(r.bb);
       if (r.day) H = Math.max(H, r.day);
     };
-    const thuTu = ['mod', 'tro', 'ldr', 'diode', 'bientro', 'npn', 'nut', 'led', 'tu', 'day', 'ngoai', 'esp', 'pin', 'cam', 'dh', 'nhan'];
+    const thuTu = ['mod', 'ic', 'tro', 'ldr', 'diode', 'bientro', 'npn', 'nut', 'led', 'rgb', 'coi', 'tu', 'day', 'ngoai', 'esp', 'pin', 'cam', 'dh', 'nhan'];
     [...items].sort((a, b) => thuTu.indexOf(a.loai) - thuTu.indexOf(b.loai)).forEach(it => {
       const c = chan(it), p = k => lo(c[k]);
       switch (it.loai) {
@@ -358,6 +396,9 @@
         case 'tu': them(veTu(it, Object.keys(c).map(p)), it); break;
         case 'npn': them(veNpn(it, [p('E'), p('B'), p('C')]), it); break;
         case 'nut': them(veNut(it, c), it); break;
+        case 'ic': them(veIc(it, c), it); break;
+        case 'rgb': them(veRgb(it, c), it); break;
+        case 'coi': them(veCoi(it, c), it); break;
         case 'mod': them(veMod(it), it); break;
         case 'esp': them(datCho(veEsp, it, 40), it); break;
         case 'ngoai': them(datCho(veNgoai, it, 300), it); break;
@@ -370,7 +411,7 @@
         case 'nhan': them(veNhan(it), it); break;
       }
       // chấm chân cắm
-      if (['tro', 'ldr', 'led', 'bientro', 'diode', 'tu', 'nut', 'mod'].includes(it.loai)) {
+      if (['tro', 'ldr', 'led', 'bientro', 'diode', 'tu', 'nut', 'mod', 'ic', 'rgb', 'coi'].includes(it.loai)) {
         Object.values(c).forEach(r => { const q = lo(r); lop.duoi += `<circle cx="${q.x}" cy="${q.y}" r="3.6" class="bb-chancam"/>`; });
       }
     });
@@ -453,7 +494,128 @@
     hop: (x, y, w, h, ten) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" class="sd-net sd-to"/>` + SD.chu(x + w / 2, y + h / 2 + 4, ten, 'sd-chu', 'middle'),
     dat: (x, y) => SD.day(`${x},${y} ${x},${y + 8}`) + `<path d="M${x - 11} ${y + 8}H${x + 11}M${x - 7} ${y + 13}H${x + 7}M${x - 3} ${y + 18}H${x + 3}" class="sd-net"/>`,
     dongHo: (x, y, chu) => `<circle cx="${x}" cy="${y}" r="16" class="sd-net"/>` + SD.chu(x, y + 5, chu, 'sd-chu', 'middle'),
+    // zener dọc, cathode (vạch có râu) ở TRÊN: vẽ đúng chiều mắc ngược (K về phía +)
+    zener: (x, y, d, nhan) => {
+      const m = y + d / 2;
+      return SD.day(`${x},${y} ${x},${m - 7}`) + `<path d="M${x - 10} ${m + 9}H${x + 10}L${x} ${m - 7}Z" class="sd-net sd-to"/>`
+        + `<path d="M${x - 14} ${m - 11}L${x - 10} ${m - 7}H${x + 10}L${x + 14} ${m - 3}" class="sd-net" stroke-width="2.2"/>` + SD.day(`${x},${m + 9} ${x},${y + d}`)
+        + (nhan ? SD.chu(x + 18, m + 4, nhan) : '');
+    },
+    // PNP: B vào từ (x−30, y); E ở trên (x+10, y−30) nối +; C ở dưới (x+10, y+30) ra tải. Mũi tên chỉ VÀO (ở E).
+    pnp: (x, y, nhan) => `<circle cx="${x}" cy="${y}" r="19" class="sd-net"/>` + SD.day(`${x - 30},${y} ${x - 7},${y}`)
+      + `<line x1="${x - 7}" y1="${y - 11}" x2="${x - 7}" y2="${y + 11}" class="sd-net" stroke-width="2.6"/>`
+      + SD.day(`${x - 7},${y - 5} ${x + 10},${y - 16} ${x + 10},${y - 30}`) + SD.day(`${x - 7},${y + 5} ${x + 10},${y + 16} ${x + 10},${y + 30}`)
+      + `<path d="M${x - 6} ${y - 6}l9 -1l-3 6z" style="fill:currentColor"/>`
+      + SD.chu(x - 30, y - 6, 'B', 'sd-mo') + SD.chu(x + 15, y - 22, 'E', 'sd-mo') + SD.chu(x + 15, y + 28, 'C', 'sd-mo') + (nhan ? SD.chu(x + 24, y + 4, nhan) : ''),
+    // MOSFET kênh N: G vào từ (x−30, y); D ở trên (x+10, y−30); S ở dưới (x+10, y+30).
+    mosfet: (x, y, nhan) => SD.day(`${x - 30},${y} ${x - 10},${y}`) + `<line x1="${x - 10}" y1="${y - 12}" x2="${x - 10}" y2="${y + 12}" class="sd-net" stroke-width="2.4"/>`
+      + [-12, 0, 12].map(dy => `<line x1="${x - 4}" y1="${y + dy - 5}" x2="${x - 4}" y2="${y + dy + 5}" class="sd-net" stroke-width="2.4"/>`).join('')
+      + SD.day(`${x - 4},${y - 12} ${x + 10},${y - 12} ${x + 10},${y - 30}`) + SD.day(`${x - 4},${y + 12} ${x + 10},${y + 12} ${x + 10},${y + 30}`) + SD.day(`${x - 4},${y} ${x + 10},${y} ${x + 10},${y + 12}`)
+      + `<path d="M${x - 3} ${y}l7 -4v8z" style="fill:currentColor"/>`
+      + SD.chu(x - 30, y - 6, 'G', 'sd-mo') + SD.chu(x + 15, y - 22, 'D', 'sd-mo') + SD.chu(x + 15, y + 28, 'S', 'sd-mo') + (nhan ? SD.chu(x + 24, y + 4, nhan) : ''),
+    // op-amp: tam giác mũi ở (x+40, y); IN− vào (x−20, y−12), IN+ vào (x−20, y+12)
+    opamp: (x, y, nhan) => `<path d="M${x} ${y - 26}V${y + 26}L${x + 40} ${y}Z" class="sd-net sd-to"/>` + SD.day(`${x - 20},${y - 12} ${x},${y - 12}`) + SD.day(`${x - 20},${y + 12} ${x},${y + 12}`)
+      + SD.chu(x + 4, y - 8, '−', 'sd-chu') + SD.chu(x + 4, y + 16, '+', 'sd-chu') + (nhan ? SD.chu(x + 6, y + 40, nhan, 'sd-mo') : ''),
+    // còi dọc từ (x, y) dài d, + ở trên
+    coi: (x, y, d, nhan) => {
+      const m = y + d / 2;
+      return SD.day(`${x},${y} ${x},${m - 8}`) + SD.day(`${x},${m + 8} ${x},${y + d}`) + `<path d="M${x - 14} ${m - 8}H${x + 14}M${x - 14} ${m + 8}H${x + 14}M${x - 10} ${m - 8}A12 12 0 0 1 ${x + 10} ${m - 8}" class="sd-net"/>`
+        + SD.chu(x - 22, m - 8, '+', 'sd-pos') + (nhan ? SD.chu(x + 20, m + 4, nhan) : '');
+    },
+    // Mạch một vòng: nguồn bên trái, các linh kiện xếp dọc bên phải từ trên xuống, nối tiếp.
+    // cac: [['tro','220Ω'], ['led'], ['diode','1N4148'], ['tu','100µF',true], ['nut','S1'], ['motor'], ['dh','A'], ['ldr','quang trở'], ['zener','3.3V'], ['coi','còi']]
+    // o.nguon: { tren: 'GPIO13', duoi: 'GND', ten: 'ESP32' } → vẽ khối chip thay cho pin. o.do: [i, 'V'] → vôn kế song song linh kiện thứ i.
+    chuoi: (ap, cac, nhan, o = {}) => {
+      const DAI = { tro: 60, ldr: 60, led: 40, diode: 50, zener: 50, tu: 50, nut: 50, motor: 36, dh: 36, coi: 44 };
+      const X = 170, x0 = 60;
+      let y = 40, s = o.mui || cac.some(c => c[0] === 'ldr') ? SD.mui : '', moc = [];
+      cac.forEach(([k, n, cuc], i) => {
+        const d = DAI[k] || 50;
+        s += SD.day(`${X},${y - 10} ${X},${y}`);
+        moc.push([y, y + d]);
+        if (k === 'tro') s += SD.tro(X, y, d, n); else if (k === 'ldr') s += SD.ldr(X, y, d, n);
+        else if (k === 'led') s += SD.led(X, y) + (n ? SD.chu(X + 26, y + 24, n) : '');
+        else if (k === 'diode') s += SD.diode(X, y, d, n); else if (k === 'zener') s += SD.zener(X, y, d, n);
+        else if (k === 'tu') s += SD.tu(X, y, d, n, cuc); else if (k === 'nut') s += SD.nut(X, y, d, n);
+        else if (k === 'coi') s += SD.coi(X, y, d, n);
+        else if (k === 'motor') s += SD.day(`${X},${y} ${X},${y + 2}`) + SD.motor(X, y + 18) + SD.day(`${X},${y + 34} ${X},${y + d}`) + (n ? SD.chu(X + 22, y + 22, n) : '');
+        else if (k === 'dh') s += SD.day(`${X},${y} ${X},${y + 2}`) + SD.dongHo(X, y + 18, n || 'A') + SD.day(`${X},${y + 34} ${X},${y + d}`);
+        y += d + 10;
+      });
+      const yb = y, H = yb + 26, ym = (30 + yb) / 2;
+      s += SD.day(`${X},${yb - 10} ${X},${yb}`);
+      if (o.nguon) {
+        s += SD.hop(x0 - 40, ym - 40, 70, 80, o.nguon.ten || 'ESP32') + SD.day(`${x0 + 30},${ym - 24} ${x0 + 50},${ym - 24} ${x0 + 50},30 ${X},30 ${X},30`)
+          + SD.day(`${x0 + 30},${ym + 24} ${x0 + 50},${ym + 24} ${x0 + 50},${yb} ${X},${yb}`)
+          + SD.chu(x0 + 32, ym - 28, o.nguon.tren || 'GPIO', 'sd-mo') + SD.chu(x0 + 32, ym + 38, o.nguon.duoi || 'GND', 'sd-mo');
+      } else {
+        s += SD.pin(x0, ym, ap) + SD.day(`${x0},${ym} ${x0},30 ${X},30 ${X},30`) + SD.day(`${x0},${ym + 10} ${x0},${yb} ${X},${yb}`);
+      }
+      s += SD.day(`${X},30 ${X},30`);
+      if (o.do) {
+        const [i, chu] = o.do, [a, b] = moc[i], xm = X + 80;
+        s += SD.cham(X, a - 5) + SD.cham(X, b + 5) + SD.day(`${X},${a - 5} ${xm},${a - 5} ${xm},${(a + b) / 2 - 16}`) + SD.dongHo(xm, (a + b) / 2, chu) + SD.day(`${xm},${(a + b) / 2 + 16} ${xm},${b + 5} ${X},${b + 5}`);
+      }
+      return SD.svg(o.rong || 300, H, s, nhan);
+    },
     mui: '<defs><marker id="sd-mui" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:currentColor"/></marker></defs>',
   };
   window.SD = SD;
+})();
+
+// Phác thảo bo đục lỗ (perfboard) cho chương Hàn: lưới pad đồng, linh kiện nằm giữa 2 pad, mối hàn, que đo, mũi hàn.
+// Toạ độ theo ô pad [cột, hàng] tính từ 0. mat: 'duoi' = nhìn mặt hàn (lật bo) — trái/phải bị đảo so với mặt linh kiện.
+(function () {
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const O = 22, L = 26;
+  function ve(b, moTa) {
+    const C = b.cot || 12, H = b.hang || 6, W = L * 2 + C * O, HH = 40 + H * O + (b.them_duoi || 0);
+    const X = c => L + O / 2 + (b.mat === 'duoi' ? C - 1 - c : c) * O, Y = r => 30 + O / 2 + r * O;
+    let s = `<rect x="${L - 8}" y="22" width="${C * O + 16}" height="${H * O + 16}" rx="4" class="pb-bo"/>`;
+    for (let c = 0; c < C; c++) for (let r = 0; r < H; r++) s += `<circle cx="${X(c)}" cy="${Y(r)}" r="6" class="pb-pad"/><circle cx="${X(c)}" cy="${Y(r)}" r="2.2" class="pb-lo"/>`;
+    s += `<text x="${L - 8}" y="14" class="pb-mat">${b.mat === 'duoi' ? 'MẶT HÀN (lật bo, nhìn từ dưới)' : 'MẶT LINH KIỆN (nhìn từ trên)'}</text>`;
+    const tren = [], duoi = [];
+    (b.items || []).forEach(it => {
+      const P = q => ({ x: X(q[0]), y: Y(q[1]) });
+      if (it.loai === 'tro' || it.loai === 'diode') {
+        const a = P(it.a), k = P(it.b), mx = (a.x + k.x) / 2, my = (a.y + k.y) / 2, g = Math.atan2(k.y - a.y, k.x - a.x) * 180 / Math.PI, d = Math.hypot(k.x - a.x, k.y - a.y);
+        if (b.mat === 'duoi') duoi.push(`<line x1="${a.x}" y1="${a.y}" x2="${k.x}" y2="${k.y}" class="pb-chan-mo"/>`);
+        else duoi.push(`<g transform="rotate(${g} ${mx} ${my})"><line x1="${mx - d / 2}" y1="${my}" x2="${mx + d / 2}" y2="${my}" class="bb-chan"/><rect x="${mx - 17}" y="${my - 6}" width="34" height="12" rx="5" class="${it.loai === 'tro' ? 'bb-tro' : 'bb-d4007'}"/>${it.loai === 'diode' ? `<rect x="${mx + 9}" y="${my - 6}" width="4" height="12" class="bb-vach-bac"/>` : ''}</g>`);
+        if (it.nhan) tren.push(`<text x="${mx}" y="${my - 11}" text-anchor="middle" class="bb-nhan">${esc(it.nhan)}</text>`);
+      } else if (it.loai === 'led') {
+        const a = P(it.a), k = P(it.b);
+        if (b.mat !== 'duoi') duoi.push(`<circle cx="${(a.x + k.x) / 2}" cy="${(a.y + k.y) / 2}" r="11" style="fill:#E5372C;opacity:.9"/><text x="${a.x}" y="${a.y - 13}" text-anchor="middle" class="bb-cuc">+</text>`);
+        if (it.nhan) tren.push(`<text x="${Math.max(a.x, k.x) + 14}" y="${a.y + 4}" class="bb-nhan">${esc(it.nhan)}</text>`);
+      } else if (it.loai === 'day') {
+        const pts = it.pts.map(P);
+        (it.tren ? duoi : duoi).push(`<polyline points="${pts.map(q => `${q.x},${q.y}`).join(' ')}" class="${it.thiec ? 'pb-thiec' : 'pb-day'}" style="${it.mau ? `stroke:${it.mau}` : ''}"/>`);
+      } else if (it.loai === 'moi') {
+        const q = P(it.p);
+        const lop = { dat: 'pb-moi', von: 'pb-moi-von', lanh: 'pb-moi-lanh' }[it.kieu || 'dat'] || 'pb-moi';
+        tren.push(`<circle cx="${q.x}" cy="${q.y}" r="${it.kieu === 'von' ? 8.5 : 6.5}" class="${lop}"/>`);
+      } else if (it.loai === 'cau') {
+        const a = P(it.a), k = P(it.b);
+        tren.push(`<path d="M${a.x} ${a.y} L${k.x} ${k.y}" class="pb-cau"/>`);
+      } else if (it.loai === 'header') {
+        const q = P(it.p);
+        duoi.push(`<rect x="${q.x - O / 2 + 2}" y="${q.y - 7}" width="${it.n * O - 4}" height="14" rx="2" class="${b.mat === 'duoi' ? 'pb-header-mo' : 'pb-header'}"/>`);
+        for (let i = 0; i < it.n; i++) duoi.push(`<rect x="${X(it.p[0] + i) - 2.5}" y="${q.y - 2.5}" width="5" height="5" class="bb-header"/>`);
+      } else if (it.loai === 'que') {
+        const q = P(it.p), m = it.mau === 'den' ? 'bb-que-den' : 'bb-que-do';
+        tren.push(`<path d="M${q.x} ${q.y} L${q.x + (it.dx || 30)} ${q.y + (it.dy || -34)}" class="${m}" style="stroke-width:3"/><circle cx="${q.x}" cy="${q.y}" r="3.5" class="${m}-dau"/>`);
+      } else if (it.loai === 'mohan') {
+        const q = P(it.p);
+        tren.push(`<path d="M${q.x} ${q.y} L${q.x + 60} ${q.y - 46}" class="pb-mohan"/><path d="M${q.x + 60} ${q.y - 46} L${q.x + 110} ${q.y - 84}" class="pb-mohan-tay"/><circle cx="${q.x}" cy="${q.y}" r="4" class="pb-mui"/>`);
+      } else if (it.loai === 'chu') {
+        const q = P(it.p);
+        tren.push(`<text x="${q.x + (it.dx || 0)}" y="${q.y + (it.dy || 0)}" text-anchor="${it.neo || 'middle'}" class="${it.xau ? 'bb-xau' : 'bb-ghichu'}">${esc(it.t)}</text>`);
+      } else if (it.loai === 'khoanh') {
+        const q = P(it.p);
+        tren.push(`<circle cx="${q.x}" cy="${q.y}" r="${it.r || 13}" class="pb-khoanh"/>`);
+      }
+    });
+    s += duoi.join('') + tren.join('');
+    return `<svg viewBox="0 0 ${W} ${HH}" role="img" aria-label="${esc(moTa || 'Phác thảo bo đục lỗ')}" class="pb">${s}</svg>`;
+  }
+  window.PB = { ve };
 })();

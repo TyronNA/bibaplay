@@ -353,6 +353,32 @@ pre.code{font-variant-ligatures:none;margin:0;padding:14px 16px;overflow-x:auto;
 .khung+.cuon,.cuon+.mo{margin-top:12px}
 .xz-bang td{font-size:14px} .xz-bang td:first-child{min-width:150px}
 
+/* linh kiện mới trên breadboard (board.js) + phác thảo bo đục lỗ (PB) */
+.bb-ic{fill:#23282E} .bb-ic-khuyet{fill:var(--board)} .bb-ic-cham{fill:#5A626B} .bb-ic-chu{fill:#DDE3E8;font:600 9px var(--mono)}
+.bb-rgb{fill:#F4F5F2;stroke:rgba(0,0,0,.35);opacity:.92} .bb-coi{fill:#1E2226;stroke:#000} .bb-coi-lo{fill:#555}
+.bb-tai{fill:#B8BEC4;stroke:#6E767E}
+svg.pb{display:block;width:100%;min-width:320px;max-width:560px;height:auto;margin:auto}
+.pb-bo{fill:#2E7D5B} .pb-pad{fill:#C9A640} .pb-lo{fill:#0B0F13}
+.pb-mat{fill:var(--muted);font:600 10px var(--mono);letter-spacing:.06em}
+.pb-chan-mo{stroke:#9AA3AD;stroke-width:2;stroke-dasharray:3 3}
+.pb-day{stroke:#D8322A;stroke-width:3.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pb-thiec{stroke:#C8CDD2;stroke-width:5;fill:none;stroke-linecap:round}
+.pb-moi{fill:#D8DDE2;stroke:#8A949E} .pb-moi-von{fill:#AEB5BC;stroke:#6E767E} .pb-moi-lanh{fill:#8E959C;stroke:#5A626B;stroke-dasharray:2 2}
+.pb-cau{stroke:#E5372C;stroke-width:4;stroke-linecap:round}
+.pb-header{fill:#1E2226} .pb-header-mo{fill:none;stroke:#1E2226;stroke-dasharray:3 3}
+.pb-mohan{stroke:#B8BEC4;stroke-width:6;stroke-linecap:round} .pb-mohan-tay{stroke:#2A3440;stroke-width:12;stroke-linecap:round} .pb-mui{fill:#FF7A3D}
+.pb-khoanh{fill:none;stroke:var(--moi);stroke-width:2.5}
+
+/* đào sâu + tự kiểm ở trang bài */
+.sau h3{margin:18px 0 6px;font-size:16px} .sau h3:first-child{margin-top:0}
+.hoi{margin:0;padding:0;list-style:none;counter-reset:hoi}
+.hoi li{counter-increment:hoi;padding:12px 16px;border-top:1px solid var(--line)} .hoi li:first-child{border-top:0}
+.hoi li>p{margin:0}
+.hoi li>p::before{content:counter(hoi) ". ";font:600 13px var(--mono);color:var(--accent)}
+.hoi details{margin-top:6px} .hoi summary{cursor:pointer;font:600 12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hoi details>div{margin-top:6px;padding:8px 12px;background:var(--accent-bg)}
+@media print{.hoi details>div{display:block}}
+
 /* tìm nhanh (tim-nhanh.js) + lọc trên trang thư viện linh kiện */
 .nut-tim{width:auto;gap:6px;padding:0 8px;grid-auto-flow:column;font:600 12px/1 var(--mono)}
 .nut-tim[hidden]{display:none}
