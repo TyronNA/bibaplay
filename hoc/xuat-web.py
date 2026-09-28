@@ -19,10 +19,11 @@ JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mua.js", "mo-phong.js
 NOTES = ["notes/giao-trinh-dien.md", "notes/do-dang-co.md"]
 # Bản chia sẻ cho người khác: nói rõ ai soạn và mức đã kiểm, vì hướng dẫn ráp sai là cháy đồ thật.
 GHI_AI = """<footer class="ghi-ai to">
-<p><b>Chia sẻ miễn phí.</b> Nội dung, hình vẽ và code do AI (Claude của Anthropic) soạn theo yêu cầu của một người đang tự học điện tử. Source mở (MIT): <a href="https://github.com/TyronNhatAnh/ban-rap">github.com/TyronNhatAnh/ban-rap</a>.</p>
-<p>Nút <b>"Mua trên Shopee"</b> là <b>link affiliate</b>: bạn mua qua đó thì người soạn nhận hoa hồng từ Shopee, giá bạn trả không đổi. Không có hãng nào trả tiền để được nhắc tên trong bài.</p>
+<p><b>Chia sẻ miễn phí.</b> Nội dung, hình vẽ và code do AI (Claude của Anthropic) soạn theo yêu cầu của một người đang tự học điện tử. Source mở (MIT): <a href="https://github.com/TyronNhatAnh/bibaplay">github.com/TyronNhatAnh/bibaplay</a>.</p>
 <p>Phần lớn bài <b>chưa được ráp thử để kiểm</b>, code Phần 2 đã build nhưng chưa chạy trên chip, nên có thể sai. Luôn đo Ω trước khi cấp điện, đối chiếu datasheet trước khi tin số trong bài. Thấy khói, mùi khét hoặc linh kiện nóng thì rút nguồn ngay.</p>
 </footer>"""
+# Chỉ chèn khi mua.js có ít nhất một link: chưa gắn link thì không nhắc tới affiliate.
+GHI_AFFILIATE = '''<p>Nút <b>"Mua trên Shopee"</b> là <b>link affiliate</b>: bạn mua qua đó thì người soạn nhận hoa hồng từ Shopee, giá bạn trả không đổi. Không có hãng nào trả tiền để được nhắc tên trong bài.</p>'''
 
 
 def main(ra):
@@ -55,7 +56,10 @@ def main(ra):
     web = goc.replace('<script src="luu-server.js"></script>', '<script src="luu-web.js"></script>') \
         .replace(nav, nav + '<a href="ban-rap.pdf" download>Tải PDF</a>')
     assert "</main>" in web
-    web = web.replace("</main>", "</main>\n" + GHI_AI, 1)
+    ghi = GHI_AI
+    if re.search(r"^\s*'[\w-]+':\s*'https?://", (HOC / "mua.js").read_text(), re.M):
+        ghi = ghi.replace("</footer>", GHI_AFFILIATE + "\n</footer>")
+    web = web.replace("</main>", "</main>\n" + ghi, 1)
     (ra / "index.html").write_text(web)
 
     json.dump(files, sys.stdout, ensure_ascii=False)
