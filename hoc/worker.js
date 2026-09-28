@@ -34,8 +34,10 @@ async function mua(request, env, ctx, id) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    // www.bibaplay.com và domain cũ hoc.talesofascension.com → bibaplay.com, giữ path + hash (hash do trình duyệt giữ).
-    if (url.hostname !== CHINH && url.hostname !== 'localhost' && url.hostname !== '127.0.0.1') {
+    // www.bibaplay.com, domain cũ hoc.talesofascension.com và http:// → https://bibaplay.com, giữ path + hash (hash do trình duyệt giữ).
+    // Zone không bật "Always Use HTTPS", nên http://bibaplay.com phải tự chuyển ở đây.
+    const local = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+    if (!local && (url.hostname !== CHINH || url.protocol === 'http:')) {
       url.hostname = CHINH; url.protocol = 'https:'; url.port = '';
       return Response.redirect(url.toString(), 301);
     }
