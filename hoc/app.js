@@ -8,7 +8,7 @@
   // LUU.goc: '/' trên web, '/hoc/' khi chạy local (server.py); <base href> trong index.html khớp với nó.
   const R = r => LUU.goc + (r ? r.replace(/\/?$/, '/') : '');
   const routeCua = pathname => decodeURIComponent(pathname.startsWith(LUU.goc) ? pathname.slice(LUU.goc.length) : pathname.replace(/^\//, '')).replace(/\/+$/, '');
-  const LA_ROUTE = /^(|do|bai\/\d+\.\d+|linh-kien(\/[\w-]+)?|mo-phong(\/.*)?)$/;
+  const LA_ROUTE = /^(|do|bai\/\d+\.\d+|linh-kien(\/[\w-]+)?|mo-phong(\/.*)?|xiaozhi)$/;
 
   // title + description + canonical + og: xuat-web.py chụp DOM sau khi render → mỗi trang tĩnh mang meta riêng.
   const bo = s => String(s).replace(/<[^>]*>/g, '').replace(/[*`]/g, '').replace(/\s+/g, ' ').trim();
@@ -310,13 +310,19 @@
     MoPhongTrang.mo(app, vao);
   }
 
+  // Nội dung ở xiaozhi.js; url() cho file (ảnh trong sandbox/), R() cho route.
+  function trangXiaozhi() {
+    datMeta(XIAOZHI.tieuDe, XIAOZHI.moTa);
+    app.innerHTML = XIAOZHI.html(R, LUU.url);
+  }
+
   async function dinhTuyen() {
     // Link cũ dạng #/bai/2.3 (đã gửi anh em, link chia sẻ mô phỏng) → đổi sang đường dẫn thật, không tải lại trang.
     if (location.hash.startsWith('#/')) history.replaceState(null, '', R(location.hash.slice(2)));
     const h = S.route = routeCua(location.pathname);
     window.scrollTo(0, 0);
     const muc = h.split('/')[0];
-    document.querySelectorAll('.top nav a').forEach(a => a.toggleAttribute('aria-current', a.dataset.r === (['do', 'linh-kien', 'mo-phong'].includes(muc) ? muc : '')));
+    document.querySelectorAll('.top nav a').forEach(a => a.toggleAttribute('aria-current', a.dataset.r === (['do', 'linh-kien', 'mo-phong', 'xiaozhi'].includes(muc) ? muc : '')));
     try {
       if (!S.gt) await taiChung();
       const m = /^bai\/(\d+\.\d+)$/.exec(h);
@@ -324,6 +330,7 @@
       else if (h === 'do') trangDo();
       else if (muc === 'linh-kien') trangLinhKien(h.split('/')[1]);
       else if (muc === 'mo-phong') await trangMoPhong(h);
+      else if (h === 'xiaozhi') trangXiaozhi();
       else trangChu();
     } catch (e) {
       app.innerHTML = `<section class="alarm"><h2>Lỗi tải trang</h2><p>${esc(e.message || e)}</p></section>`;

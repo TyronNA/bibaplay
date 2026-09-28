@@ -30,8 +30,10 @@ ROOT = Path(__file__).resolve().parent.parent
 HOC = ROOT / "hoc"
 WEB = "https://bibaplay.com"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mua.js", "mo-phong.js", "mo-phong-ui.js", "luu-web.js", "dau-trang.js", "app.js"]
+JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mua.js", "mo-phong.js", "mo-phong-ui.js", "xiaozhi.js", "luu-web.js", "dau-trang.js", "app.js"]
 NOTES = ["notes/giao-trinh-dien.md", "notes/do-dang-co.md"]
+# Ảnh trang /xiaozhi/ (xiaozhi.js), giữ nguyên đường dẫn trong repo như NOTES.
+ANH = ["sandbox/robot-face/sheet.png", "sandbox/sensor-panel/shot.png"]
 # Bản chia sẻ cho người khác: nói rõ ai soạn và mức đã kiểm, vì hướng dẫn ráp sai là cháy đồ thật.
 GHI_AI = """<footer class="ghi-ai to">
 <p><b>Chia sẻ miễn phí.</b> Nội dung, hình vẽ và code do AI (Claude của Anthropic) soạn theo yêu cầu của một người đang tự học điện tử.</p>
@@ -73,7 +75,7 @@ def main(ra):
 
     # Code các bài Phần 2 mà trang bài tải về hiển thị (trường `code:` trong bai/*.js).
     code = sorted({m for b in bai for m in re.findall(r"code: *'([^']+)'", (HOC / "bai" / f"{b}.js").read_text())})
-    for f in NOTES + code:
+    for f in NOTES + ANH + code:
         (ra / f).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(ROOT / f, ra / f)
         files.append(f)
@@ -85,7 +87,7 @@ def main(ra):
 
     goc = (HOC / "index.html").read_text()
     assert '<script src="luu-server.js"></script>' in goc and '<base href="/hoc/">' in goc
-    nav = '<a href="mo-phong/" data-r="mo-phong">Mô phỏng</a>'
+    nav = '<a href="xiaozhi/" data-r="xiaozhi">Robot AI</a>'
     assert nav in goc
     # ban-rap.pdf: xuat-pdf.py in từ chính thư mục này, nằm trên R2, hoc/worker.js phát ra (deploy-web.sh).
     web = goc.replace('<script src="luu-server.js"></script>', '<script src="luu-web.js"></script>') \
@@ -141,11 +143,11 @@ def co_pdf():
 
 
 def routes(ra):
-    """Mọi route có trang tĩnh: trang chủ, từng bài trong giáo trình, thư viện + từng linh kiện, đồ, mô phỏng."""
+    """Mọi route có trang tĩnh: trang chủ, từng bài trong giáo trình, thư viện + từng linh kiện, đồ, mô phỏng, robot AI."""
     gt = (ra / "notes/giao-trinh-dien.md").read_text()
     bai = re.findall(r"^\|\s*(\d+\.\d+)[^|]*\|", gt, re.M)
     lk = re.findall(r"\{ id: '([\w-]+)', nhom:", (HOC / "linhkien.js").read_text())
-    return ["", "do", "linh-kien", "mo-phong", *(f"bai/{b}" for b in bai), *(f"linh-kien/{x}" for x in lk)]
+    return ["", "do", "linh-kien", "mo-phong", "xiaozhi", *(f"bai/{b}" for b in bai), *(f"linh-kien/{x}" for x in lk)]
 
 
 def trang_sitemap(trang):

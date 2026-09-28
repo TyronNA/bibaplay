@@ -338,6 +338,21 @@ tbody th{font-weight:600}
 pre.code{font-variant-ligatures:none;margin:0;padding:14px 16px;overflow-x:auto;font:13px/1.5 var(--mono);background:var(--panel);border:1px solid var(--line-dam);white-space:pre}
 .bb-to92-chu-ngoai{fill:var(--ink);font:600 8.5px var(--mono);paint-order:stroke;stroke:var(--board);stroke-width:3px}
 
+/* trang /xiaozhi/ (xiaozhi.js) */
+.xz-tt{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin:14px 0 0;font-size:14px}
+.xz-hinh img{display:block;width:100%;height:auto;background:#000}
+.xz-hinh figcaption{padding:10px 16px;border-top:1px solid var(--line-dam);font-size:14px;color:var(--muted)}
+.xz-hinh+.mo{margin:10px 0 0}
+.xz-hinh-so .cuon{padding:12px}
+.xz-sodo{display:block;width:100%;min-width:620px;height:auto}
+.xz-hop rect{fill:none;stroke:var(--line-dam);stroke-width:1.5}
+.xz-ten text{fill:var(--ink);font:700 14px var(--mono);text-anchor:middle}
+.xz-chu text{fill:var(--muted);font:13px "Be Vietnam Pro",system-ui,sans-serif;text-anchor:middle}
+.xz-nhan text{fill:var(--accent);font:600 11px var(--mono);text-anchor:middle}
+.xz-day path{stroke:var(--accent);stroke-width:2;fill:none} .xz-mui{fill:var(--accent)}
+.khung+.cuon,.cuon+.mo{margin-top:12px}
+.xz-bang td{font-size:14px} .xz-bang td:first-child{min-width:150px}
+
 /* nút mua (link affiliate, mua.js) */
 .mua{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:#fff;background:#EE4D2D;padding:6px 8px;text-decoration:none;border-radius:2px;white-space:nowrap}
 .lk-the header .mua{margin-left:auto}

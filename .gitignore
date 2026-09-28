@@ -6,3 +6,5 @@ sandbox/esp32-bai/sdkconfig
 sandbox/esp32-bai/sdkconfig.old
 __pycache__/
 .wrangler/
+# số đo riêng của mình (hoc/server.py ghi), không đưa lên repo công khai
+hoc/ket-qua/

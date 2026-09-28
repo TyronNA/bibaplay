@@ -18,13 +18,16 @@ Mỗi bài có hình breadboard từng bước (chân nào cắm lỗ nào), bư
 | `notes/giao-trinh-dien.md` | Danh sách bài (web đọc thẳng file này) |
 | `hoc/` | Web tự học: `bai/<id>.js` từng bài, `linhkien.js` thư viện linh kiện, `board.js` vẽ breadboard |
 | `sandbox/esp32-bai/` | Code ESP-IDF các bài ESP32, chọn bài bằng `idf.py menuconfig` |
+| `sandbox/robot-face/`, `sandbox/sensor-panel/` | Giả lập LVGL trên máy tính: mặt robot OLED, màn thông số PC (`sandbox/README.md`) |
 | `firmware/` | Board `ares-bread` cho [xiaozhi-esp32](https://github.com/78/xiaozhi-esp32) (clone riêng, không nằm trong repo) |
-| `server/` | Server thay xiaozhi.me: giao thức xiaozhi ↔ Gemini Live |
+| `server/` | Server thay xiaozhi.me: giao thức xiaozhi ↔ Gemini Live (`server/README.md`) |
+
+Robot AI (firmware + server + chỗ host) viết thành trang: https://bibaplay.com/xiaozhi/
 
 ## Chạy web ở máy
 
 ```sh
-python3 hoc/server.py        # http://localhost:4300 — số đo lưu vào hoc/ket-qua/
+python3 hoc/server.py        # http://localhost:4300 — số đo lưu vào hoc/ket-qua/ (gitignored)
 node hoc/test/mo-phong.test.js   # test lõi mô phỏng
 ```
 

@@ -52,7 +52,7 @@
         buoc: [
           { ten: '3 nút', lam: ['3 nút vắt qua rãnh ở cột 32/34, 36/38, 40/42 (hướng đã kiểm như 6.1). Cột 34, 38, 42: dây đen hàng j → thanh − dưới. <code>47</code> → 32b, <code>40</code> → 36b, <code>39</code> → 40b.'], board: { bo: BO, them: [...NUT, ESP] } },
           buocOm('Đo lần cuối, cả lúc nhấn từng nút', []),
-          { ...K.camUsb('Cắm USB, build + nạp firmware', ['Build firmware xiaozhi-esp32 từ source (ESP-IDF v6.0.1 trở lên) cho board <code>bread-compact-wifi-128x64</code>, rồi <code>idf.py -p /dev/cu.usbmodem… flash monitor</code>.', 'Cần một server xiaozhi đang chạy để board kết nối tới.'], {}, { thay: 'OLED hiện thanh trạng thái; nói vào mic thì nghe trả lời qua loa.', neu_khong: 'Từng module đã chạy ở 12.1–12.3 → lỗi ở phần ghép: so từng dây với bảng chân. OLED/ampli ấm: rút USB.' }) },
+          { ...K.camUsb('Cắm USB, build + nạp firmware', ['Build firmware xiaozhi-esp32 từ source (ESP-IDF v6.0.1 trở lên) cho board <code>bread-compact-wifi-128x64</code>, rồi <code>idf.py -p /dev/cu.usbmodem… flash monitor</code>.', 'Cần một server xiaozhi đang chạy để board kết nối tới: cách build firmware có mặt robot, chạy server riêng bằng key Gemini miễn phí, chọn chỗ host — xem trang <a href="xiaozhi/">Robot AI tự build</a>.'], {}, { thay: 'OLED hiện thanh trạng thái; nói vào mic thì nghe trả lời qua loa.', neu_khong: 'Từng module đã chạy ở 12.1–12.3 → lỗi ở phần ghép: so từng dây với bảng chân. OLED/ampli ấm: rút USB.' }) },
           K.rutUsb(),
         ],
       },
