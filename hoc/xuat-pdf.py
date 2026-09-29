@@ -23,6 +23,10 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from pypdf import PdfReader, PdfWriter
+from pypdf.annotations import Link
+from pypdf.generic import ArrayObject, DecodedStreamObject, DictionaryObject, NameObject
+
+WEB = "https://bibaplay.com"  # trùng WEB trong xuat-web.py
 
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
@@ -77,6 +81,33 @@ def in_trang(goc, tam, i_route):
         pr.wait()
 
 
+def chan_trang(w, trang_cua):
+    """Mỗi trang một dòng xám nhỏ ở lề dưới (@page margin 11mm trong style.css) ghi link về đúng bài + số trang:
+    file hay bị chuyển tiếp qua chat, người nhận vẫn biết nguồn. Không phủ hình chìm lên nội dung — che mất lỗ
+    breadboard / nhãn chân. Chữ ASCII + Helvetica chuẩn của PDF để khỏi nhúng font tiếng Việt."""
+    font = DictionaryObject({NameObject("/Type"): NameObject("/Font"), NameObject("/Subtype"): NameObject("/Type1"),
+                             NameObject("/BaseFont"): NameObject("/Helvetica"),
+                             NameObject("/Encoding"): NameObject("/WinAnsiEncoding")})
+    ref, n = w._add_object(font), len(w.pages)
+    for i, (p, route) in enumerate(zip(w.pages, trang_cua)):
+        url = f"{WEB}/{route + '/' if route else ''}"
+        chu = f"{url.removeprefix('https://')}   \xb7   {i + 1} / {n}"
+        co, x0, y = 7, float(p.mediabox.left) + 28, float(p.mediabox.bottom) + 14
+        rong = co * 0.52 * len(chu)  # ước chừng bề rộng Helvetica, chỉ để khoanh vùng bấm
+        res = p.setdefault(NameObject("/Resources"), DictionaryObject())
+        fonts = res.setdefault(NameObject("/Font"), DictionaryObject())
+        fonts[NameObject("/FBibaplay")] = ref
+        # Nối thêm stream, không viết lại stream gốc (mỗi trang vài trăm KB vector). Bọc gốc trong q…Q để ma trận /
+        # màu Chrome để lại cuối trang không lệch dòng chữ.
+        cu = p[NameObject("/Contents")]
+        cu = list(cu.get_object()) if isinstance(cu.get_object(), ArrayObject) else [cu]
+        dau, cuoi = DecodedStreamObject(), DecodedStreamObject()
+        dau.set_data(b"q\n")
+        cuoi.set_data(f"\nQ q BT 0.55 g /FBibaplay {co} Tf {x0:.2f} {y:.2f} Td ({chu}) Tj ET Q".encode("latin-1"))
+        p[NameObject("/Contents")] = ArrayObject([w._add_object(dau), *cu, w._add_object(cuoi)])
+        w.add_annotation(i, Link(rect=(x0, y - 2, x0 + rong, y + co), url=url))
+
+
 def main(web, ra):
     gt = (web / "notes/giao-trinh-dien.md").read_text()
     ds = muc_luc(gt)
@@ -88,7 +119,7 @@ def main(web, ra):
         with ThreadPoolExecutor(2) as ex:
             pdf = dict(zip(trang, ex.map(partial(in_trang, goc, tam), enumerate(trang))))
         srv.shutdown()
-        w, cha = PdfWriter(), None
+        w, cha, trang_cua = PdfWriter(), None, []
         for ten, route, cap in ds:
             if route is None:  # tiêu đề chương: bookmark trỏ vào bài đầu tiên của chương
                 cha = ("cho", ten)
@@ -96,11 +127,13 @@ def main(web, ra):
             dau = len(w.pages)
             for p in PdfReader(pdf[route]).pages:
                 w.add_page(p)
+                trang_cua.append(route)
             if cap and isinstance(cha, tuple):
                 cha = w.add_outline_item(cha[1], dau)
             w.add_outline_item(ten, dau, parent=cha if cap else None)
             if not cap:
                 cha = None
+        chan_trang(w, trang_cua)
         w.add_metadata({"/Title": "Bàn Ráp · giáo trình điện trên breadboard", "/Author": "Soạn bởi AI (Claude)"})
         # 58 file Chrome in riêng mang font/hình trùng nhau → gộp lại, bớt ~25%
         for p in w.pages:
