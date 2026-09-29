@@ -522,9 +522,18 @@ line.mp-thong{stroke:var(--accent);stroke-width:12;stroke-opacity:.18;stroke-lin
   a{color:var(--ink);text-decoration:none}
 }
 /* chân trang bản web chia sẻ (xuat-web.py chèn vào): nói rõ nội dung do AI soạn, chưa kiểm hết */
-.ghi-ai{max-width:1100px;margin:0 auto 40px;padding:12px 16px;font-size:13.5px;line-height:1.55;color:var(--muted)}
-.ghi-ai b{color:var(--ink)} .ghi-ai p{margin:0 0 4px;max-width:95ch} .ghi-ai p:last-child{margin:0}
-.qr-ung-ho{display:block;margin-top:8px;background:#fff;padding:6px;border-radius:6px}
+/* footer = khung tên bản vẽ: các ô chia bằng đường mảnh, co về 2 rồi 1 cột trên máy hẹp */
+.ghi-ai{max-width:1100px;margin:0 auto 40px;font-size:13.5px;line-height:1.55;color:var(--muted)}
+.ghi-ai b{color:var(--ink)} .ghi-ai p{margin:0 0 6px} .ghi-ai p:last-child{margin:0}
+.ct-luoi{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.ct-o{padding:14px 16px;border-right:1px solid var(--line)} .ct-o:last-child{border-right:0}
+.ct-o h2{margin:0 0 8px;font-size:11px;font-weight:600;color:var(--ink)}
+.ct-o ul{margin:0;padding:0;list-style:none} .ct-o li{margin:0 0 4px}
+.ct-ung-ho{display:flex;flex-direction:column;align-items:flex-start}
+.qr-ung-ho{display:block;margin-top:8px;background:#fff;padding:6px;border-radius:4px}
+.ct-duoi{border-top:1px solid var(--line);padding:10px 16px;font-size:12.5px}
+@media (max-width:900px){.ct-luoi{grid-template-columns:1fr 1fr}.ct-o{border-bottom:1px solid var(--line)}.ct-o:nth-child(2n){border-right:0}.ct-o:nth-last-child(-n+2):nth-child(odd),.ct-o:last-child{border-bottom:0}}
+@media (max-width:520px){.ct-luoi{grid-template-columns:1fr}.ct-o{border-right:0}.ct-o:nth-last-child(-n+2):nth-child(odd){border-bottom:1px solid var(--line)}.ct-o:last-child{border-bottom:0}}
 
 /* Video ráp thật: ảnh YouTube + nút phát, bấm mới đổi thành iframe (app.js) */
 .video-yt{position:relative;aspect-ratio:16/9;max-width:720px;overflow:hidden;background:#000}

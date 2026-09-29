@@ -35,12 +35,17 @@ NOTES = ["notes/giao-trinh-dien.md", "notes/do-dang-co.md"]
 # Ảnh trang /xiaozhi/ (xiaozhi.js), giữ nguyên đường dẫn trong repo như NOTES.
 ANH = ["sandbox/robot-face/sheet.png", "sandbox/sensor-panel/shot.png"]
 # Bản chia sẻ cho người khác: nói rõ ai soạn và mức đã kiểm, vì hướng dẫn ráp sai là cháy đồ thật.
-GHI_AI = """<footer class="ghi-ai to">
-<p><b>Chia sẻ miễn phí.</b> Nội dung, hình vẽ và code do AI (Claude của Anthropic) soạn theo yêu cầu của một người đang tự học điện tử.</p>
-<p>Phần lớn bài <b>chưa được ráp thử để kiểm</b> (bài đã ráp có nhãn <b>đã ráp thật</b> kèm video), code Phần 2 đã build nhưng chưa chạy trên chip, nên có thể sai. Luôn đo Ω trước khi cấp điện, đối chiếu datasheet trước khi tin số trong bài. Thấy khói, mùi khét hoặc linh kiện nóng thì rút nguồn ngay.</p>
-<p>Mã nguồn mở (MIT): <a href="https://github.com/TyronNA/bibaplay" target="_blank" rel="noopener">github.com/TyronNA/bibaplay ↗</a> — web, bài, firmware, server. Thấy sai thì mở issue.</p>
-<p><a href="/gioi-thieu/">Giới thiệu</a> · <a href="/chinh-sach-rieng-tu/">Chính sách riêng tư</a> · Liên hệ: <a href="mailto:lienhe@bibaplay.com">lienhe@bibaplay.com</a></p>
-</footer>"""
+# Dựng như khung tên bản vẽ: mỗi ô một nhãn mono + vài dòng; ô Ủng hộ và dải công bố dưới chỉ có khi cấu hình bật.
+COT_BAN_RAP = """<div class="ct-o"><h2 class="eyebrow">Bàn Ráp</h2>
+<p>Web tự học điện tử, <b>miễn phí</b>. Nội dung, hình vẽ và code do <b>AI (Claude của Anthropic)</b> soạn cho một người đang tự học.</p>
+<p><a href="https://github.com/TyronNA/bibaplay" target="_blank" rel="noopener">Mã nguồn mở (MIT) ↗</a></p></div>"""
+COT_AN_TOAN = """<div class="ct-o"><h2 class="eyebrow">An toàn</h2>
+<p>Phần lớn bài <b>chưa ráp thử</b> (bài đã ráp có nhãn <b>đã ráp thật</b>); code Phần 2 chưa chạy trên chip. Đo Ω trước khi cấp điện, đối chiếu datasheet.</p>
+<p>Khói, mùi khét, linh kiện nóng → <b>rút nguồn ngay</b>.</p></div>"""
+COT_TRANG = """<div class="ct-o"><h2 class="eyebrow">Trang</h2>
+<ul><li><a href="/gioi-thieu/">Giới thiệu</a></li><li><a href="/chinh-sach-rieng-tu/">Chính sách riêng tư</a></li>
+<li><a href="mailto:lienhe@bibaplay.com">lienhe@bibaplay.com</a></li>
+<li><a href="https://github.com/TyronNA/bibaplay/issues" target="_blank" rel="noopener">Báo lỗi trong bài ↗</a></li></ul></div>"""
 # Chỉ chèn khi mua.js có ít nhất một link: chưa gắn link thì không nhắc tới affiliate.
 GHI_AFFILIATE = '''<p>Nút <b>"Mua trên Shopee"</b> là <b>link affiliate</b>: bạn mua qua đó thì người soạn nhận hoa hồng từ Shopee, giá bạn trả không đổi. Không có hãng nào trả tiền để được nhắc tên trong bài.</p>'''
 
@@ -66,7 +71,7 @@ NHOM_KHONG_INDEX = {"cam-tay"}
 CHU_TOI_THIEU_LK = 50
 
 # Chỉ chèn khi cau-hinh-web.json có ung_ho.link hoặc ung_ho.qr.
-GHI_UNG_HO = """<p class="ung-ho"><b>Ủng hộ.</b> {chu}{link}</p>{qr}"""
+GHI_UNG_HO = """<div class="ct-o ct-ung-ho"><h2 class="eyebrow">Ủng hộ</h2><p>{chu}{link}</p>{qr}</div>"""
 
 
 def main(ra):
@@ -133,21 +138,20 @@ def main(ra):
         files.append("ads.txt")
     web = web.replace("</head>", them_dau + "</head>", 1)
     assert "</main>" in web
-    ghi = GHI_AI
-    if mua:
-        ghi = ghi.replace("</footer>", GHI_AFFILIATE + "\n</footer>")
-    if qc:
-        ghi = ghi.replace("</footer>", GHI_QUANG_CAO + "\n</footer>")
+    cot = [COT_BAN_RAP, COT_AN_TOAN, COT_TRANG]
     uh = cfg.get("ung_ho") or {}
     if uh.get("link") or uh.get("qr"):
         if uh.get("qr"):
             shutil.copy(HOC / uh["qr"], ra / Path(uh["qr"]).name)
             files.append(Path(uh["qr"]).name)
-        ghi = ghi.replace("</footer>", GHI_UNG_HO.format(
+        cot.append(GHI_UNG_HO.format(
             chu=html.escape(uh.get("chu") or "Thấy có ích thì mời mình ly cà phê:"),
             link=f' <a href="{html.escape(uh["link"])}" target="_blank" rel="noopener">{html.escape(uh.get("nhan") or "Ủng hộ")} ↗</a>' if uh.get("link") else "",
-            qr=f'<img class="qr-ung-ho" src="{html.escape(Path(uh["qr"]).name)}" alt="Mã QR ủng hộ" width="140" height="140" loading="lazy">' if uh.get("qr") else "",
-        ) + "\n</footer>")
+            qr=f'<img class="qr-ung-ho" src="{html.escape(Path(uh["qr"]).name)}" alt="Mã QR chuyển khoản ủng hộ (VietQR)" width="120" height="120" loading="lazy">' if uh.get("qr") else "",
+        ))
+    duoi = ([GHI_AFFILIATE] if mua else []) + ([GHI_QUANG_CAO] if qc else [])
+    ghi = (f'<footer class="ghi-ai to"><div class="ct-luoi">\n' + "\n".join(cot) + "\n</div>"
+           + (f'\n<div class="ct-duoi">{"".join(duoi)}</div>' if duoi else "") + "\n</footer>")
     web = web.replace("</main>", "</main>\n" + ghi, 1)
     (ra / "index.html").write_text(web)
 
