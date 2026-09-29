@@ -8,3 +8,6 @@ __pycache__/
 .wrangler/
 # số đo riêng của mình (hoc/server.py ghi), không đưa lên repo công khai
 hoc/ket-qua/
+# ghi chú riêng cho Claude + tiến độ của mình: chỉ ở máy, repo này công khai
+CLAUDE.md
+notes/progress.md
