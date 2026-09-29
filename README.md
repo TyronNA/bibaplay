@@ -6,7 +6,7 @@ Mỗi bài có hình breadboard từng bước (chân nào cắm lỗ nào), bư
 - Web: https://bibaplay.com — PDF cả bộ: https://bibaplay.com/ban-rap.pdf
 - Mô phỏng ghép mạch ngay trên web: https://bibaplay.com/mo-phong/ — cắm linh kiện, lắp pin, cầm que đo;
   nối sai thì báo nóng / bốc khói. Mô hình gần đúng, chưa có ESP32 (dùng [Wokwi](https://wokwi.com) cho phần đó).
-- Chia sẻ miễn phí.
+- Chia sẻ miễn phí. Liên hệ: lienhe@bibaplay.com · báo sai: mở issue.
 
 > **Do AI soạn.** Nội dung, hình vẽ và code do AI (Claude của Anthropic) soạn theo datasheet (nguồn ở
 > `notes/datasheet-robot.md`). Phần lớn bài **chưa được ráp thử**. Luôn đo trước khi cấp nguồn; pin lithium cháy thật.
@@ -16,7 +16,7 @@ Mỗi bài có hình breadboard từng bước (chân nào cắm lỗ nào), bư
 | Thư mục | Nội dung |
 |---|---|
 | `notes/giao-trinh-dien.md` | Danh sách bài (web đọc thẳng file này) |
-| `hoc/` | Web tự học: `bai/<id>.js` từng bài, `linhkien.js` thư viện linh kiện, `board.js` vẽ breadboard |
+| `hoc/` | Web tự học: `bai/<id>.js` từng bài, `linhkien.js` thư viện linh kiện, `board.js` vẽ breadboard, `video.js` video ráp thật, `trang-phu.js` giới thiệu + chính sách riêng tư |
 | `sandbox/esp32-bai/` | Code ESP-IDF các bài ESP32, chọn bài bằng `idf.py menuconfig` |
 | `sandbox/robot-face/`, `sandbox/sensor-panel/` | Giả lập LVGL trên máy tính: mặt robot OLED, màn thông số PC (`sandbox/README.md`) |
 | `firmware/` | Board `ares-bread` cho [xiaozhi-esp32](https://github.com/78/xiaozhi-esp32) (clone riêng, không nằm trong repo) |

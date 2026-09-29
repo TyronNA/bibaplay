@@ -8,18 +8,31 @@
   // LUU.goc: '/' trên web, '/hoc/' khi chạy local (server.py); <base href> trong index.html khớp với nó.
   const R = r => LUU.goc + (r ? r.replace(/\/?$/, '/') : '');
   const routeCua = pathname => decodeURIComponent(pathname.startsWith(LUU.goc) ? pathname.slice(LUU.goc.length) : pathname.replace(/^\//, '')).replace(/\/+$/, '');
-  const LA_ROUTE = /^(|do|bai\/\d+\.\d+|linh-kien(\/[\w-]+)?|mo-phong(\/.*)?|xiaozhi)$/;
+  const LA_ROUTE = /^(|do|bai\/\d+\.\d+|linh-kien(\/[\w-]+)?|mo-phong(\/.*)?|xiaozhi|gioi-thieu|chinh-sach-rieng-tu)$/;
 
   // title + description + canonical + og: xuat-web.py chụp DOM sau khi render → mỗi trang tĩnh mang meta riêng.
   const bo = s => String(s).replace(/<[^>]*>/g, '').replace(/[*`]/g, '').replace(/\s+/g, ' ').trim();
   const cat = (s, n = 160) => (s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s);
-  function datMeta(tieuDe, moTa) {
-    const url = (LUU.web ? 'https://bibaplay.com' : location.origin) + R(S.route);
+  // ld: dữ liệu có cấu trúc (schema.org) cho Google, ghi vào <script id="ld"> trong khối meta của index.html.
+  const GOC_WEB = 'https://bibaplay.com';
+  const vet = ds => ({ '@type': 'BreadcrumbList', itemListElement: ds.map(([ten, r], i) => ({ '@type': 'ListItem', position: i + 1, name: ten, item: GOC_WEB + R(r) })) });
+  function datMeta(tieuDe, moTa, ld = []) {
+    const url = (LUU.web ? GOC_WEB : location.origin) + R(S.route);
     const dat = (sel, v) => { const el = document.head.querySelector(sel); if (el) el.setAttribute(el.tagName === 'LINK' ? 'href' : 'content', v); };
     document.title = tieuDe;
     moTa = cat(bo(moTa));
     dat('meta[name="description"]', moTa); dat('meta[property="og:description"]', moTa);
     dat('meta[property="og:title"]', tieuDe); dat('meta[property="og:url"]', url); dat('link[rel="canonical"]', url);
+    const el = document.getElementById('ld');
+    // "<" thoát thành \u003c: chữ bài có thể chứa "</script>" và làm vỡ thẻ
+    if (el) el.textContent = ld.length ? JSON.stringify({ '@context': 'https://schema.org', '@graph': ld }).replace(/</g, '\\u003c') : '';
+  }
+
+  // Video ráp thật (video.js). Chỉ nhận id YouTube 11 ký tự: link dán tay, sai dạng thì coi như chưa có video.
+  function videoCua(id) {
+    const v = window.VIDEO && VIDEO[id];
+    const m = v && /(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/)([\w-]{11})(?![\w-])/.exec(v.link || '');
+    return m ? { ...v, yt: m[1] } : null;
   }
 
   // ds: cho tìm nhanh (tim-nhanh.js) — rỗng tới khi giáo trình tải xong.
@@ -73,9 +86,10 @@
   }
 
   function trangThai(b) {
-    if (b.xong) return '<span class="pill ok">xong</span>';
-    if (b.dangO) return '<span class="pill dang">đang học</span>';
-    if (S.soan.includes(b.id)) return '<span class="pill soan">có hướng dẫn</span>';
+    const rap = videoCua(b.id) ? '<span class="pill ok">đã ráp thật</span>' : '';
+    if (b.xong) return rap + '<span class="pill ok">xong</span>';
+    if (b.dangO) return rap + '<span class="pill dang">đang học</span>';
+    if (S.soan.includes(b.id)) return rap || '<span class="pill soan">có hướng dẫn</span>';
     return '<span class="pill mo">chưa soạn</span>';
   }
 
@@ -84,7 +98,8 @@
   }
 
   function trangChu() {
-    datMeta('Bàn Ráp · học điện tử, robot, ESP32 trên breadboard', 'Giáo trình điện miễn phí bằng tiếng Việt cho người mới: đo đạc, định luật Ohm, tụ, diode, transistor, ESP32, motor, pin lithium tới robot. Mỗi bài có hình breadboard từng bước và bước đo Ω trước khi cấp điện.');
+    datMeta('Bàn Ráp · học điện tử, robot, ESP32 trên breadboard', 'Giáo trình điện miễn phí bằng tiếng Việt cho người mới: đo đạc, định luật Ohm, tụ, diode, transistor, ESP32, motor, pin lithium tới robot. Mỗi bài có hình breadboard từng bước và bước đo Ω trước khi cấp điện.',
+      [{ '@type': 'WebSite', name: 'Bàn Ráp', url: GOC_WEB + '/', inLanguage: 'vi' }]);
     app.innerHTML = `
       <section class="dau"><p class="eyebrow">Giáo trình điện · nghiêng về robot + nhúng</p>
       <h1>Học điện trên breadboard</h1>
@@ -160,7 +175,8 @@
     const l = chon && LINHKIEN.theoId(chon);
     if (l) {
       const cungNhom = LINHKIEN.ds.filter(x => x.loai === l.loai && x.id !== l.id);
-      datMeta(`${bo(l.ten)}: cách nhận chân, giới hạn, bẫy · Bàn Ráp`, `${l.ten}: ${l.chan.join(' ')}`);
+      datMeta(`${bo(l.ten)}: cách nhận chân, giới hạn, bẫy · Bàn Ráp`, `${l.ten}: ${l.chan.join(' ')}`,
+        [vet([['Linh kiện', 'linh-kien'], [bo(l.ten), `linh-kien/${l.id}`]])]);
       app.innerHTML = `<section class="dau"><p class="eyebrow"><a href="${R('linh-kien')}">Thư viện linh kiện</a> · ${LINHKIEN.loai[l.loai]}</p><h1>${l.ten}</h1>
         <p class="lede">Hình minh hoạ có chú thích chân, ký hiệu trên sơ đồ, cách nhận chân và bẫy. Chỗ nào ghi <b>đo mới biết</b> thì phải đo trước khi ráp.</p></section>
         <div class="lk-luoi lk-mot">${the(l)}</div>
@@ -252,7 +268,12 @@
       return;
     }
     const bai = await taiBai(id);
-    datMeta(tieuDe, bai.muc_tieu || `${gt.lam} ${gt.thay}`);
+    const moTa = bai.muc_tieu || `${gt.lam} ${gt.thay}`, vd = videoCua(id);
+    const ld = [vet([['Bài học', ''], [`Bài ${id}: ${bo(gt.ten)}`, `bai/${id}`]])];
+    // Google chỉ nhận VideoObject có đủ name, description, thumbnailUrl, uploadDate
+    if (vd && vd.ngay) ld.push({ '@type': 'VideoObject', name: `Ráp thật bài ${id}: ${bo(gt.ten)}`, description: cat(bo(vd.ghi || moTa)),
+      thumbnailUrl: `https://i.ytimg.com/vi/${vd.yt}/hqdefault.jpg`, uploadDate: vd.ngay, embedUrl: `https://www.youtube-nocookie.com/embed/${vd.yt}`, contentUrl: `https://www.youtube.com/watch?v=${vd.yt}` });
+    datMeta(tieuDe, moTa, ld);
     nguon = bai.nguon || '';
     const kq = await LUU.docKq(id);
     const can = (bai.can || []).map(c => {
@@ -266,6 +287,9 @@
       ${khungTen(`<div><dt>Phần · bước</dt><dd>${bai.phan.length} phần · ${soBuoc} bước</dd></div>${bai.poster ? `<div><dt>Poster 30 bài</dt><dd>bài ${bai.poster.join(', ')}</dd></div>` : ''}`)}
       <section class="khung to"><p class="lede">${bai.muc_tieu}</p>
         ${bai.poster ? `<p class="mo">Hình trên poster có chỗ sai. Ráp theo hình ở trang này.</p>` : ''}</section>
+      ${vd ? `<section><h2>Video ráp thật</h2><div class="video-yt"><button type="button" data-yt="${esc(vd.yt)}" aria-label="Phát video ráp thật bài ${id}">
+        <img src="https://i.ytimg.com/vi/${esc(vd.yt)}/hqdefault.jpg" alt="Ảnh video ráp thật bài ${id}" width="480" height="360" loading="lazy"><span class="video-play" aria-hidden="true"></span></button></div>
+        <p class="mo">${vd.ghi ? `${esc(vd.ghi)} ` : ''}Video tải từ YouTube khi bạn bấm. <a href="https://www.youtube.com/watch?v=${esc(vd.yt)}" target="_blank" rel="noopener">Mở trên YouTube ↗</a></p></section>` : ''}
       <section><h2>Đồ cần</h2><ul class="can">${can}</ul><p class="mo">Đối chiếu với trang <a href="${R(`do`)}">Đồ đang có</a>. Bấm vào hình để xem cách nhận chân trong <a href="${R(`linh-kien`)}">thư viện linh kiện</a>.</p></section>
       ${bai.kien_thuc ? `<section><h2>Hiểu trước khi ráp</h2><div class="khung to">${bai.kien_thuc}</div></section>` : ''}
       ${bai.so_do ? `<section><h2>Sơ đồ</h2><div class="sd-luoi">${bai.so_do.map(s => `<figure class="sd-hinh to">${s.nhan ? `<span class="pill ${s.xau ? 'xau' : 'ok'}">${s.nhan}</span>` : ''}${s.svg}<figcaption>${s.chu}</figcaption></figure>`).join('')}</div></section>` : ''}
@@ -285,6 +309,13 @@
       ${bai.robot ? `<section><h2>Dùng ở đâu trong robot</h2><ul>${bai.robot.map(x => `<li>${x}</li>`).join('')}</ul></section>` : ''}
       ${dieuHuong}`;
 
+    // Chỉ nhúng iframe khi bấm: trang nhẹ, và YouTube không đặt cookie khi người xem chưa bấm (chinh-sach-rieng-tu).
+    app.querySelectorAll('.video-yt button').forEach(n => n.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${n.dataset.yt}?autoplay=1&rel=0`;
+      f.title = n.getAttribute('aria-label'); f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.allowFullscreen = true;
+      n.replaceWith(f);
+    }));
     app.querySelectorAll('[data-td]').forEach(n => n.addEventListener('click', () => {
       const v = n.dataset.td;
       // "đang học" chỉ 1 bài một lúc, như "← đang ở đây" trong giáo trình
@@ -323,13 +354,20 @@
     app.innerHTML = XIAOZHI.html(R, LUU.url);
   }
 
+  // Giới thiệu, chính sách riêng tư (trang-phu.js)
+  function trangPhu(h) {
+    const t = TRANG_PHU[h];
+    datMeta(t.tieuDe, t.moTa);
+    app.innerHTML = t.html(R);
+  }
+
   async function dinhTuyen() {
     // Link cũ dạng #/bai/2.3 (đã gửi anh em, link chia sẻ mô phỏng) → đổi sang đường dẫn thật, không tải lại trang.
     if (location.hash.startsWith('#/')) history.replaceState(null, '', R(location.hash.slice(2)));
     const h = S.route = routeCua(location.pathname);
     window.scrollTo(0, 0);
     const muc = h.split('/')[0];
-    document.querySelectorAll('.top nav a').forEach(a => a.toggleAttribute('aria-current', a.dataset.r === (['do', 'linh-kien', 'mo-phong', 'xiaozhi'].includes(muc) ? muc : '')));
+    document.querySelectorAll('.top nav a').forEach(a => a.toggleAttribute('aria-current', a.dataset.r === (['do', 'linh-kien', 'mo-phong', 'xiaozhi'].includes(muc) ? muc : muc === '' || muc === 'bai' ? '' : null)));
     try {
       if (!S.gt) await taiChung();
       const m = /^bai\/(\d+\.\d+)$/.exec(h);
@@ -338,6 +376,7 @@
       else if (muc === 'linh-kien') trangLinhKien(h.split('/')[1]);
       else if (muc === 'mo-phong') await trangMoPhong(h);
       else if (h === 'xiaozhi') trangXiaozhi();
+      else if (window.TRANG_PHU && Object.hasOwn(TRANG_PHU, h)) trangPhu(h);
       else trangChu();
     } catch (e) {
       app.innerHTML = `<section class="alarm"><h2>Lỗi tải trang</h2><p>${esc(e.message || e)}</p></section>`;

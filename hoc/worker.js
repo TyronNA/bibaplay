@@ -70,6 +70,12 @@ async function xuLy(request, env, ctx) {
   // Link chia sẻ mạch (/mo-phong/m/<mã>/) và "thử trên mô phỏng" (/mo-phong/bai/…) không có file tĩnh:
   // phát trang /mo-phong/ đã render sẵn, app.js đọc đường dẫn rồi nạp mạch.
   if (/^\/mo-phong\/.+/.test(url.pathname)) return env.ASSETS.fetch(new Request(new URL('/mo-phong/', url), request));
+  // /bai/2.3 (thiếu "/"): Static Assets tự chuyển sang /bai/2.3/ nhưng bằng 307 (tạm thời) → Google coi là hai URL.
+  // Tự trả 301 khi bản có "/" là trang thật; đường dẫn có đuôi file (.js, .pdf… — đuôi bắt đầu bằng chữ, vì /bai/2.3 cũng có dấu chấm) hay trang không có thì để Assets lo như cũ.
+  if ((request.method === 'GET' || request.method === 'HEAD') && !url.pathname.endsWith('/') && !/\.[a-z]\w*$/i.test(url.pathname)) {
+    const co = new URL(url.pathname + '/', url);
+    if ((await env.ASSETS.fetch(new Request(co, { method: 'HEAD' }))).ok) { co.search = url.search; return Response.redirect(co.toString(), 301); }
+  }
   if (url.pathname !== PDF) return env.ASSETS.fetch(request);
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     return new Response('Method Not Allowed', { status: 405, headers: { allow: 'GET, HEAD' } });

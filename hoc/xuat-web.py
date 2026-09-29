@@ -30,15 +30,16 @@ ROOT = Path(__file__).resolve().parent.parent
 HOC = ROOT / "hoc"
 WEB = "https://bibaplay.com"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mua.js", "mo-phong.js", "mo-phong-ui.js", "xiaozhi.js", "luu-web.js", "dau-trang.js", "tim-nhanh.js", "app.js"]
+JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mua.js", "mo-phong.js", "mo-phong-ui.js", "xiaozhi.js", "trang-phu.js", "video.js", "luu-web.js", "dau-trang.js", "tim-nhanh.js", "app.js"]
 NOTES = ["notes/giao-trinh-dien.md", "notes/do-dang-co.md"]
 # Ảnh trang /xiaozhi/ (xiaozhi.js), giữ nguyên đường dẫn trong repo như NOTES.
 ANH = ["sandbox/robot-face/sheet.png", "sandbox/sensor-panel/shot.png"]
 # Bản chia sẻ cho người khác: nói rõ ai soạn và mức đã kiểm, vì hướng dẫn ráp sai là cháy đồ thật.
 GHI_AI = """<footer class="ghi-ai to">
 <p><b>Chia sẻ miễn phí.</b> Nội dung, hình vẽ và code do AI (Claude của Anthropic) soạn theo yêu cầu của một người đang tự học điện tử.</p>
-<p>Phần lớn bài <b>chưa được ráp thử để kiểm</b>, code Phần 2 đã build nhưng chưa chạy trên chip, nên có thể sai. Luôn đo Ω trước khi cấp điện, đối chiếu datasheet trước khi tin số trong bài. Thấy khói, mùi khét hoặc linh kiện nóng thì rút nguồn ngay.</p>
+<p>Phần lớn bài <b>chưa được ráp thử để kiểm</b> (bài đã ráp có nhãn <b>đã ráp thật</b> kèm video), code Phần 2 đã build nhưng chưa chạy trên chip, nên có thể sai. Luôn đo Ω trước khi cấp điện, đối chiếu datasheet trước khi tin số trong bài. Thấy khói, mùi khét hoặc linh kiện nóng thì rút nguồn ngay.</p>
 <p>Mã nguồn mở (MIT): <a href="https://github.com/TyronNA/bibaplay" target="_blank" rel="noopener">github.com/TyronNA/bibaplay ↗</a> — web, bài, firmware, server. Thấy sai thì mở issue.</p>
+<p><a href="/gioi-thieu/">Giới thiệu</a> · <a href="/chinh-sach-rieng-tu/">Chính sách riêng tư</a> · Liên hệ: <a href="mailto:lienhe@bibaplay.com">lienhe@bibaplay.com</a></p>
 </footer>"""
 # Chỉ chèn khi mua.js có ít nhất một link: chưa gắn link thì không nhắc tới affiliate.
 GHI_AFFILIATE = '''<p>Nút <b>"Mua trên Shopee"</b> là <b>link affiliate</b>: bạn mua qua đó thì người soạn nhận hoa hồng từ Shopee, giá bạn trả không đổi. Không có hãng nào trả tiền để được nhắc tên trong bài.</p>'''
@@ -55,7 +56,11 @@ HOI_PDF = """<dialog id="hoi-pdf" class="hoi to" aria-labelledby="hoi-pdf-ten"><
 GHI_QUANG_CAO = '''<p>Trang có <b>quảng cáo của Google</b>. Google và đối tác có thể dùng cookie để chọn quảng cáo theo các trang bạn đã xem. Tắt quảng cáo cá nhân hoá ở <a href="https://adssettings.google.com" target="_blank" rel="noopener">adssettings.google.com ↗</a>.</p>'''
 # Route không gắn script quảng cáo: "do" là bảng tick trống (dữ liệu nằm ở localStorage), "mo-phong" là công cụ gần như
 # không có chữ. AdSense từ chối "quảng cáo trên màn hình không có nội dung" đúng vì những trang kiểu này. 404.html cũng không gắn.
-KHONG_QUANG_CAO = {"do", "mo-phong"}
+KHONG_QUANG_CAO = {"do", "mo-phong", "gioi-thieu", "chinh-sach-rieng-tu"}
+# Nhóm "Dụng cụ cầm tay" (nhíp, kìm, tua vít…): mỗi trang chỉ ~150 chữ, không có gì để nhận chân → trang mỏng kéo điểm
+# chất lượng cả site xuống (AdSense từng từ chối vì "giá trị thấp"). Vẫn phát trang cho người bấm từ bài, nhưng noindex,
+# không quảng cáo, không vào sitemap. Món nào viết dày lên thì chuyển nhóm hoặc bỏ khỏi đây.
+NHOM_KHONG_INDEX = {"cam-tay"}
 
 # Chỉ chèn khi cau-hinh-web.json có ung_ho.link hoặc ung_ho.qr.
 GHI_UNG_HO = """<p class="ung-ho"><b>Ủng hộ.</b> {chu}{link}</p>{qr}"""
@@ -69,9 +74,9 @@ def main(ra):
     files = ["style.css", *JS]
     for f in files:
         shutil.copy(HOC / f, ra / f)
-    if (HOC / "og.png").exists():
-        shutil.copy(HOC / "og.png", ra / "og.png")
-        files.append("og.png")
+    for f in ("og.png", "favicon.ico", "favicon-96.png", "apple-touch-icon.png"):
+        shutil.copy(HOC / f, ra / f)
+        files.append(f)
 
     bai = sorted(p.stem for p in (HOC / "bai").glob("*.js"))
     for b in bai:
@@ -148,7 +153,8 @@ def main(ra):
     # 404.html: Workers Static Assets trả trang này (mã 404) cho đường dẫn lạ — xem not_found_handling trong wrangler.jsonc.
     (ra / "404.html").write_text(re.sub(r'<main id="app">.*</main>', '<main id="app"><section class="dau"><h1>Không có trang này</h1>'
         '<p class="lede">Link có thể đã đổi. Xem <a href="/">danh sách bài</a> hoặc <a href="/linh-kien/">thư viện linh kiện</a>.</p></section></main>',
-        web, count=1, flags=re.S).replace('<script src="app.js"></script>', ''))
+        web, count=1, flags=re.S).replace('<script src="app.js"></script>', '')
+        .replace('<script type="application/ld+json" id="ld"></script>\n', '', 1))
     files.append("404.html")
     ngay = date.today().isoformat()
     (ra / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
@@ -172,12 +178,22 @@ def routes(ra):
     gt = (ra / "notes/giao-trinh-dien.md").read_text()
     bai = re.findall(r"^\|\s*(\d+\.\d+)[^|]*\|", gt, re.M)
     lk = re.findall(r"\{ id: '([\w-]+)', nhom:", (HOC / "linhkien.js").read_text())
-    return ["", "do", "linh-kien", "mo-phong", "xiaozhi", *(f"bai/{b}" for b in bai), *(f"linh-kien/{x}" for x in lk)]
+    return ["", "do", "linh-kien", "mo-phong", "xiaozhi", "gioi-thieu", "chinh-sach-rieng-tu",
+            *(f"bai/{b}" for b in bai), *(f"linh-kien/{x}" for x in lk)]
+
+
+def khong_index():
+    """Route linh-kien/<id> thuộc NHOM_KHONG_INDEX, đọc từ bảng LOAI trong linhkien.js."""
+    lk = (HOC / "linhkien.js").read_text()
+    ids = [i for n in NHOM_KHONG_INDEX for m in re.findall(rf"\['{n}', '[^']*', \[([^\]]*)\]\]", lk) for i in re.findall(r"'([\w-]+)'", m)]
+    assert ids, f"linhkien.js: không thấy nhóm {NHOM_KHONG_INDEX}"
+    return {f"linh-kien/{i}" for i in ids}
 
 
 def trang_sitemap(trang):
     # "do" là danh sách tick của từng người (localStorage) — trang tĩnh chỉ là bảng trống, không đưa vào sitemap.
-    return [t[:-len("/index.html")] if t != "index.html" else "" for t in trang if t != "do/index.html"]
+    bo = {"do", *khong_index()}
+    return [r for r in (t[:-len("/index.html")] if t != "index.html" else "" for t in trang) if r not in bo]
 
 
 class DuongDan(SimpleHTTPRequestHandler):
@@ -224,7 +240,7 @@ def render_tinh(ra, web, ds, qc=""):
     srv = ThreadingHTTPServer(("127.0.0.1", 0), partial(DuongDan, directory=str(ra)))
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     goc = f"http://127.0.0.1:{srv.server_address[1]}"
-    ket = []
+    ket, ni = [], khong_index()
     with tempfile.TemporaryDirectory() as tam:
         # mỗi Chrome headless ~15 tiến trình: 6 luồng từng đẩy load máy lên ~200 và swap đầy → mặc định 2
         with ThreadPoolExecutor(max(1, int(os.environ.get("XUAT_WEB_JOBS", "2")))) as ex:
@@ -238,7 +254,11 @@ def render_tinh(ra, web, ds, qc=""):
         # thay bằng hàm chứ không bằng chuỗi: nội dung có \\ (công thức, code) mà re.sub sẽ hiểu là escape
         t = re.sub(r"<!--meta:.*?<!--/meta-->", lambda _: meta[0], web, count=1, flags=re.S)
         t = re.sub(r'<main id="app">.*</main>', lambda _: main[0], t, count=1, flags=re.S)
-        if qc and route.split("/")[0] not in KHONG_QUANG_CAO:
+        # trang không có dữ liệu có cấu trúc: bỏ thẻ ld+json rỗng (Search Console báo lỗi parse)
+        t = t.replace('<script type="application/ld+json" id="ld"></script>\n', "", 1)
+        if route in ni:
+            t = t.replace("</head>", '<meta name="robots" content="noindex, follow">\n</head>', 1)
+        elif qc and route.split("/")[0] not in KHONG_QUANG_CAO:
             t = t.replace("</head>", qc + "</head>", 1)
         f = Path(route) / "index.html"
         (ra / f).parent.mkdir(parents=True, exist_ok=True)
