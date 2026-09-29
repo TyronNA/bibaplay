@@ -14,24 +14,24 @@
     + sd.tu(150, 110, 40, '', true) + sd.tu(170, 110, 40, '', true) + sd.chu(160, 225, 'mỗi C nối + tụ, − tụ sang B bên kia', 'sd-mo', 'middle'), 'Mạch nháy hai transistor ghép chéo bằng tụ');
   BAI.dangKy({
     id: '6.3',
-    muc_tieu: 'Mạch tự dao động: 2 transistor thay nhau dẫn, 2 LED nháy luân phiên. Đây là một "clock" làm bằng tay.',
+    muc_tieu: 'Mạch tự dao động: 2 transistor thay nhau dẫn, 2 LED nháy luân phiên. Đây là một "clock" tự ráp bằng tay.',
     can: [K.can.npn(2), K.can.tuhoa('10µF', 2), K.can.tro('47k', 2), K.can.tro('1k', 2), K.can.led('đỏ + xanh lá', 2), ...K.coBan(12)],
-    kien_thuc: `<p>Q1 dẫn → C1 sụt về ~0 → cú sụt đó đi qua tụ 1, kéo B2 xuống âm → Q2 tắt. Tụ 1 được 47k nạp lại dần, B2 lên tới ~0.65V thì Q2 dẫn, và cú sụt ở C2 đi qua tụ 2 tắt Q1. Lặp mãi.</p>
+    kien_thuc: `<p>Khi Q1 dẫn, chân C1 sụt về ~0. Cú sụt đó truyền qua tụ 1, kéo B2 xuống âm, nên Q2 tắt. Sau đó 47k nạp lại tụ 1 dần dần. Khi B2 lên tới ~0.65V thì Q2 dẫn, và cú sụt ở C2 truyền qua tụ 2 làm Q1 tắt. Cứ thế lặp mãi.</p>
       <p>Mỗi nửa chu kỳ ≈ <code>0.69 · 47k · 10µF ≈ 0.32s</code>.</p>
-      <p><b>Chân + của mỗi tụ hướng về chân C</b>, chân − về chân B bên kia. Chân B bị kéo xuống ~−4V mỗi chu kỳ: dưới mức S8050 chịu (~5V) ở pin 4.78V, nhưng <b>không</b> tăng nguồn lên cao hơn khi chưa thêm diode bảo vệ.</p>
-      <p>Mạch nhiều dây: ráp theo từng nhóm, mỗi nhóm đối chiếu hình rồi mới làm nhóm sau.</p>`,
+      <p><b>Chân + của mỗi tụ hướng về chân C</b>, chân − hướng về chân B bên kia. Mỗi chu kỳ, chân B bị kéo xuống ~−4V. Với pin 4.78V, mức này vẫn dưới mức S8050 chịu được (~5V), nhưng <b>không</b> được tăng nguồn lên cao hơn khi chưa thêm diode bảo vệ.</p>
+      <p>Mạch có nhiều dây, nên ráp theo từng nhóm. Xong mỗi nhóm thì đối chiếu với hình rồi mới làm nhóm sau.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Hai nửa đối xứng, nối chéo qua 2 tụ.' }],
-    du_doan: '<p>Mỗi LED sáng ~0.3s rồi tắt ~0.3s, luân phiên. Thay 47k bằng 100k → chậm gấp đôi.</p>',
+    du_doan: '<p>Mỗi LED sáng ~0.3s rồi tắt ~0.3s, luân phiên nhau. Thay 47k bằng 100k thì chậm đi gấp đôi.</p>',
     sau: `<h3>Hằng số 0.69 từ đâu, và vì sao ở đây là ~0.75</h3>
       <p>Lúc Q1 vừa dẫn, C1 sụt từ ~4.7V về ~0.1V. Tụ không đổi áp tức thì, nên chân B2 bị kéo từ 0.65V xuống ≈ <code>0.65 − 4.6 ≈ −4V</code>. Sau đó 47k nạp B2 tiến về +4.78V:</p>
       <p><code>u_B2(t) = 4.78 − (4.78 + 4.0)·e^(−t/RC)</code></p>
-      <p>Q2 dẫn lại khi u_B2 = 0.65V: <code>e^(−t/RC) = 4.13/8.78</code> → <code>t = RC·ln(2.13) ≈ 0.75·RC</code> ≈ 0.35s. Công thức sách <code>0.69·RC = ln2·RC</code> là khi coi U_BE và U_CE bằng 0 (tỉ số thành U/2U). Nguồn càng cao so với 0.65V thì càng gần 0.69.</p>
+      <p>Q2 dẫn lại khi u_B2 = 0.65V, tức <code>e^(−t/RC) = 4.13/8.78</code>, nên <code>t = RC·ln(2.13) ≈ 0.75·RC</code> ≈ 0.35s. Công thức trong sách <code>0.69·RC = ln2·RC</code> là khi coi U_BE và U_CE bằng 0 (tỉ số trở thành U/2U). Nguồn càng cao so với 0.65V thì hệ số càng gần 0.69.</p>
       <h3>Điều kiện để mạch chạy</h3>
-      <p>Mỗi transistor phải bão hoà được qua 47k: <code>R_B &lt; hFE · R_C</code> → 47k &lt; 200 × 1k. Và phía C phải nạp lại nhanh hơn phía B nhiều (1k·10µF = 10ms ≪ 47k·10µF = 0.47s), để cạnh xung vuông gọn.</p>`,
+      <p>Mỗi transistor phải bão hoà được qua 47k, tức <code>R_B &lt; hFE · R_C</code>: ở đây 47k &lt; 200 × 1k. Ngoài ra phía C phải nạp lại nhanh hơn phía B nhiều (1k·10µF = 10ms ≪ 47k·10µF = 0.47s) để cạnh xung vuông được gọn.</p>`,
     hoi: [
-      ['Thay 2 con 47k bằng 100k. Nửa chu kỳ mới khoảng bao nhiêu? Tần số nháy?', '≈ 0.75 × 100k × 10µF ≈ <b>0.75s</b>; chu kỳ 1.5s → ~0.67Hz.'],
-      ['Tụ 10µF ±20%. Hai nửa chu kỳ có bằng nhau không?', 'Không chắc: mỗi nửa do một tụ quyết định, 2 tụ lệch nhau tới 40% → LED này sáng lâu hơn LED kia.'],
-      ['Vì sao phải có R_B &lt; hFE · R_C?', 'Để dòng qua R_B đủ đẩy transistor vào bão hoà (Ib ≥ Ic/hFE). Không bão hoà thì cú sụt ở C nhỏ, không đủ lật con kia.'],
+      ['Thay 2 con 47k bằng 100k. Nửa chu kỳ mới khoảng bao nhiêu? Tần số nháy?', 'Nửa chu kỳ ≈ 0.75 × 100k × 10µF ≈ <b>0.75s</b>, cả chu kỳ 1.5s, tức ~0.67Hz.'],
+      ['Tụ 10µF ±20%. Hai nửa chu kỳ có bằng nhau không?', 'Không chắc. Mỗi nửa chu kỳ do một tụ quyết định, mà 2 tụ có thể lệch nhau tới 40%, nên LED này có thể sáng lâu hơn LED kia.'],
+      ['Vì sao phải có R_B &lt; hFE · R_C?', 'Để dòng qua R_B đủ đẩy transistor vào bão hoà (Ib ≥ Ic/hFE). Không bão hoà thì cú sụt ở C nhỏ, không đủ để lật con kia.'],
     ],
     phan: [{
       ten: 'Phần 1 · Ráp theo nhóm', cot: 30,
@@ -39,15 +39,15 @@
         K.buocPin(),
         { ten: 'Nhóm 1: 2 transistor + E xuống −', lam: ['Q1: E 6h, B 7h, C 8h. Q2: E 20h, B 21h, C 22h (theo 5.1). Dây đen 6j và 20j → thanh −.'], board: { them: [Q1, Q2, ...E] } },
         { ten: 'Nhóm 2: 47k chân B', lam: ['47k vắt qua rãnh 7e → 7f, dây đỏ thanh + → 7a. Tương tự 21e → 21f, dây đỏ → 21a.'], board: { them: RB } },
-        { ten: 'Nhóm 3: LED + 1k chân C', lam: ['LED1: chân ngắn 8g, chân dài 9g; 1k 9e → 9f; dây đỏ thanh + → 9a.', 'LED2: chân ngắn 22g, chân dài 23g; 1k 23e → 23f; dây đỏ thanh + → 23a.'], board: { them: LED } },
+        { ten: 'Nhóm 3: LED + 1k chân C', lam: ['LED1: chân ngắn 8g, chân dài 9g. 1k 9e → 9f. Dây đỏ thanh + → 9a.', 'LED2: chân ngắn 22g, chân dài 23g. 1k 23e → 23f. Dây đỏ thanh + → 23a.'], board: { them: LED } },
         { ten: 'Nhóm 4: 2 tụ nối chéo', lam: ['Tụ 1: <b>chân dài 12i</b>, chân ngắn 13i. Dây cam 8j → 12j (C1 → + tụ 1). Dây tím 13j → 21j (− tụ 1 → B2).', 'Tụ 2: <b>chân dài 16g</b>, chân ngắn 17g. Dây cam 22i → 16i (C2 → + tụ 2). Dây tím 17i → 7i (− tụ 2 → B1).'], board: { them: TU } },
         K.buocOm('Ω 200k', '> 10', 'Số lớn hơn 10k (2 đường 47k qua B–E, song song), có thể trôi vì tụ đang nạp.', 'Dưới 10k: có dây đi tắt qua điện trở. Gần 0: nối tắt.'),
-        K.lapPin('Lắp pin', ['Nhìn 2 LED.'], { sua: { l1: { sang: true } } }, { thay: '2 LED nháy luân phiên, mỗi nhịp ~0.3s. Tụ và transistor nguội.', neu_khong: '1 LED sáng đứng: kiểm dây chéo của tụ (tím về đúng B bên kia). Tụ ấm: tháo pin, tụ ngược.' }),
+        K.lapPin('Lắp pin', ['Nhìn 2 LED.'], { sua: { l1: { sang: true } } }, { thay: '2 LED nháy luân phiên, mỗi nhịp ~0.3s. Tụ và transistor nguội.', neu_khong: '1 LED sáng đứng yên: kiểm dây chéo của tụ (dây tím phải về đúng chân B bên kia). Tụ ấm lên: tháo pin ngay, tụ đang cắm ngược.' }),
         K.thaoPin(),
       ],
     }],
     bang_do: [{ ten: 'Chu kỳ', cot: ['Đếm số nháy của LED1 trong 30s', 'Nửa chu kỳ = 15/số nháy'], hang: [{ ten: '47k · 10µF', du_doan: ['≈ 47', '≈ 0.32 s'] }] }],
-    bay: ['Tụ cắm ngược cực: mạch không nháy và tụ bị áp ngược.', 'Dây tím về nhầm B cùng bên: mạch đứng yên một trạng thái.', 'Tăng nguồn lên 9V+ với mạch này: chân B bị kéo âm quá mức chịu của transistor.'],
-    robot: ['Vi điều khiển có thạch anh làm clock; mạch này cho thấy clock là một thứ dao động tuần hoàn, và R·C quyết định tần số.'],
+    bay: ['Tụ cắm ngược cực: mạch không nháy và tụ bị áp ngược.', 'Dây tím về nhầm B cùng bên: mạch đứng yên một trạng thái.', 'Tăng nguồn lên 9V trở lên với mạch này: chân B bị kéo âm quá mức transistor chịu được.'],
+    robot: ['Vi điều khiển dùng thạch anh làm clock. Mạch này cho thấy clock chỉ là một thứ dao động tuần hoàn, và ở đây R·C quyết định tần số.'],
   });
 })();

@@ -12,23 +12,23 @@
     + sd.chu(262, 44, '220Ω', 'sd-mo') + sd.day('250,120 250,200 80,200'), 'Biến trở chia áp, qua 100k vào chân B; LED và 220 ohm ở chân C');
   BAI.dangKy({
     id: '5.2',
-    muc_tieu: 'Dòng nhỏ vào chân B điều khiển dòng lớn gấp hFE lần ở chân C, tới khi transistor <b>bão hoà</b> (bài này chỉ con hFE lớn mới chạm tới). Chỉ đo áp, không cần chuyển đồng hồ sang mA.',
+    muc_tieu: 'Dòng nhỏ vào chân B điều khiển dòng lớn gấp hFE lần ở chân C, cho tới khi transistor <b>bão hoà</b> (trong bài này chỉ con có hFE lớn mới chạm tới). Chỉ cần đo áp, không phải chuyển đồng hồ sang mA.',
     can: [K.can.npn(), K.can.bientro(), K.can.tro('100k'), K.can.tro('220'), K.can.led(), ...K.coBan(7)],
-    kien_thuc: `<p>Làm 5.1 trước: hình dưới giả sử chân <b>E-B-C</b> từ trái sang phải; nếu của bạn khác thì cắm theo kết quả 5.1.</p>
-      <p><code>Ib = U_100k / 100k</code>, <code>Ic = U_220 / 220</code>. Vùng khuếch đại: <code>Ic ≈ hFE · Ib</code>. Tăng Ib mãi thì Ic chạm trần <code>(4.78 − 1.9 − 0.1)/220 ≈ 12.6mA</code>: bão hoà, C–E còn ~0.1V.</p>
-      <p>Biến trở dùng <b>kiểu B</b> (bài 2.3): A → thanh +, B → thanh −, W chỉ nối vào 100k. 100k giữ Ib ≤ 41µA dù vặn hết cỡ.</p>`,
+    kien_thuc: `<p>Làm 5.1 trước. Hình dưới giả sử chân <b>E-B-C</b> xếp từ trái sang phải, nếu con của bạn khác thì cắm theo kết quả bài 5.1.</p>
+      <p><code>Ib = U_100k / 100k</code>, <code>Ic = U_220 / 220</code>. Trong vùng khuếch đại, <code>Ic ≈ hFE · Ib</code>. Tăng Ib mãi thì Ic chạm trần <code>(4.78 − 1.9 − 0.1)/220 ≈ 12.6mA</code>: transistor bão hoà, C–E chỉ còn ~0.1V.</p>
+      <p>Biến trở nối <b>kiểu B</b> (bài 2.3): A → thanh +, B → thanh −, W chỉ nối vào 100k. Con 100k giữ Ib ≤ 41µA dù vặn hết cỡ.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'W → 100k → B. C → LED → 220Ω → +. E → −.' }],
-    du_doan: '<p>U_W = 1 / 2 / 3 / 4.78V → Ib ≈ 3.5 / 13.5 / 23.5 / 41µA → Ic ≈ hFE × Ib, trần 12.6mA. hFE 200: U_W = 3V cho Ic ≈ 4.7mA.</p>',
+    du_doan: '<p>U_W = 1 / 2 / 3 / 4.78V cho Ib ≈ 3.5 / 13.5 / 23.5 / 41µA, và Ic ≈ hFE × Ib, tối đa 12.6mA. Với hFE 200, U_W = 3V cho Ic ≈ 4.7mA.</p>',
     sau: `<h3>Tính Ib, Ic từ 2 áp đo</h3>
-      <p><code>Ib = (U_W − 0.65) / 100k</code> — áp trên 100k chia 100k. <code>Ic = U_220 / 220</code>. Bảng của bạn cho ra hFE = Ic/Ib ở từng mức.</p>
+      <p><code>Ib = (U_W − 0.65) / 100k</code>, tức áp trên 100k chia cho 100k. <code>Ic = U_220 / 220</code>. Từ bảng đo của bạn tính được hFE = Ic/Ib ở từng mức.</p>
       <h3>Bài này có tới bão hoà không?</h3>
-      <p>Ib lớn nhất ≈ (4.78 − 0.65)/100k ≈ 41µA. Với hFE 200: Ic ≈ 8.2mA, <b>chưa chạm</b> trần 12.6mA → LED còn sáng thêm được, transistor vẫn ở vùng khuếch đại. Chỉ con nào hFE ≳ 310 mới chạm trần trong bài này. Nên nếu LED cứ sáng dần tới cuối vòng vặn: không sai, hFE của bạn chỉ chưa đủ lớn.</p>
+      <p>Ib lớn nhất ≈ (4.78 − 0.65)/100k ≈ 41µA. Với hFE 200, Ic ≈ 8.2mA, <b>chưa chạm</b> trần 12.6mA, nên LED còn sáng thêm được và transistor vẫn ở vùng khuếch đại. Chỉ con nào có hFE ≳ 310 mới chạm trần trong bài này. Vì vậy nếu LED cứ sáng dần tới cuối vòng vặn thì không sai, chỉ là hFE của bạn chưa đủ lớn.</p>
       <h3>Không thiết kế dựa vào hFE</h3>
-      <p>hFE đổi theo con (100–300 cùng một lô), theo dòng, theo nhiệt độ (tăng khi nóng). Mạch dựa vào "Ic = 200 × Ib" sẽ khác nhau ở mỗi con. Vì vậy ở mạch số người ta cho transistor <b>bão hoà hẳn</b> (bài 5.3), còn mạch tương tự thì dùng phản hồi (điện trở ở chân E) để kết quả chỉ còn phụ thuộc điện trở.</p>`,
+      <p>hFE thay đổi theo từng con (100–300 trong cùng một lô), theo dòng, và theo nhiệt độ (tăng khi nóng). Mạch dựa vào "Ic = 200 × Ib" sẽ chạy khác nhau với mỗi con. Vì vậy ở mạch số người ta cho transistor <b>bão hoà hẳn</b> (bài 5.3), còn mạch tương tự thì dùng phản hồi (điện trở ở chân E) để kết quả chỉ còn phụ thuộc điện trở.</p>`,
     hoi: [
-      ['U_W = 2V, U_220 = 0.60V. Tính Ib, Ic, hFE.', 'Ib = 1.35/100k = 13.5µA; Ic = 0.60/220 ≈ 2.7mA; hFE ≈ <b>200</b>.'],
-      ['hFE = 150. Vặn hết cỡ thì Ic bao nhiêu, LED có "hết sáng thêm" không?', '150 × 41µA ≈ <b>6.2mA</b> &lt; 12.6mA → chưa bão hoà, LED vẫn sáng thêm tới cuối.'],
-      ['Transistor ấm lên, hFE tăng 20%. Trong mạch này điều gì xảy ra?', 'Cùng Ib, Ic tăng ~20% → LED sáng hơn. Mạch phụ thuộc hFE thì trôi theo nhiệt độ.'],
+      ['U_W = 2V, U_220 = 0.60V. Tính Ib, Ic, hFE.', 'Ib = 1.35/100k = 13.5µA, Ic = 0.60/220 ≈ 2.7mA, nên hFE ≈ <b>200</b>.'],
+      ['hFE = 150. Vặn hết cỡ thì Ic bao nhiêu, LED có "hết sáng thêm" không?', '150 × 41µA ≈ <b>6.2mA</b> &lt; 12.6mA, chưa bão hoà, nên LED vẫn sáng thêm tới cuối vòng vặn.'],
+      ['Transistor ấm lên, hFE tăng 20%. Trong mạch này điều gì xảy ra?', 'Cùng Ib mà Ic tăng ~20%, nên LED sáng hơn. Mạch phụ thuộc hFE thì sẽ trôi theo nhiệt độ.'],
     ],
     phan: [
       {
@@ -44,8 +44,8 @@
       {
         ten: 'Phần 2 · Vặn và đo', ke_thua: true,
         buoc: [
-          K.lapPin('Lắp pin, vặn W về phía B', ['LED tắt. Vặn chậm về phía A: LED sáng dần.'], { sua: { led: { sang: true } } }, { thay: 'LED sáng dần tới cuối vòng vặn. Con hFE ≳ 310 thì tới một lúc vặn thêm không sáng hơn nữa (bão hoà); con hFE thấp hơn thì không — cả hai đều đúng (xem phần sau).', neu_khong: 'Không sáng bao giờ: kiểm chân transistor (5.1) và chiều LED. Transistor nóng: tháo pin.' }),
-          { ten: 'Đo 3 áp ở 4 vị trí', lam: ['<code>DCV 20</code>. Ở mỗi vị trí đo: U_W (W so với −), U_100k (2 chân 100k), U_220 (2 chân 220Ω). Thêm U_CE ở vị trí sáng nhất.'], board: { them: [K.dh('DCV 20', 'rb.1', 'rb.2', '≈ 2.35')] }, kiem: { thay: 'Ic/Ib gần như không đổi (hFE) ở mọi vị trí. Chỉ khi Ic chạm ~12.6mA (bão hoà) thì tỉ số mới tụt.', neu_khong: '' } },
+          K.lapPin('Lắp pin, vặn W về phía B', ['LED tắt. Vặn chậm về phía A: LED sáng dần.'], { sua: { led: { sang: true } } }, { thay: 'LED sáng dần tới cuối vòng vặn. Con có hFE ≳ 310 thì tới một lúc vặn thêm cũng không sáng hơn nữa (bão hoà), con có hFE thấp hơn thì không có lúc đó. Cả hai đều đúng (xem phần Đào sâu).', neu_khong: 'Không bao giờ sáng: kiểm chân transistor (bài 5.1) và chiều LED. Transistor nóng: tháo pin.' }),
+          { ten: 'Đo 3 áp ở 4 vị trí', lam: ['<code>DCV 20</code>. Ở mỗi vị trí đo: U_W (W so với −), U_100k (2 chân 100k), U_220 (2 chân 220Ω). Thêm U_CE ở vị trí sáng nhất.'], board: { them: [K.dh('DCV 20', 'rb.1', 'rb.2', '≈ 2.35')] }, kiem: { thay: 'Ic/Ib (tức hFE) gần như không đổi ở mọi vị trí. Chỉ khi Ic chạm ~12.6mA (bão hoà) thì tỉ số này mới tụt.', neu_khong: '' } },
           K.thaoPin(),
         ],
       },

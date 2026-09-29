@@ -17,26 +17,26 @@
 
   BAI.dangKy({
     id: '11.4',
-    muc_tieu: 'Phát âm thanh bằng PWM: còi thụ động kêu đúng tần số xung đưa vào. Lần này giữ duty 50% và đổi tần số — tần số là nốt nhạc.',
+    muc_tieu: 'Phát âm thanh bằng PWM: còi thụ động kêu đúng tần số của xung đưa vào. Lần này giữ duty 50% và đổi tần số, vì tần số chính là nốt nhạc.',
     can: [...K.coBanEsp(3), { ten: 'Còi thụ động (passive buzzer)', tim: 'buzzer', lk: 'coi-chip', sl: 1 }, K.can.npn(), K.can.d4148(), K.can.tro('1k'), K.can.tro('10k'), K.can.tro('100')],
     code: 'sandbox/esp32-bai/main/bai_11_4.c',
     kien_thuc: `
-      <p>Còi thụ động là một màng kim loại + cuộn dây (hoặc gốm áp điện): mỗi xung kéo màng một cái. Xung 523 lần/giây → màng rung 523Hz → nốt Đô. Chương 11 trước đổi <b>duty</b> để đổi độ sáng; ở đây giữ duty 50% và đổi <b>tần số</b> bằng <code>ledc_set_freq</code>.</p>
-      <p>Còi từ tính có cuộn dây chỉ vài chục Ω: không nối thẳng GPIO. Qua S8050 như bài 5.3, thêm <b>100Ω nối tiếp</b> để dòng đỉnh ≤ <code>3.3/(100 + 16) ≈ 28mA</code> — board 3V3 gánh dễ. Chân B: GPIO qua 1k → Ib ≈ 2.6mA, dư để bão hoà.</p>
-      <p>Còi là cuộn dây: ngắt đột ngột sinh xung ngược như motor (bài 7.4) — hàng nghìn lần mỗi giây. 1N4148 ngược song song còi (<b>vạch về phía 3V3</b>) cho xung đó chạy vòng.</p>
-      <p>Mua nhầm còi <b>chủ động</b> (đáy kín, có tem): nó tự kêu một tần số khi có điện, PWM chỉ làm nó kêu rè rè. Thử bằng pin: chủ động kêu liên tục, thụ động chỉ "tách".</p>`,
+      <p>Còi thụ động gồm một màng kim loại và cuộn dây (hoặc gốm áp điện), mỗi xung kéo màng một cái. Có 523 xung mỗi giây thì màng rung 523Hz, ra nốt Đô. Các bài trước của chương 11 đổi <b>duty</b> để đổi độ sáng. Ở đây giữ duty 50% và đổi <b>tần số</b> bằng <code>ledc_set_freq</code>.</p>
+      <p>Còi từ tính có cuộn dây chỉ vài chục Ω, nên không nối thẳng vào GPIO. Còi chạy qua S8050 như bài 5.3, thêm <b>100Ω nối tiếp</b> để dòng đỉnh ≤ <code>3.3/(100 + 16) ≈ 28mA</code>, mức này nguồn 3V3 của board gánh dễ. Chân B nối GPIO qua 1k, cho Ib ≈ 2.6mA, dư để transistor bão hoà.</p>
+      <p>Còi có cuộn dây, nên mỗi lần ngắt đột ngột lại sinh xung ngược giống motor (bài 7.4), hàng nghìn lần mỗi giây. 1N4148 mắc ngược song song với còi (<b>vạch về phía 3V3</b>) để xung đó có đường chạy vòng.</p>
+      <p>Nếu mua nhầm còi <b>chủ động</b> (đáy kín, có tem dán): loại này tự kêu một tần số cố định khi có điện, đưa PWM vào chỉ làm nó kêu rè rè. Thử bằng pin: còi chủ động kêu liên tục, còi thụ động chỉ kêu "tách" một cái.</p>`,
     so_do: [{ nhan: 'Còi qua transistor', svg: soDo, chu: 'Vạch 1N4148 về phía 3V3. Mọi thứ ăn 3V3 của board, không cần hộp pin.' }],
-    du_doan: '<p>Gam Đô 523 → 1047Hz, mỗi nốt 0.4s. Rồi 1000, 2000, 2700, 4000Hz: thường to nhất ở 2–3kHz (cộng hưởng của màng). Cuối cùng một tiếng quét lên từ 500 tới 4000Hz. Chạm transistor: nguội.</p>',
+    du_doan: '<p>Gam Đô từ 523 → 1047Hz, mỗi nốt 0.4s. Rồi tới 1000, 2000, 2700, 4000Hz, thường to nhất ở 2–3kHz (tần số cộng hưởng của màng). Cuối cùng là một tiếng quét lên từ 500 tới 4000Hz. Chạm vào transistor thấy nguội.</p>',
     sau: `<h3>Nốt nhạc là tần số theo cấp số nhân</h3>
-      <p>Lên một quãng tám = tần số gấp đôi. Chia quãng tám thành 12 nửa cung đều theo tỉ lệ: mỗi nửa cung gấp <code>2^(1/12) ≈ 1.0595</code> lần. La4 = 440Hz; Đô5 = 440 × 2^(3/12) ≈ 523.3Hz. Tai nghe cao độ theo log của tần số — như mắt nghe độ sáng theo log (bài 11.1).</p>
+      <p>Lên một quãng tám là tần số gấp đôi. Quãng tám chia thành 12 nửa cung đều nhau theo tỉ lệ, mỗi nửa cung gấp <code>2^(1/12) ≈ 1.0595</code> lần. La4 = 440Hz, nên Đô5 = 440 × 2^(3/12) ≈ 523.3Hz. Tai cảm nhận cao độ theo log của tần số, giống như mắt cảm nhận độ sáng theo log (bài 11.1).</p>
       <h3>Tần số và độ phân giải</h3>
-      <p>LEDC 10 bit ở 4kHz cần 4k × 1024 ≈ 4MHz, dư so với clock 80MHz. Tần số thật = 80MHz / (bộ chia × 1024) nên không đúng tuyệt đối từng Hz: sai vài phần nghìn — tai không nghe ra.</p>
+      <p>LEDC 10 bit chạy ở 4kHz cần clock 4k × 1024 ≈ 4MHz, còn dư nhiều so với clock 80MHz. Tần số thật bằng 80MHz / (bộ chia × 1024), nên không đúng tuyệt đối tới từng Hz. Sai số chỉ vài phần nghìn, tai không nghe ra.</p>
       <h3>Vì sao còi kêu to ở 2–3kHz</h3>
-      <p>Màng có tần số cộng hưởng riêng (datasheet còi 12mm thường ghi 2.3–2.7kHz). Ở đó mỗi xung đẩy màng đúng nhịp nó muốn rung, biên độ dồn lên. Xa tần số đó, cùng dòng mà nhỏ hơn nhiều. Loa (bài 12.3) màng mềm, dải rộng hơn — vì thế phát giọng nói được, còn còi chỉ bíp.</p>`,
+      <p>Màng còi có tần số cộng hưởng riêng, datasheet còi 12mm thường ghi 2.3–2.7kHz. Ở tần số đó, mỗi xung đẩy màng đúng nhịp nó muốn rung, nên biên độ dồn lên. Xa tần số đó thì cùng dòng mà tiếng nhỏ hơn nhiều. Loa (bài 12.3) có màng mềm, dải tần rộng hơn, nên phát được giọng nói, còn còi chỉ kêu bíp.</p>`,
     hoi: [
-      ['La5 là bao nhiêu Hz (La4 = 440Hz)?', '<b>880Hz</b> (lên 1 quãng tám = gấp đôi).'],
-      ['Vì sao cần 100Ω nối tiếp còi?', 'Cuộn còi chỉ ~16Ω: không có 100Ω thì dòng đỉnh ~200mA từ 3V3, quá sức ổn áp board và transistor nóng.'],
-      ['Duty 50% và 10% cùng tần số: khác gì?', 'Cùng nốt, nhưng duty 10% nhỏ tiếng và "mỏng" hơn (ít năng lượng mỗi chu kỳ, nhiều hoạ âm).'],
+      ['La5 là bao nhiêu Hz (La4 = 440Hz)?', '<b>880Hz</b>, vì lên 1 quãng tám là gấp đôi.'],
+      ['Vì sao cần 100Ω nối tiếp còi?', 'Cuộn còi chỉ ~16Ω. Không có 100Ω thì dòng đỉnh lấy từ 3V3 lên ~200mA, quá sức mạch ổn áp của board và làm transistor nóng.'],
+      ['Duty 50% và 10% cùng tần số: khác gì?', 'Cùng một nốt, nhưng duty 10% nhỏ tiếng và "mỏng" hơn, vì mỗi chu kỳ ít năng lượng hơn và có nhiều hoạ âm hơn.'],
     ],
     phan: [{
       ten: 'Phần 1 · Ráp và phát nốt', cot: 24,
@@ -46,12 +46,12 @@
         { ten: 'Dây từ board', lam: ['<code>3V3</code> → thanh + trên (cột 3). <code>GND</code> → thanh − dưới (cột 3). <code>14</code> → <b>13a</b>.'], board: { them: [ESP] } },
         K.buocOmEsp(null, null, ['Còi chỉ nối 3V3 qua 100Ω tới chân C; transistor tắt nên không có đường xuống GND: số phải gần mốc.']),
         K.camUsb('Cắm USB, nạp 11.4', ['<code>idf.py menuconfig</code> → 11.4, <code>flash monitor</code>. Nghe gam Đô, các tần số thử và tiếng quét. Sau 1 vòng, chạm nhanh vào transistor.'], {},
-          { thay: 'Nghe rõ 8 nốt tăng dần; to nhất quanh 2–3kHz. Transistor nguội.', neu_khong: 'Chỉ rè rè đều một tiếng: còi chủ động. Im lặng: kiểm chân C, còi, 100Ω; dây 13a đúng chân 14 chưa.' }),
+          { thay: 'Nghe rõ 8 nốt cao dần, to nhất quanh 2–3kHz. Transistor nguội.', neu_khong: 'Chỉ rè rè đều một tiếng: đó là còi chủ động. Im lặng: kiểm chân C, còi, điện trở 100Ω, và dây ở 13a đã nối đúng chân 14 chưa.' }),
         K.rutUsb(),
       ],
     }],
     bang_do: [{ ten: 'Nghe to nhất', cot: ['To / nhỏ'], hang: [{ ten: '523 Hz', du_doan: ['nhỏ'] }, { ten: '1000 Hz', du_doan: [''] }, { ten: '2000 Hz', du_doan: [''] }, { ten: '2700 Hz', du_doan: ['to'] }, { ten: '4000 Hz', du_doan: [''] }] }],
-    bay: ['Còi nối thẳng GPIO: cuộn dây vài chục Ω kéo quá 20mA.', 'Thiếu diode: xung ngược mỗi chu kỳ đập vào chân C.', 'Còi chủ động + PWM: kêu rè, không ra nốt.'],
-    robot: ['Robot kêu bíp khi pin yếu, khi va chạm, khi mất WiFi — thông báo không cần màn hình.', 'Xiaozhi phát giọng qua ampli I2S (12.3); còi hợp cho báo lỗi đơn giản khi chưa có ampli.'],
+    bay: ['Nối còi thẳng vào GPIO: cuộn dây vài chục Ω kéo quá 20mA.', 'Thiếu diode: mỗi chu kỳ lại có xung ngược đập vào chân C.', 'Dùng còi chủ động với PWM: kêu rè, không ra nốt.'],
+    robot: ['Robot kêu bíp khi pin yếu, khi va chạm, khi mất WiFi: cách báo tin không cần màn hình.', 'Xiaozhi phát giọng qua ampli I2S (12.3). Còi hợp để báo lỗi đơn giản khi chưa có ampli.'],
   });
 })();

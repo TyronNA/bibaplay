@@ -24,17 +24,19 @@
   const ESP3 = K.esp({ ...E, G17: '19c', G18: '24a', G8: '30c', G12: '34c', G1: '38c', '5V': '16c' }, { x: 30 });
   BAI.dangKy({
     id: '17.1',
-    muc_tieu: 'Ghép mọi thứ của Phần 3 thành robot 2 bánh chạy bằng pin: đi thẳng, gặp vật (siêu âm / hồng ngoại / cản va) thì dừng, lùi, quay rồi đi tiếp; pin yếu thì tự dừng.',
+    muc_tieu: 'Ghép mọi thứ của Phần 3 thành robot 2 bánh chạy bằng pin. Robot đi thẳng, gặp vật (siêu âm, hồng ngoại hoặc cản va) thì dừng, lùi, quay rồi đi tiếp. Pin yếu thì tự dừng.',
     nguon: 'pack 2S → VM (6–8.4V) + LM2596 5V → board',
     can: [K.can.khung(), K.can.motorTT(2), K.can.drv8833(), K.can.sr04(), K.can.fc51(), K.can.kw11(), K.can.lm2596(), { ten: 'Pack 2S + BMS + cầu chì T2A trên P+ (16.2)', tim: 'BMS 2S', lk: 'bms-2s', sl: 1 }, K.can.esp(), K.can.usb(), K.can.ducCai(12), K.can.bb(), K.can.day(14), K.can.dh(), K.can.tro('10k', 2), K.can.tro('20k', 2)],
-    kien_thuc: `<p>Mọi mảnh đã làm riêng: công tắc va chạm (14.1), FC-51 (14.2), HC-SR04 (14.3), DRV8833 + motor (15.2), pack 2S (16.2), LM2596 + đo pin (16.3). Bài này chỉ ghép, nên <b>làm từng cụm, đo từng cụm</b> — không cắm hết rồi mới cấp điện.</p>
-      <p><b>Thanh nguồn có 3 mức áp khác nhau</b> — ghi nhãn bằng băng keo lên breadboard: thanh + trên = <b>pin 6–8.4V</b> (chỉ VM driver, IN+ LM2596, cầu đo pin); thanh + dưới = <b>3V3</b> của board (SLP, FC-51); cột 16 = <b>5V</b> từ LM2596 (board, HC-SR04). 2 thanh − là GND, nối với nhau ở cột 2.</p>
-      <p><b>Dây P+ của pack</b> (đã có cầu chì T2A, bài 16.2) cắm vào <b>lỗ 44a</b>, một dây đỏ cố định 44c → thanh + trên dẫn sang. Không cắm P+ thẳng vào thanh + trên: lỗ thanh + nằm sát lỗ thanh − cùng cột, cắm lệch một hàng là chập pack. Bài này cắm/rút P+ nhiều lần nên chỗ cắm phải là chỗ không có GND bên cạnh.</p>
-      <p><b>Motor TT định mức 3–6V</b>, pack đầy 8.4V → code giới hạn duty tối đa 70% (≈ 5.9V trung bình). DRV8833 chịu VM tới 10.8V nên pack 2S nằm trong mức.</p>
-      <p><b>Nạp code:</b> rút dây P+ của pack → cắm USB → nạp → rút USB → cắm P+. Không bao giờ có USB và pin cùng lúc (Espressif: các đường cấp nguồn loại trừ nhau).</p>
-      <p>Code: đi thẳng 50%; siêu âm &lt; 20cm, FC-51 báo vật, hoặc công tắc bị nhấn → dừng, lùi 0.4s, quay tại chỗ 0.35s, đi tiếp. Pin &lt; 6.6V (3.3V/cell) → dừng hẳn. Monitor in lý do mỗi lần né (khi chạy bằng USB ở bước thử).</p>`,
+    kien_thuc: `<p>Mọi mảnh đã làm riêng: công tắc va chạm (14.1), FC-51 (14.2), HC-SR04 (14.3), DRV8833 + motor (15.2), pack 2S (16.2), LM2596 + đo pin (16.3). Bài này chỉ ghép lại, nên <b>làm từng cụm, đo từng cụm</b>. Đừng cắm hết rồi mới cấp điện.</p>
+      <p><b>Breadboard có 3 mức áp khác nhau.</b> Dán băng keo ghi nhãn lên từng chỗ:</p>
+      <ul><li>Thanh + trên = <b>pin 6–8.4V</b>. Chỉ nối VM của driver, IN+ của LM2596 và cầu đo pin.</li><li>Thanh + dưới = <b>3V3</b> của board. Nối SLP và FC-51.</li><li>Cột 16 = <b>5V</b> từ LM2596. Nối board và HC-SR04.</li></ul>
+      <p>2 thanh − đều là GND, nối với nhau ở cột 2.</p>
+      <p><b>Dây P+ của pack</b> (đã có cầu chì T2A từ bài 16.2) cắm vào <b>lỗ 44a</b>. Một dây đỏ cố định từ 44c → thanh + trên dẫn điện sang. Không cắm P+ thẳng vào thanh + trên: lỗ thanh + nằm sát lỗ thanh − cùng cột, cắm lệch một hàng là chập pack. Bài này phải cắm/rút P+ nhiều lần, nên chỗ cắm phải là chỗ không có GND ngay bên cạnh.</p>
+      <p><b>Motor TT định mức 3–6V</b>, trong khi pack đầy là 8.4V. Vì vậy code giới hạn duty tối đa 70%, tức trung bình ≈ 5.9V. DRV8833 chịu VM tới 10.8V nên pack 2S nằm trong mức cho phép.</p>
+      <p><b>Thứ tự nạp code:</b> rút dây P+ của pack → cắm USB → nạp → rút USB → cắm lại P+. Không bao giờ cắm USB và pin cùng lúc, vì theo Espressif các đường cấp nguồn của board không được dùng chung.</p>
+      <p>Code chạy thẳng ở 50%. Khi siêu âm đo &lt; 20cm, FC-51 báo có vật, hoặc công tắc bị nhấn, robot dừng, lùi 0.4s, quay tại chỗ 0.35s rồi đi tiếp. Pin &lt; 6.6V (3.3V/cell) thì dừng hẳn. Ở các bước thử bằng USB, monitor in lý do mỗi lần né.</p>`,
     code: 'sandbox/esp32-bai/main/bai_17_1.c',
-    du_doan: '<p>Kê khung cho bánh quay trên không: 2 bánh cùng quay tiến; đưa tay trước siêu âm → 2 bánh dừng, quay lùi, rồi quay ngược nhau. Thả xuống sàn: robot né tường.</p>',
+    du_doan: '<p>Kê khung cho bánh quay trên không: 2 bánh cùng quay tiến. Đưa tay trước cảm biến siêu âm thì 2 bánh dừng, quay lùi, rồi quay ngược chiều nhau. Thả xuống sàn thì robot né được tường.</p>',
     khoi: 'Rút dây P+ của pack khỏi breadboard ngay, rút USB nếu đang cắm. Motor kẹt kêu ù, DRV8833 hoặc LM2596 nóng: tháo P+ trước rồi mới tìm lỗi. Pack nóng, phồng, có khói: không cầm, mở cửa thoáng, tránh xa; có lửa thì gọi 114.',
     so_do: [{ nhan: 'Sơ đồ khối robot', svg: SD.svg(380, 280, SD.hop(4, 20, 110, 40, 'pack 2S + BMS') + SD.day('114,40 150,40') + SD.hop(150, 20, 80, 40, 'LM2596') + SD.day('230,40 280,40') + SD.chu(236, 34, '5V', 'sd-pos') + SD.hop(280, 20, 90, 40, 'ESP32-S3')
       + SD.day('55,60 55,120') + SD.chu(60, 116, '6–8.4V', 'sd-pos') + SD.hop(10, 120, 90, 40, 'DRV8833') + SD.day('55,160 55,190') + SD.hop(10, 190, 90, 40, '2 motor TT')
@@ -43,15 +45,15 @@
       + SD.day('240,120 240,100 345,100 345,60') + SD.day('330,120 330,100') + SD.day('240,202 240,240 360,240 360,60') + SD.day('330,202 330,240'),
       'Pack qua LM2596 ra 5V nuôi ESP32; pack nuôi thẳng DRV8833 chạy 2 motor; cảm biến về ESP32'), chu: 'Ba mức áp: pack (motor), 5V (board, HC-SR04), 3V3 (FC-51, SLP). GND chung.' }],
     sau: `<h3>Ngân sách năng lượng</h3>
-      <p>2 motor TT chạy ~0.15A mỗi con ở tải nhẹ, đỉnh ~1A mỗi con lúc khởi động/kẹt. Board + cảm biến ~0.15A ở 5V → ~0.12A từ pack qua LM2596. Trung bình ~0.45A từ pack 7.4V ≈ 3.3W → pack 18Wh chạy ~4–5 giờ lý thuyết. Duty giới hạn 70% với pack đầy (8.4 × 0.7 ≈ 5.9V) là để motor 6V không quá áp, không phải để tiết kiệm.</p>
+      <p>Mỗi motor TT kéo ~0.15A ở tải nhẹ, và đỉnh ~1A lúc khởi động hoặc bị kẹt. Board + cảm biến dùng ~0.15A ở 5V, tức ~0.12A lấy từ pack qua LM2596. Tính trung bình, pack 7.4V cấp ~0.45A ≈ 3.3W, nên pack 18Wh chạy được ~4–5 giờ theo lý thuyết. Duty giới hạn 70% với pack đầy (8.4 × 0.7 ≈ 5.9V) là để motor 6V không bị quá áp, không phải để tiết kiệm pin.</p>
       <h3>Vòng lặp điều khiển</h3>
-      <p>Mỗi vòng: đọc cảm biến → quyết định → đặt motor. Siêu âm cần ≥ 60ms mỗi lần đo → vòng ~16Hz. Robot 0.3m/s đi 2cm mỗi vòng; ngưỡng dừng 20cm cho ~10 vòng để phản ứng. Nhanh gấp đôi thì phải nâng ngưỡng hoặc đọc cảm biến nhanh hơn (FC-51 và công tắc đọc tức thì được).</p>
+      <p>Mỗi vòng lặp làm 3 việc: đọc cảm biến, quyết định, đặt motor. Siêu âm cần ≥ 60ms mỗi lần đo, nên vòng lặp chạy ~16Hz. Robot đi 0.3m/s thì mỗi vòng đi 2cm, ngưỡng dừng 20cm cho khoảng ~10 vòng để phản ứng. Nếu robot nhanh gấp đôi thì phải nâng ngưỡng, hoặc đọc cảm biến nhanh hơn (FC-51 và công tắc đọc tức thì được).</p>
       <h3>Máy trạng thái</h3>
-      <p>Code gọn nhất là máy trạng thái: ĐI_THẲNG → (có vật) → LÙI (0.4s) → QUAY (0.35s) → ĐI_THẲNG; PIN_YẾU là trạng thái cuối. Mỗi trạng thái chỉ quan tâm điều kiện thoát của nó. Thêm hành vi mới (xiaozhi ra lệnh qua MCP, bài 17.2) là thêm trạng thái, không phải thêm if lồng nhau.</p>`,
+      <p>Cách viết gọn nhất là máy trạng thái: ĐI_THẲNG → (có vật) → LÙI (0.4s) → QUAY (0.35s) → ĐI_THẲNG, còn PIN_YẾU là trạng thái cuối. Mỗi trạng thái chỉ cần biết điều kiện để thoát khỏi nó. Muốn thêm hành vi mới (như xiaozhi ra lệnh qua MCP ở bài 17.2) thì thêm trạng thái, không phải chồng thêm if lồng nhau.</p>`,
     hoi: [
-      ['Robot 0.4m/s, vòng lặp 60ms, ngưỡng 20cm. Có bao nhiêu vòng để phản ứng?', '0.4 × 0.06 = 2.4cm mỗi vòng → ~<b>8 vòng</b>.'],
-      ['Vì sao duty tối đa 70% khi pack đầy?', '8.4 × 0.7 ≈ 5.9V trung bình, trong định mức 3–6V của motor TT.'],
-      ['Pin xuống 6.6V robot dừng. Vì sao không chạy tới lúc BMS tự cắt?', 'Để không xả sâu cell (BMS cắt ở ~2.5V/cell là mức cứu hộ, không phải mức dùng), và để LM2596 còn giữ 5V ổn cho board.'],
+      ['Robot 0.4m/s, vòng lặp 60ms, ngưỡng 20cm. Có bao nhiêu vòng để phản ứng?', 'Mỗi vòng đi 0.4 × 0.06 = 2.4cm, nên có khoảng ~<b>8 vòng</b>.'],
+      ['Vì sao duty tối đa 70% khi pack đầy?', '8.4 × 0.7 ≈ 5.9V trung bình, nằm trong định mức 3–6V của motor TT.'],
+      ['Pin xuống 6.6V robot dừng. Vì sao không chạy tới lúc BMS tự cắt?', 'Để không xả sâu cell (BMS cắt ở ~2.5V/cell là mức cứu hộ, không phải mức để dùng hằng ngày), và để LM2596 còn giữ được 5V ổn định cho board.'],
     ],
     phan: [
       {
@@ -63,7 +65,7 @@
           { ten: 'SLP, VM, GND driver, 2 motor', lam: ['Dây đỏ <b>4c → thanh + dưới</b> (SLP lên 3V3). Dây đỏ <b>thanh + trên → 13c</b> (VM). Dây đen <b>14c → thanh − trên</b>. Motor trái → 9e, 10e. Motor phải → 11e, 12e.'], board: { them: [...DDRV, MT, MP] } },
           { ten: 'Dây từ board', lam: ['USB rút. <code>GND</code> → thanh − dưới (cột 3). <code>3V3</code> → <b>thanh + dưới</b> (cột 3). <code>9</code> → 5c, <code>10</code> → 6c, <code>14</code> → 7c, <code>21</code> → 8c.'], board: { them: [ESP1] } },
           K.buocOmEsp('Không dưới 100Ω; thanh + trên (pin, đang trống) ↔ thanh −: rất lớn.', 'Thanh + dưới gần 0 với thanh −: 3V3 chạm GND.', ['Thêm: que đỏ thanh + <b>trên</b>, que đen thanh + <b>dưới</b> → không gần 0 (pin và 3V3 không được dính nhau).'], { thanh3v3: 'dưới' }),
-          K.camUsb('Cắm USB, nạp 17.1, xem monitor', ['<code>idf.py menuconfig</code> → 17.1, <code>flash monitor</code>. Motor chưa có điện nên đứng yên; cảm biến chưa nối nên code có thể báo né liên tục — bình thường ở bước này.'], {}, { thay: 'Monitor in trạng thái và "pin = … mV" (≈ 0 vì chưa có pin).', neu_khong: '' }),
+          K.camUsb('Cắm USB, nạp 17.1, xem monitor', ['<code>idf.py menuconfig</code> → 17.1, <code>flash monitor</code>. Motor chưa có điện nên đứng yên. Cảm biến chưa nối nên code có thể báo né liên tục, ở bước này như vậy là bình thường.'], {}, { thay: 'Monitor in trạng thái và "pin = … mV" (≈ 0 vì chưa có pin).', neu_khong: '' }),
           K.rutUsb(),
         ],
       },
@@ -75,13 +77,13 @@
           { ten: 'Cầu đo pin', lam: ['20k từ <b>thanh + trên (cột 38) → 38a</b>. 10k <b>38e → 38f</b>. Dây đen <b>38j → thanh −</b>.'], board: { them: DPIN } },
           { ten: 'Dây tín hiệu', lam: ['USB rút. <code>17</code> → 19c, <code>18</code> → <b>24a</b> (điểm giữa cầu Echo), <code>8</code> → 30c, <code>12</code> → 34c, <code>1</code> → <b>38c</b>.'], board: { bo: ['esp'], them: [ESP2] } },
           K.buocOmEsp(null, null, ['Thêm: 20b ↔ 24b ≈ 10k (Echo không nối thẳng GPIO18). 38b ↔ thanh − ≈ 10k song song phần còn lại.'], { thanh3v3: 'dưới' }),
-          K.camUsb('Cắm USB, thử từng cảm biến', ['<code>flash monitor</code>. HC-SR04 chưa có 5V (cột 16 chưa nối) nên báo "het gio" — bình thường. Thử: che FC-51 bằng tay; gạt công tắc.'], {}, { thay: 'Che FC-51 → in "ne: hong ngoai". Gạt công tắc → in "ne: va cham".', neu_khong: 'Không in: kiểm dây 8 / 12 như bài 14.1, 14.2.' }),
+          K.camUsb('Cắm USB, thử từng cảm biến', ['<code>flash monitor</code>. HC-SR04 chưa có 5V (cột 16 chưa nối) nên báo "het gio", như vậy là bình thường. Thử che FC-51 bằng tay, rồi gạt công tắc.'], {}, { thay: 'Che FC-51 → in "ne: hong ngoai". Gạt công tắc → in "ne: va cham".', neu_khong: 'Không in: kiểm dây 8 / 12 như bài 14.1, 14.2.' }),
           K.rutUsb(),
         ],
       },
       {
         ten: 'Phần 3 · Pin + LM2596, bánh nhấc khỏi mặt bàn', ke_thua: true,
-        gioi_thieu: 'Kê khung lên hộp/cuốn sách cho 2 bánh quay trên không. LM2596 đã chỉnh 5.0V ở 16.3 — đo lại trước.',
+        gioi_thieu: 'Kê khung lên hộp hoặc cuốn sách để 2 bánh quay trên không. LM2596 đã chỉnh ra 5.0V ở bài 16.3, nhưng vẫn đo lại trước.',
         buoc: [
           { ten: 'LM2596 vào thanh pin, OUT → cột 16', lam: ['USB rút, pack chưa nối. IN+ → thanh + trên (cột 42), IN− → thanh − trên (cột 42). OUT+ → <b>16a</b>, OUT− → thanh − dưới (cột 16). Chân 5V board chưa nối.', 'Chỗ cắm P+: dây đỏ <b>44c → thanh + trên (cột 44)</b>. Cột 44 phía trên không có gì khác.', 'Tạm rút đầu dây <code>1</code> khỏi <b>38c</b>: bước sau nối pack khi board chưa có điện, cầu đo pin sẽ đưa ~2.8V vào chân của chip đang tắt.'], board: { bo: ['esp'], them: [BUCK, DPP, ESP2b] } },
           { ten: 'Nối pack, đo 5V trước khi nối board', cap_dien: true, kiem_truoc: true, lam: ['Dây P− → thanh − trên (cột 44), rồi P+ → <b>44a</b>. <code>DCV 20</code>: que đỏ 16b, que đen thanh −. Motor phải <b>đứng yên</b> (board chưa có điện, SLP = 0).'], board: { them: [PACK, K.dh('DCV 20', '16b', 'B-:18', '≈ 5.0')] },
@@ -89,16 +91,16 @@
           { ten: 'Rút P+, nối chân 5V board', lam: ['Rút P+. <code>5V</code> → <b>16c</b>. Cắm lại <code>1</code> → <b>38c</b>. Cáp USB: <b>rút khỏi board</b>.'], board: { bo: ['pack', 'esp'], them: [ESP3] } },
           K.buocOmEsp('3V3 ↔ − không dưới 100Ω, và 16b ↔ − (5V) không dưới 100Ω.', null, ['Thêm: 16b ↔ thanh − (mạch 5V).'], { thanh3v3: 'dưới' }),
           { ten: 'Cắm P+: robot chạy (bánh trên không)', cap_dien: true, lam: ['Không có USB. P+ → <b>44a</b>. Nhìn 2 bánh. Đưa tay trước HC-SR04 ~10cm, rồi che FC-51, rồi gạt công tắc. Sau 1 phút sờ DRV8833, LM2596.'], board: { them: [PACK] },
-            kiem: { thay: '2 bánh quay tiến; mỗi lần có vật: dừng → lùi → 2 bánh ngược nhau → tiến lại. Driver/LM2596 chỉ ấm.', neu_khong: 'Một bánh quay lùi khi "tiến": đảo 2 dây motor đó. Không bánh nào quay: SLP, VM. Dừng hẳn ngay: pin < 6.6V — sạc lại. Nóng: rút P+.' } },
+            kiem: { thay: '2 bánh quay tiến. Mỗi lần có vật: dừng → lùi → 2 bánh quay ngược nhau → tiến lại. Driver và LM2596 chỉ ấm.', neu_khong: 'Một bánh quay lùi khi đang "tiến": đảo 2 dây của motor đó. Không bánh nào quay: kiểm SLP và VM. Dừng hẳn ngay từ đầu: pin < 6.6V, cần sạc lại. Có gì nóng: rút P+.' } },
           { ten: 'Thả xuống sàn', cap_dien: true, lam: ['Rút P+. Đặt robot trên sàn trống, cách tường 1m, xa cầu thang. Cắm P+. Quan sát. Muốn dừng: nhấc robot lên, rút P+.'], board: {},
-            kiem: { thay: 'Robot đi, né tường/chân ghế. Vật mềm (rèm) có thể không né được bằng siêu âm — công tắc cản va là lớp cuối.', neu_khong: 'Đi lệch hẳn một bên: 2 motor khác tốc độ — bình thường với motor TT; encoder (15.2) là cách sửa.' } },
+            kiem: { thay: 'Robot đi và né được tường, chân ghế. Vật mềm như rèm có thể không né được bằng siêu âm, lúc đó công tắc cản va là lớp bảo vệ cuối.', neu_khong: 'Đi lệch hẳn một bên: 2 motor chạy khác tốc độ. Với motor TT chuyện này bình thường, cách sửa là dùng encoder (15.2).' } },
           { ten: 'Rút P+ khi xong', lam: ['Rút P+ trước, bọc đầu dây. Sạc lại 2 cell bằng 16.1 (tháo từng cell).'], board: { bo: ['pack'] } },
         ],
       },
     ],
     bang_do: [{ ten: 'Thử né (bánh trên không)', cot: ['Phản ứng?', 'Lý do in ra (khi có USB)'], hang: [{ ten: 'Tay trước HC-SR04 10cm', du_doan: ['dừng-lùi-quay', 'sieu am'] }, { ten: 'Che FC-51', du_doan: ['dừng-lùi-quay', 'hong ngoai'] }, { ten: 'Gạt công tắc', du_doan: ['dừng-lùi-quay', 'va cham'] }] },
       { ten: 'Nguồn', cot: ['Pin (V)', '5V (16b)'], hang: [{ ten: 'Lúc chạy', du_doan: ['7.4–8.4', '4.95–5.05'] }] }],
-    bay: ['Cắm USB khi P+ đang nối: 2 nguồn đấu nhau trên chân 5V.', 'Cắm P+ thẳng vào thanh + trên: lệch 1 hàng là vào thanh − — chập pack. Cắm ở 44a.', 'Pack không có cầu chì trên P+: chập chỉ còn trông vào BMS.', 'Cắm cảm biến 3V3 (FC-51, SLP) nhầm vào thanh + trên (pin 8.4V): hỏng module/chip.', 'Chạy thử lần đầu trên sàn: robot lao đi, rơi, đứt dây. Luôn bánh trên không trước.', 'Duty 100% với pack đầy: motor TT 8.4V, quá định mức 6V.', 'Để pack cạn dưới 6V: LM2596 tụt áp, board reset, robot giật cục.'],
-    robot: ['Bước tiếp: encoder 2 bánh để đi thẳng (15.2), gyro quay đúng góc (15.3), TCRT5000 chống rơi (14.4), rồi cho xiaozhi điều khiển qua MCP (tài liệu MCP trong repo xiaozhi-esp32).'],
+    bay: ['Cắm USB khi P+ đang nối: 2 nguồn đấu nhau trên chân 5V.', 'Cắm P+ thẳng vào thanh + trên: lệch 1 hàng là vào thanh −, chập pack. Luôn cắm ở 44a.', 'Pack không có cầu chì trên P+: chập chỉ còn trông vào BMS.', 'Cắm cảm biến 3V3 (FC-51, SLP) nhầm vào thanh + trên (pin 8.4V): hỏng module/chip.', 'Chạy thử lần đầu trên sàn: robot lao đi, rơi, đứt dây. Lần đầu luôn để bánh quay trên không.', 'Duty 100% với pack đầy: motor TT nhận 8.4V, quá định mức 6V.', 'Để pack cạn dưới 6V: LM2596 tụt áp, board reset, robot giật cục.'],
+    robot: ['Bước tiếp: encoder 2 bánh để đi thẳng (15.2), gyro để quay đúng góc (15.3), TCRT5000 chống rơi (14.4), rồi cho xiaozhi điều khiển bằng giọng qua MCP (<a href="bai/17.2/">bài 17.2</a>).'],
   });
 })();

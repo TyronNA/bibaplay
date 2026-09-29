@@ -10,18 +10,20 @@
   const ESP = K.esp({ '3V3': 'T+:1', GND: 'T-:1', GND2: 'B-:30', '5V': '27c', G42: '6c', G41: '7c', G6: '13c', G5: '14c', G4: '15c', G16: '21c', G15: '22c', G7: '23c', G47: '32b', G40: '36b', G39: '40b' });
   const BO = ['esp'];
   const buocOm = (ten, them) => ({
-    ten, kiem_truoc: true, lam: ['USB rút. <code>Ω 200k</code>. Que đỏ thanh + trên (3V3), que đen thanh − trên (GND). Rồi que đỏ cột VIN ampli (27d), que đen thanh −.', 'So 3V3–GND với mốc 8.1: mỗi module thêm vào làm số giảm chút ít, không bao giờ gần 0.'],
+    ten, kiem_truoc: true, lam: ['USB rút. <code>Ω 200k</code>. Que đỏ thanh + trên (3V3), que đen thanh − trên (GND). Rồi que đỏ cột VIN ampli (27d), que đen thanh −.', 'So số 3V3–GND với số mốc của bài 8.1: mỗi module thêm vào làm số giảm chút ít, nhưng không bao giờ gần 0.'],
     board: { them: [K.dh('Ω 200k', 'T+:30', 'T-:30', '> 0.1'), ...(them || [])] },
-    kiem: { thay: 'Cả 2 số không dưới ~100Ω.', neu_khong: 'Gần 0: module vừa cắm có VCC chạm GND (thường là cắm đảo). <b>Không cắm USB</b>, rút module vừa thêm ra đo lại.' },
+    kiem: { thay: 'Cả 2 số không dưới ~100Ω.', neu_khong: 'Gần 0: module vừa cắm có VCC chạm GND, thường là do cắm đảo chiều. <b>Không cắm USB</b>, rút module vừa thêm ra rồi đo lại.' },
   });
   BAI.dangKy({
     id: '12.5',
-    muc_tieu: 'Ráp đủ mic + ampli + OLED + 3 nút theo <code>bread-compact-wifi</code> (biến thể 128×64), nạp firmware tự build, nói chuyện với server riêng — mục tiêu 1 của lộ trình.',
+    muc_tieu: 'Ráp đủ mic, ampli, OLED và 3 nút theo board <code>bread-compact-wifi</code> (bản 128×64), nạp firmware tự build, rồi nói chuyện với server riêng. Đây là mục tiêu đầu tiên của lộ trình.',
     can: [...K.coBanEsp(15), { ten: 'OLED 0.96" 128×64', tim: 'OLED', lk: 'oled', sl: 1 }, { ten: 'Mic INMP441', tim: 'INMP441', lk: 'inmp441', sl: 1 }, { ten: 'Ampli MAX98357A + loa', tim: 'MAX98357A', lk: 'max98357a', sl: 1 }, K.can.nut(3)],
-    kien_thuc: `<p>Làm 12.1, 12.2, 12.3 trước: từng module đã chạy riêng thì lúc ghép mới biết lỗi nằm ở đâu.</p>
-      <p>Chân theo <code>xiaozhi-esp32/main/boards/bread-compact-wifi/config.h</code>: mic WS=4 SCK=5 SD=6; ampli DIN=7 BCLK=15 LRC=16; OLED SDA=41 SCL=42; nút TOUCH=47, VOL+=40, VOL−=39 (nút BOOT=0 có sẵn trên board). Nút nối chân ↔ GND, firmware bật pull-up nội (lớp <code>Button</code>, active-low).</p>
-      <p>Nguồn: thanh + trên = <b>3V3</b> (OLED, mic), thanh − trên và dưới = GND. <b>5V chỉ đi 1 dây thẳng vào VIN ampli</b>, không vào thanh nguồn nào.</p>
-      <p>Ráp từng module, đo Ω sau mỗi module. Board thật cắm ghép 2 breadboard cũng được; hình vẽ board để ngoài, nối dây đực–cái.</p>`,
+    kien_thuc: `<p>Làm 12.1, 12.2, 12.3 trước. Từng module đã chạy riêng được thì lúc ghép, có lỗi mới biết nằm ở đâu.</p>
+      <p>Chân lấy theo board <code>bread-compact-wifi</code> của xiaozhi:</p>
+      <ul><li>Mic: WS=4, SCK=5, SD=6.</li><li>Ampli: DIN=7, BCLK=15, LRC=16.</li><li>OLED: SDA=41, SCL=42.</li><li>Nút: TOUCH=47, VOL+=40, VOL−=39 (nút BOOT=0 có sẵn trên board).</li></ul>
+      <p>Mỗi nút nối giữa chân GPIO và GND, firmware bật pull-up nội, nên nhấn là chân xuống 0 (active-low).</p>
+      <p>Nguồn: thanh + trên là <b>3V3</b> (cho OLED và mic), thanh − trên và dưới là GND. <b>5V chỉ đi đúng 1 dây thẳng vào VIN của ampli</b>, không cắm vào thanh nguồn nào.</p>
+      <p>Ráp từng module, và đo Ω sau mỗi module. Có thể cắm board lên 2 breadboard ghép lại. Hình vẽ để board ở ngoài và nối bằng dây đực–cái.</p>`,
     so_do: [{ nhan: 'Sơ đồ khối xiaozhi', svg: SD.svg(360, 260, SD.hop(130, 90, 100, 70, 'ESP32-S3') + SD.hop(10, 20, 90, 40, 'OLED') + SD.hop(10, 110, 90, 40, 'mic INMP441') + SD.hop(260, 20, 90, 40, 'ampli') + SD.hop(260, 200, 90, 40, 'loa')
       + SD.hop(10, 200, 90, 40, '3 nút') + SD.hop(160, 200, 80, 40, 'USB 5V')
       + SD.day('100,40 150,40 150,90') + SD.chu(106, 34, 'I2C 41/42', 'sd-mo') + SD.day('100,130 130,130') + SD.chu(104, 150, 'I2S 4/5/6', 'sd-mo')
@@ -29,15 +31,15 @@
       + SD.day('200,200 200,160') + SD.chu(206, 186, '5V', 'sd-pos'),
       'ESP32 ở giữa: OLED qua I2C, mic và ampli qua I2S, 3 nút, nguồn USB 5V; ampli ra loa'), chu: 'Chân theo bread-compact-wifi (xiaozhi). 5V chỉ vào VIN ampli; OLED và mic ăn 3V3.' }],
     sau: `<h3>Ngân sách dòng trên cổng USB</h3>
-      <p>Chip phát WiFi: đỉnh vài trăm mA. Ampli nói to vào loa 8Ω: đỉnh ~0.3–0.5A từ 5V. OLED ~20mA, mic ~1.5mA. Cộng các đỉnh lại có lúc chạm 500mA của cổng USB 2.0: câu dài nói to mà board reset là dấu hiệu nguồn không đủ, không phải lỗi firmware. Chữa: cổng USB 3 / cục sạc 5V 2A, tụ 100–470µF sát VIN ampli, giảm âm lượng tối đa.</p>
+      <p>Lúc chip phát WiFi, dòng đỉnh lên vài trăm mA. Ampli nói to vào loa 8Ω kéo đỉnh ~0.3–0.5A từ 5V. OLED dùng ~20mA, mic ~1.5mA. Cộng các đỉnh lại, có lúc chạm mức 500mA của cổng USB 2.0. Vì vậy nếu board reset khi đang nói câu dài và to, đó là dấu hiệu nguồn không đủ, không phải lỗi firmware. Cách chữa: dùng cổng USB 3 hoặc cục sạc 5V 2A, gắn tụ 100–470µF sát VIN của ampli, hoặc giảm âm lượng tối đa.</p>
       <h3>Độ trễ đi đâu</h3>
-      <p>Server riêng đo được ~2.6s từ lúc ngừng nói tới lúc có tiếng trả lời. Phần của mạch rất nhỏ: I2S đệm vài chục ms, mã hoá Opus ~20–60ms mỗi khung. Phần lớn là mạng + chờ phát hiện hết câu + mô hình nghĩ và nói. Muốn nhanh hơn phải sửa phía server, không phải phía dây.</p>
+      <p>Server riêng đo được ~2.6s từ lúc ngừng nói tới lúc có tiếng trả lời. Phần của mạch chiếm rất ít: I2S đệm vài chục ms, mã hoá Opus ~20–60ms mỗi khung. Phần lớn thời gian nằm ở mạng, ở việc chờ biết bạn đã nói hết câu, và ở việc mô hình nghĩ rồi nói. Muốn nhanh hơn thì phải sửa phía server, không phải sửa dây.</p>
       <h3>Ghép từng khối</h3>
-      <p>Ráp từng module, đo Ω sau mỗi module là cách chia đôi lỗi: hỏng ở bước nào thì chỉ nghi phần vừa thêm.</p>`,
+      <p>Ráp từng module và đo Ω sau mỗi module giúp khoanh vùng lỗi: hỏng ở bước nào thì chỉ cần nghi phần vừa thêm vào.</p>`,
     hoi: [
-      ['Board reset đúng lúc xiaozhi nói to. Nghi gì đầu tiên?', 'Nguồn 5V sụt vì ampli kéo đỉnh dòng (cổng USB không đủ) → brownout.'],
-      ['Vì sao OLED và mic ăn 3V3 còn ampli ăn 5V?', 'OLED và mic là chip logic 3.3V (mic tối đa ~3.6V); ampli cần công suất lớn cho loa, lấy trực tiếp từ 5V.'],
-      ['Ráp cả bộ rồi mới đo Ω, thấy gần 0. Làm gì?', 'Rút từng module ra, đo lại tới khi hết gần 0: module vừa rút là thủ phạm. Lần sau đo sau mỗi module.'],
+      ['Board reset đúng lúc xiaozhi nói to. Nghi gì đầu tiên?', 'Nguồn 5V bị sụt vì ampli kéo dòng đỉnh lớn mà cổng USB không cấp đủ, dẫn tới brownout.'],
+      ['Vì sao OLED và mic ăn 3V3 còn ampli ăn 5V?', 'OLED và mic là chip logic 3.3V (mic chịu tối đa ~3.6V). Ampli cần công suất lớn cho loa nên lấy thẳng từ 5V.'],
+      ['Ráp cả bộ rồi mới đo Ω, thấy gần 0. Làm gì?', 'Rút từng module ra rồi đo lại, cho tới khi hết gần 0: module vừa rút là thủ phạm. Lần sau nhớ đo sau mỗi module.'],
     ],
     phan: [
       {
@@ -69,13 +71,13 @@
         buoc: [
           { ten: '3 nút', lam: ['3 nút vắt qua rãnh ở cột 32/34, 36/38, 40/42 (hướng đã kiểm như 6.1). Cột 34, 38, 42: dây đen hàng j → thanh − dưới. <code>47</code> → 32b, <code>40</code> → 36b, <code>39</code> → 40b.'], board: { bo: BO, them: [...NUT, ESP] } },
           buocOm('Đo lần cuối, cả lúc nhấn từng nút', []),
-          { ...K.camUsb('Cắm USB, build + nạp firmware', ['Build firmware xiaozhi-esp32 từ source (ESP-IDF v6.0.1 trở lên) cho board <code>bread-compact-wifi-128x64</code>, rồi <code>idf.py -p /dev/cu.usbmodem… flash monitor</code>.', 'Cần một server xiaozhi đang chạy để board kết nối tới: cách build firmware có mặt robot, chạy server riêng bằng key Gemini miễn phí, chọn chỗ host — xem trang <a href="xiaozhi/">Robot AI tự build</a>.'], {}, { thay: 'OLED hiện thanh trạng thái; nói vào mic thì nghe trả lời qua loa.', neu_khong: 'Từng module đã chạy ở 12.1–12.3 → lỗi ở phần ghép: so từng dây với bảng chân. OLED/ampli ấm: rút USB.' }) },
+          { ...K.camUsb('Cắm USB, build + nạp firmware', ['Build firmware xiaozhi-esp32 từ source (ESP-IDF v6.0.1 trở lên) cho board <code>bread-compact-wifi-128x64</code>, rồi <code>idf.py -p /dev/cu.usbmodem… flash monitor</code>.', 'Board cần một server xiaozhi đang chạy để kết nối tới. Cách build firmware có mặt robot, chạy server riêng bằng key Gemini miễn phí và chọn chỗ host nằm ở trang <a href="xiaozhi/">Robot AI tự build</a>.'], {}, { thay: 'OLED hiện thanh trạng thái, nói vào mic thì nghe trả lời qua loa.', neu_khong: 'Từng module đã chạy ở 12.1–12.3 thì lỗi nằm ở phần ghép: so từng dây với bảng chân. OLED hoặc ampli ấm lên: rút USB.' }) },
           K.rutUsb(),
         ],
       },
     ],
     bang_do: [{ ten: 'Ω 3V3–GND sau mỗi module', cot: ['Ω'], hang: [{ ten: 'Mốc 8.1', du_doan: [''] }, { ten: '+ OLED', du_doan: ['≤ mốc'] }, { ten: '+ mic', du_doan: ['≤ trên'] }, { ten: '+ ampli', du_doan: ['≤ trên'] }, { ten: '+ nút (nhấn từng nút)', du_doan: ['như trên'] }] }],
-    bay: ['5V cắm vào thanh + (đang là 3V3): 2 nguồn đấu nhau, OLED/mic nhận 5V.', 'Cắm module đảo chiều (VCC ↔ GND): đo Ω sau từng module để bắt ngay.', 'Nút nối vào thanh + thay vì GND: nhấn là cấp 3.3V vào chân đang bật pull-up — không hỏng nhưng nút không ăn.'],
+    bay: ['Cắm 5V vào thanh + (đang là 3V3): 2 nguồn đấu nhau, OLED và mic nhận 5V.', 'Cắm module đảo chiều (VCC ↔ GND): đo Ω sau từng module để bắt được ngay.', 'Nối nút vào thanh + thay vì GND: nhấn là cấp 3.3V vào chân đang bật pull-up. Không hỏng gì, nhưng nút không ăn.'],
     robot: ['Bước tiếp theo: <a href="bai/17.2/">bài 17.2</a> thêm driver + 2 motor, xiaozhi nhận lệnh bằng giọng rồi chạy bánh xe.'],
   });
 })();

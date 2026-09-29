@@ -18,21 +18,21 @@
     poster: [28, 29],
     muc_tieu: 'Bật motor bằng transistor, có diode chống xung ngược. Đo dòng motor trước để biết transistor có chịu được không.',
     can: [K.can.motor(), K.can.npn(), K.can.d4007(), K.can.tro('470'), K.can.tro('10k'), ...K.coBan(10)],
-    kien_thuc: `<p>Cuộn dây motor đang có dòng mà bị ngắt đột ngột thì sinh xung áp rất cao (hàng chục volt) ở chân C: có thể giết transistor. Diode 1N4007 song song motor, <b>vạch (cathode) về phía +</b>, cho dòng đó chạy vòng qua diode rồi tắt dần.</p>
-      <p><b>Cắm ngược diode là nối tắt:</b> lúc transistor dẫn, dòng đi thẳng + → diode → transistor → −, không qua motor. Diode và transistor nóng tới cháy. Bước 3 của phần 2 kiểm chiều diode bằng đồng hồ trước khi cắm motor.</p>
-      <p>S8050 chịu ~0.5A liên tục. Phần 1 đo dòng motor chạy không tải: <b>trên 400mA thì dừng</b>, chờ driver (chương 13). Dòng khởi động (bài 7.3) lớn hơn nhưng chỉ vài trăm ms; <b>không để trục bị kẹt</b> khi dùng transistor.</p>
-      <p>Chân B: tải ~0.3A, hFE ở dòng lớn ~100 → Ib ≥ 3mA, dư 3 lần → ~8mA → <code>(4.78 − 0.8)/8mA ≈ 500Ω</code>: dùng 470Ω.</p>`,
+    kien_thuc: `<p>Cuộn dây motor đang có dòng mà bị ngắt đột ngột thì sinh ra xung áp rất cao (hàng chục volt) ở chân C, có thể làm chết transistor. Diode 1N4007 mắc song song motor, <b>vạch (cathode) về phía +</b>, để dòng đó chạy vòng qua diode rồi tắt dần.</p>
+      <p><b>Cắm ngược diode là nối tắt:</b> lúc transistor dẫn, dòng đi thẳng + → diode → transistor → −, không qua motor, và diode cùng transistor nóng tới cháy. Vì vậy bước 3 của phần 2 kiểm chiều diode bằng đồng hồ trước khi cắm motor.</p>
+      <p>S8050 chịu ~0.5A liên tục. Phần 1 đo dòng motor khi chạy không tải: <b>trên 400mA thì dừng</b>, chờ tới lúc có driver (chương 13). Dòng khởi động (bài 7.3) lớn hơn nhưng chỉ kéo dài vài trăm ms. <b>Không để trục bị kẹt</b> khi dùng transistor.</p>
+      <p>Chân B: tải ~0.3A, hFE ở dòng lớn chỉ ~100, nên cần Ib ≥ 3mA. Lấy dư 3 lần, tức ~8mA, thì <code>(4.78 − 0.8)/8mA ≈ 500Ω</code>, dùng 470Ω.</p>`,
     so_do: [{ nhan: 'Sơ đồ', svg: soDo, chu: 'Motor ở phía C (phía +), transistor ở phía − (low-side).' }],
-    du_doan: '<p>Dòng chạy không tải của motor quạt nhỏ: 0.1–0.3A. Bật: U_CE ≲ 0.3V, motor chạy gần như cắm thẳng pin.</p>',
+    du_doan: '<p>Motor quạt nhỏ chạy không tải kéo 0.1–0.3A. Khi bật: U_CE ≲ 0.3V, motor chạy gần như cắm thẳng vào pin.</p>',
     sau: `<h3>Xung áp khi ngắt cuộn dây</h3>
-      <p>Cuộn dây chống lại sự thay đổi dòng: <code>u = L·di/dt</code>. Motor L cỡ 1mH đang chạy 0.3A, transistor ngắt trong ~1µs: <code>u ≈ 10⁻³ × 0.3 / 10⁻⁶ = 300V</code> (lý thuyết), vượt xa 25V mà S8050 chịu. Thực tế transistor bị đánh thủng trước khi tới 300V — và hỏng dần sau nhiều lần.</p>
-      <p>Diode ngược cho dòng đó một đường vòng: áp ở chân C bị kẹp ở <code>U_pin + 0.7V</code>. Năng lượng cuộn dây <code>½·L·I² = ½ × 10⁻³ × 0.3² = 45µJ</code> được đốt chậm trong điện trở cuộn và diode.</p>
+      <p>Cuộn dây chống lại sự thay đổi dòng: <code>u = L·di/dt</code>. Motor có L cỡ 1mH đang chạy 0.3A, transistor ngắt trong ~1µs thì <code>u ≈ 10⁻³ × 0.3 / 10⁻⁶ = 300V</code> (theo lý thuyết), vượt xa mức 25V mà S8050 chịu được. Thực tế transistor bị đánh thủng trước khi áp lên tới 300V, và hỏng dần sau nhiều lần như vậy.</p>
+      <p>Diode ngược cho dòng đó một đường vòng, nên áp ở chân C bị kẹp ở <code>U_pin + 0.7V</code>. Năng lượng cuộn dây <code>½·L·I² = ½ × 10⁻³ × 0.3² = 45µJ</code> được đốt chậm trong điện trở cuộn và diode.</p>
       <h3>Đánh đổi</h3>
-      <p>Có diode, dòng tắt chậm (tụt theo τ = L/R của cuộn), motor dừng "mềm". Mạch cần tắt nhanh (relay cần nhả nhanh, driver bước) thì thêm zener nối tiếp diode: kẹp ở áp cao hơn → tắt nhanh hơn mà vẫn an toàn cho transistor.</p>`,
+      <p>Có diode thì dòng tắt chậm (tụt theo τ = L/R của cuộn), motor dừng "mềm". Mạch cần tắt nhanh (relay cần nhả nhanh, driver motor bước) thì thêm zener nối tiếp với diode: kẹp ở áp cao hơn nên tắt nhanh hơn, mà vẫn an toàn cho transistor.</p>`,
     hoi: [
       ['L = 2mH, I = 0.2A, ngắt trong 2µs. Xung áp lý thuyết?', '2×10⁻³ × 0.2 / 2×10⁻⁶ = <b>200V</b>.'],
       ['Diode cắm đúng chiều thì áp chân C khi ngắt lên tối đa bao nhiêu?', '≈ 4.78 + 0.7 ≈ <b>5.5V</b>.'],
-      ['Vì sao diode ngược không làm motor yếu đi khi đang chạy?', 'Lúc chạy, diode bị phân cực ngược (vạch về phía +) nên không dẫn; nó chỉ dẫn khi transistor vừa ngắt.'],
+      ['Vì sao diode ngược không làm motor yếu đi khi đang chạy?', 'Lúc motor chạy, diode bị phân cực ngược (vạch về phía +) nên không dẫn. Nó chỉ dẫn khi transistor vừa ngắt.'],
     ],
     phan: [
       {
@@ -46,7 +46,7 @@
           { ten: 'Đồng hồ ở 10A, kẹp vào chỗ hở', kiem_truoc: true, lam: ['Que đỏ sang lỗ <code>10A</code>, núm <code>10A</code> (DCA 10). Dây nhảy ở 14h và ở thanh −. Que đỏ vào dây 14h, que đen vào dây thanh −.'], board: { them: [K.dh('DCA 10A', '14h', 'B-:17', '—', '10A')] },
             kiem: { thay: 'Không que nào chạm thanh +.', neu_khong: 'Sửa trước khi lắp pin.' } },
           K.lapPin('Lắp pin, đọc dòng chạy', ['Đợi motor chạy đều 2 giây, đọc số (A). Tháo pin. <b>Trả que đỏ về VΩ, núm về DCV.</b>'], { them: [K.dh('DCA 10A', '14h', 'B-:17', '≈ 0.20', '10A')] },
-            { thay: '≤ 0.40A → làm tiếp phần 2.', neu_khong: '<b>> 0.40A: dừng ở đây</b>, S8050 không đủ. Chờ driver (chương 13).' }),
+            { thay: '≤ 0.40A: làm tiếp phần 2.', neu_khong: '<b>> 0.40A: dừng ở đây</b>, S8050 không đủ sức. Chờ tới lúc có driver (chương 13).' }),
         ],
       },
       {
@@ -55,19 +55,19 @@
           K.buocPin(),
           { ten: 'Transistor, diode, cột + ', lam: ['S8050: E 12h, B 13h, C 14h. Dây đen 12j → thanh −.', 'Cột 17 nối +: dây đỏ thanh + → 17a, dây đỏ 17e → 17f.', '1N4007: <b>anode 14g</b> (phía C), <b>vạch bạc 17g</b> (phía +).'], board: { them: [Q, DE, ...VP, D] } },
           { ten: 'Kiểm chiều diode trước khi cắm motor', kiem_truoc: true, lam: ['Thang diode. Que đỏ 14i, que đen 17i. Rồi đảo que.'], board: { them: [K.dh('diode ▶|', '14i', '17i', '≈ 0.55')] },
-            kiem: { thay: 'Que đỏ ở 14 (anode): ~0.5–0.6. Đảo: 1.', neu_khong: 'Ngược lại: <b>diode cắm ngược, sửa ngay</b> — để vậy thì bật transistor là nối tắt pin.' } },
+            kiem: { thay: 'Que đỏ ở 14 (anode): ~0.5–0.6. Đảo que: 1.', neu_khong: 'Ra ngược lại: <b>diode đang cắm ngược, sửa ngay</b>. Để vậy thì bật transistor là nối tắt pin.' } },
           { ten: 'Motor và chân B', lam: ['Motor: dây 1 vào 17j, dây 2 vào 14j.', '470Ω vắt qua rãnh 13e → 13f. 10k từ 13j xuống thanh −. <b>Chưa cắm dây bật.</b>'], board: { them: [M2, RB, RD] } },
           K.buocOm('Ω 200k', '1', '1 (OL): transistor tắt, diode chặn.', 'Vài Ω: C–E đang nối tắt hoặc motor nối thẳng xuống −.'),
           { ten: 'Cắm dây bật, đo lại', kiem_truoc: true, lam: ['Hộp vẫn rỗng. Cắm dây vàng thanh + → 13a. Đo lại 2 tiếp điểm hộp pin.'], board: { them: [SW, K.dh('Ω 200k', 'pin+', 'pin-', '> 0.4')] }, kiem: { thay: 'Lớn hơn ~400Ω (470Ω + B–E).', neu_khong: 'Vài Ω: có chỗ nối tắt, đừng lắp pin.' } },
           K.lapPin('Lắp pin: motor chạy, đo U_CE', ['<code>DCV 20</code>, que đỏ C (14h), que đen E (12h). Sau 5 giây chạm nhanh vào transistor.'], { them: [K.dh('DCV 20', 'q.C', 'q.E', '≈ 0.2')] },
-            { thay: 'U_CE ≲ 0.3V. Transistor ấm nhẹ hoặc nguội.', neu_khong: 'U_CE > 0.8V hoặc transistor nóng: tháo pin — chưa bão hoà hoặc motor kéo quá dòng.' }),
+            { thay: 'U_CE ≲ 0.3V. Transistor ấm nhẹ hoặc nguội.', neu_khong: 'U_CE > 0.8V hoặc transistor nóng: tháo pin. Transistor chưa bão hoà, hoặc motor kéo quá dòng.' }),
           { ten: 'Rút dây bật', lam: ['Rút đầu dây vàng ở thanh +. Motor dừng.'], board: { bo: ['sw'] }, kiem: { thay: 'Motor dừng, không có gì nóng: diode đã hứng xung ngược.', neu_khong: '' } },
           K.thaoPin(),
         ],
       },
     ],
     bang_do: [{ ten: 'Motor', cot: ['I chạy (10A)', 'U_CE khi bật', 'Transistor sau 5s'], hang: [{ ten: 'Số đo', du_doan: ['0.1–0.3 A', '≲ 0.3', 'nguội/ấm'] }] }],
-    bay: ['Không diode: xung ngược giết transistor sau vài lần bật/tắt.', 'Diode cắm ngược: nối tắt pin qua transistor khi bật.', 'Dòng motor > 0.4A: S8050 nóng, chết.', 'Đo dòng motor ở lỗ mA: vượt 200mA, đứt cầu chì đồng hồ. Dùng lỗ 10A.'],
-    robot: ['Đúng mạch này với GPIO thay dây bật (bài 11.3). Motor bánh xe robot thì dùng driver cầu H (chương 13) để đổi được chiều.'],
+    bay: ['Không diode: xung ngược giết transistor sau vài lần bật/tắt.', 'Diode cắm ngược: nối tắt pin qua transistor khi bật.', 'Dòng motor > 0.4A: S8050 nóng, chết.', 'Đo dòng motor ở lỗ mA: vượt 200mA là đứt cầu chì đồng hồ. Dùng lỗ 10A.'],
+    robot: ['Bài 11.3 dùng đúng mạch này, chỉ thay dây bật bằng GPIO. Motor bánh xe robot thì dùng driver cầu H (chương 13) để đổi được chiều quay.'],
   });
 })();
