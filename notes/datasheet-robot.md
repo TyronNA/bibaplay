@@ -22,3 +22,23 @@ Module rời (FC-51, TCRT5000, GY-521, khe quang…) không có datasheet hãng:
 
 Không lấy được datasheet gốc: MP1584 (link MPS hỏng) → giáo trình dùng LM2596. Module khe quang (FC-03 / HC-020K):
 shop ghi khác nhau (HC-020K chỉ 5V, ra 5V) → bài 15.2 bắt **đo chân OUT trước khi nối GPIO**.
+
+## Linh kiện Phần 1–2 + "nên có"
+
+| Linh kiện | Số đã kiểm | Nguồn |
+|---|---|---|
+| DW01A | xem bảng trên (4.30V / 2.50V) — đọc lại từ PDF, khớp | [DW01A Fortune](https://components101.com/sites/default/files/component_datasheet/DW01A-Datasheet.pdf) |
+| IRLZ44N | 55V; VGS ±16V; RDS(on) 0.022Ω @10V, 0.025Ω @5V, 0.035Ω @4V; VGS(th) 1–2V | [Infineon](https://www.infineon.com/dgdl/irlz44npbf.pdf?fileId=5546d462533600a40153567217c32725) |
+| 1N4728A | 3.3V @ IZT 76mA; ZZK 400Ω @1mA; Ptot 1.3W (Vishay; hãng khác 1W) | [Vishay 85816](https://www.vishay.com/docs/85816/1n4728a.pdf) |
+| 1N5819 | 40V, 1A; VF ≤ 0.6V @1A; **IR tối đa 1mA @25°C, 10mA @100°C** | [Vishay 88525](https://www.vishay.com/docs/88525/1n5817.pdf) |
+| 1N4148 | VRRM 100V, VR 75V; IF(AV) 150mA (Vishay; onsemi 200mA) | [Vishay 81857](https://www.vishay.com/docs/81857/1n4148.pdf) |
+| 1N4007 | 1000V, 1A | [Vishay 88503](https://www.vishay.com/docs/88503/1n4001.pdf) |
+| NE555 | VCC 4.5–16V; IO ±200mA (khuyến nghị) | [TI](https://www.ti.com/lit/ds/symlink/ne555.pdf) |
+| LM358 | VS 3–30V (TI bản hiện tại; LM358B 3–36V); đầu vào/ra tới (V+) − 1.5V | [TI](https://www.ti.com/lit/ds/symlink/lm358.pdf) |
+| AMS1117 | sụt ~1.1V điển hình, **tối đa 1.3V** ở tải lớn | [AMS ds1117](http://www.advanced-monolithic.com/pdf/ds1117.pdf) (tải trực tiếp lỗi SSL; số qua nhiều bản mirror) |
+| ESP32-S3 | chân ≤ VDD + 0.3V (3.6V); drive mặc định 20mA, GPIO17/18 10mA, GPIO19/20 40mA; ADC ATTEN3 0–2900mV | [Espressif datasheet](https://www.espressif.com/sites/default/files/documentation/esp32-s3_datasheet_en.pdf) |
+| MAX98357A | 2.5–5.5V; 3.2W vào 4Ω @5V | [ADI](https://www.analog.com/media/en/technical-documentation/data-sheets/max98357a-max98357b.pdf) |
+| INMP441 | VDD 1.8–3.3V; **L/R thấp = kênh trái**, cao = kênh phải (xiaozhi đọc `I2S_STD_SLOT_LEFT`) | [Digi-Key bản HTML datasheet](https://www.digikey.com/htmldatasheets/production/1431884/0/0/1/inmp441-datasheet.html) |
+| Relay SRD-05VDC-SL-C | cuộn 71.4mA / 70Ω (bản 0.36W); đóng ≤ 10ms, nhả ≤ 5ms; tiếp điểm 10A | [Songle](https://www.circuitbasics.com/wp-content/uploads/2015/11/SRD-05VDC-SL-C-Datasheet.pdf) |
+| S8050 | VCEO 25V, IC 0.5A (bản Changjiang/JCET) | shop/mirror — nhiều hãng khác nhau |
+| SS12D00 / KW11-3Z / GL5528 | 0.5A 50VDC / 5A 250VAC / 8–20k @10lux, ≥1MΩ tối, ≤150V, 100mW | trang shop / mirror (không có PDF hãng) |
