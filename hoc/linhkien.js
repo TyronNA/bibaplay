@@ -34,7 +34,7 @@
       kh: kh(net(`8,28 30,28 ${zz(30, 90, 28)} 112,28`) + chu(60, 52, 'R', 'lk-mo'), 'điện trở'),
       chan: ['Không có cực, cắm chiều nào cũng được.', 'Vòng 1–2 là 2 chữ số, vòng 3 là số mũ: nâu·đen·cam = 10·10³ = 10kΩ; đỏ·đỏ·nâu = 220Ω.', 'Không chắc thì rút khỏi mạch rồi đo thang Ω (bài 1.3).'],
       gioi_han: '1/4W = 0.25W. Cắm thẳng vào 4.5V thì cần ≥ 81Ω.',
-      bay: 'Đo Ω khi điện trở còn trong mạch có pin → số sai, có khi hỏng đồng hồ.',
+      bay: 'Đo Ω khi điện trở còn nằm trong mạch có pin thì số sai, có khi hỏng đồng hồ.',
       bai: ['1.2', '1.3', '1.4', '1.5', '1.6', '2.2', '2.3', '2.4', '2.5', '3.1', '4.3', '4.4', '5.2', '5.6', '6.1', '6.3', '6.5', '0.1', '9.7', '11.4', '13.4'] },
 
     { id: 'led', nhom: 'lk', ten: 'LED 5mm', tim: 'LED 5mm',
@@ -47,7 +47,7 @@
       kh: diodeKh('LED', muiTen(58, 12, 70, 2) + muiTen(66, 16, 78, 6)),
       chan: ['Chân dài = + (anode, A). Chân ngắn = − (cathode, K).', 'Chân đã cắt bằng nhau: nhìn mép vành, bên phẳng là −. Hoặc đo thang diode: sáng mờ khi que đỏ ở A.'],
       gioi_han: 'Dòng ≤ 20mA. Luôn có điện trở nối tiếp (220Ω với 4.5V).',
-      bay: 'Cắm LED thẳng vào pin không qua điện trở → cháy LED ngay.',
+      bay: 'Cắm LED thẳng vào pin không qua điện trở là cháy LED ngay.',
       bai: ['1.2', '2.3', '3.2', '4.1', '4.2', '4.4', '5.2', '5.4', '5.6', '6.3', '6.5', '0.4', '9.8'] },
 
     { id: 'nut-nhan', nhom: 'lk', ten: 'Nút nhấn 6×6mm', tim: 'Nút nhấn',
@@ -60,7 +60,7 @@
       kh: kh(net('8,40 40,40') + '<circle cx="42" cy="40" r="2.5" class="lk-dac"/><circle cx="78" cy="40" r="2.5" class="lk-dac"/>' + net('80,40 112,40') + net('36,28 84,28') + net('60,28 60,12') + net('52,12 68,12'), 'nút nhấn thường hở'),
       chan: ['4 chân nhưng chỉ là 1 công tắc: 2 cặp chân luôn thông với nhau sẵn.', 'Đo thông mạch từng cặp khi chưa nhấn: cặp kêu bíp là cặp luôn thông. Nhấn giữ thì 2 cặp nối vào nhau.', 'Cắm vắt qua rãnh giữa breadboard.'],
       gioi_han: 'Chỉ cho tín hiệu vài mA, không bật motor.',
-      bay: 'Cắm 2 chân luôn-thông vào 2 bên mạch → mạch luôn nối, nhấn không có tác dụng.',
+      bay: 'Cắm 2 chân luôn thông vào 2 bên mạch thì mạch luôn nối, nhấn không có tác dụng.',
       bai: ['6.1', '6.4', '9.8'] },
 
     { id: 'bien-tro', nhom: 'lk', ten: 'Biến trở RM065 10k', tim: 'RM065',
@@ -74,7 +74,7 @@
       kh: kh(net(`8,36 26,36 ${zz(26, 94, 36)} 112,36`) + muiTen(60, 6, 60, 26) + chu(18, 26, 'A', 'lk-mo') + chu(102, 26, 'B', 'lk-mo') + chu(70, 12, 'W', 'lk-mo', 'start'), 'biến trở'),
       chan: ['2 đầu dải than (A, B) + con trượt (W). Cặp nào vặn mà Ω không đổi (~10k) là A–B; chân còn lại là W.', 'Luôn có R(A–W) + R(W–B) ≈ 10k.'],
       gioi_han: 'Cỡ 0.1W. Dòng qua đoạn nhỏ gần 0Ω vẫn cháy được.',
-      bay: 'Nối W thẳng vào + hoặc − pin rồi vặn về đầu kia → nối tắt pin, bốc khói (đã cháy 1 con ở bài 2.3).',
+      bay: 'Nối W thẳng vào + hoặc − pin rồi vặn về đầu kia là nối tắt pin, bốc khói (bài 2.3 đã cháy 1 con như vậy).',
       bai: ['2.3', '5.2', '5.4', '6.5'] },
 
     { id: 'quang-tro', nhom: 'lk', ten: 'Quang trở GL5528', tim: 'GL5528',
@@ -86,7 +86,7 @@
       kh: kh(net(`8,36 30,36 ${zz(30, 90, 36)} 112,36`) + muiTen(40, 4, 52, 18) + muiTen(54, 4, 66, 18), 'quang trở'),
       chan: ['Không có cực.', 'Là điện trở đổi theo ánh sáng: đo thang 200k, lấy tay che rồi soi đèn để thấy số chạy.'],
       gioi_han: 'Cỡ 0.1W, áp ≤ 150V — ở đây không lo.',
-      bay: 'Đặt ở trên hay ở dưới cầu phân áp thì chiều áp ra ngược nhau (poster bài 16 ghi ngược).',
+      bay: 'Đặt ở trên hay ở dưới cầu phân áp thì chiều áp ra ngược nhau (poster kèm bộ kit, bài 16, ghi ngược chỗ này).',
       bai: ['2.4', '5.4', '6.5'] },
 
     { id: 'tu-hoa', nhom: 'lk', ten: 'Tụ hoá 10µF / 100µF 16V', tim: 'Tụ hoá',
@@ -99,8 +99,8 @@
         ${chu(8, 16, 'cắm ngược / quá 16V → phồng, nổ', 'lk-xau', 'start')}`, 'Tụ hoá hình trụ xanh, vạch sáng có dấu trừ ở một bên, chân dài là cực dương'),
       kh: kh(net('8,28 52,28') + net('52,12 52,44') + '<path d="M66 12 Q58 28 66 44" class="lk-net"/>' + net('62,28 112,28') + chu(42, 14, '+', 'lk-mo'), 'tụ có cực'),
       chan: ['Có cực. Chân dài = +. Bên có vạch in dấu − là chân −.', 'Số in trên thân: điện dung (µF) và áp tối đa (16V).'],
-      gioi_han: 'Áp ≤ 16V (mình dùng 4.5V, dư). Sau này nguồn 5V vẫn an toàn.',
-      bay: 'Cắm ngược cực → nóng, phồng, có thể nổ. Tụ đã nạp giữ điện sau khi rút pin: chạm 2 chân qua điện trở để xả.',
+      gioi_han: 'Áp ≤ 16V. Các bài dùng 4.5V nên còn dư nhiều, sau này lên nguồn 5V vẫn an toàn.',
+      bay: 'Cắm ngược cực thì tụ nóng, phồng, có thể nổ. Tụ đã nạp vẫn giữ điện sau khi rút pin: nối 2 chân qua một điện trở để xả.',
       bai: ['3.1', '3.2', '3.3', '6.3'] },
 
     { id: 'tu-gom', nhom: 'lk', ten: 'Tụ gốm 104 = 100nF', tim: 'Tụ gốm',
@@ -112,7 +112,7 @@
       kh: kh(net('8,28 54,28') + net('54,12 54,44') + net('66,12 66,44') + net('66,28 112,28'), 'tụ không cực'),
       chan: ['Không có cực.', 'Số 104 đọc như điện trở, đơn vị pF: 10·10⁴ pF = 100nF = 0.1µF.'],
       gioi_han: 'Áp ≤ 50V.',
-      bay: 'Điện dung quá nhỏ để trữ điện — dùng để lọc nhiễu, không thay được tụ hoá (bài 3.4).',
+      bay: 'Điện dung quá nhỏ để trữ điện. Tụ gốm dùng để lọc nhiễu, không thay được tụ hoá (bài 3.4).',
       bai: ['3.4'] },
 
     { id: '1n4148', nhom: 'lk', ten: 'Diode 1N4148', tim: 'Diode 1N4148',
@@ -148,9 +148,9 @@
         ${chu(8, 16, 'thứ tự chân theo lô → dò bằng bài 5.1', 'lk-canh', 'start')}`, 'Transistor S8050 vỏ TO-92 đen, mặt phẳng có chữ, 3 chân chưa biết thứ tự'),
       kh: kh('<circle cx="64" cy="28" r="22" class="lk-net"/>' + net('8,28 56,28') + net('56,14 56,42') + net('56,22 76,10 76,2') + net('56,34 76,46 76,54')
         + '<polygon points="76,46 66,44 71,38" class="lk-dac"/>' + chu(14, 20, 'B', 'lk-mo') + chu(88, 13, 'C', 'lk-mo') + chu(88, 50, 'E', 'lk-mo'), 'transistor NPN'),
-      chan: ['3 chân B (điều khiển), C, E. Thường gặp là E·B·C khi mặt có chữ hướng về mình, chân chúc xuống — nhưng tuỳ lô, poster còn ghi khác.', 'Dò bằng thang diode: chân B là chân dẫn ~0.7V sang cả 2 chân kia (bài 5.1).'],
+      chan: ['3 chân B (điều khiển), C, E. Hay gặp nhất là E·B·C khi mặt có chữ hướng về bạn, chân chúc xuống. Nhưng thứ tự đổi theo lô, poster kèm bộ kit còn ghi khác nữa.', 'Dò bằng thang diode: chân B là chân dẫn ~0.7V sang cả 2 chân kia (bài 5.1).'],
       gioi_han: 'Ic ≤ ~0.5A (tuỳ datasheet lô), Vce ≤ 25V. Luôn có điện trở ở chân B.',
-      bay: 'Chân B nối thẳng vào + không qua điện trở → cháy mối B–E.',
+      bay: 'Chân B nối thẳng vào + không qua điện trở là cháy mối B–E.',
       bai: ['5.1', '5.2', '5.3', '5.4', '5.5', '6.2', '6.3', '6.4', '7.4', '11.4'] },
 
     { id: 'day-nhay', nhom: 'dc', ten: 'Dây nhảy đực–đực', tim: 'Dây nhảy',
@@ -162,7 +162,7 @@
       kh: '',
       chan: ['Không có chiều. Quy ước màu: đỏ = +, đen/xanh = −, màu khác cho tín hiệu.'],
       gioi_han: 'Dây mảnh: vài trăm mA thì ổn, motor lớn thì nóng.',
-      bay: 'Kim bị cong hoặc cắm chưa ngập → lỏng tiếp xúc, số đo nhảy.',
+      bay: 'Kim bị cong hoặc cắm chưa ngập thì tiếp xúc lỏng, số đo nhảy.',
       bai: null },
 
     { id: 'breadboard', nhom: 'dc', ten: 'Breadboard MB-102', tim: 'MB-102',
@@ -178,7 +178,7 @@
       kh: '',
       chan: ['Mỗi cột có 2 nhóm 5 lỗ (a–e, f–j) thông nhau; rãnh giữa ngăn 2 nhóm.', 'Thanh nguồn +/− chạy dọc mép, thông theo hàng ngang. Có loại MB-102 đứt thanh nguồn ở giữa — đo thông mạch 2 đầu thanh cho chắc.'],
       gioi_han: 'Tiếp điểm chịu ~1A. Không cắm chân quá to (chân diode 1N4007 vừa khít).',
-      bay: '2 chân linh kiện cùng 1 cột = nối tắt sẵn linh kiện đó.',
+      bay: 'Cắm 2 chân một linh kiện vào cùng 1 cột là nối tắt sẵn linh kiện đó.',
       bai: null },
 
     { id: 'dong-ho', nhom: 'dc', ten: 'Đồng hồ vạn năng', tim: 'đồng hồ vạn năng',
@@ -191,9 +191,9 @@
         ${g(152, 78, 196, 78, 'núm thang')}${g(132, 124, 70, 118, 'đen → COM', 'end')}${g(162, 124, 196, 124, 'đỏ → VΩ')}
         ${g(92, 30, 70, 30, 'hiện 1 = quá', 'end')}`, 'Đồng hồ vạn năng: màn LCD, núm xoay chọn thang, 3 lỗ cắm que 10A, COM, VΩmA'),
       kh: kh('<circle cx="60" cy="28" r="16" class="lk-net"/>' + net('8,28 44,28') + net('76,28 112,28') + chu(60, 33, 'V', 'lk-chu-kh'), 'vôn kế'),
-      chan: ['Que đen luôn ở COM. Que đỏ ở VΩ để đo áp/Ω; chỉ chuyển sang lỗ mA khi đo dòng, đo xong trả về VΩ ngay.', 'Vị trí 3 lỗ khác nhau giữa các đời máy — đọc chữ in cạnh lỗ trên máy của bạn.'],
+      chan: ['Que đen luôn ở COM. Que đỏ ở VΩ để đo áp/Ω; chỉ chuyển sang lỗ mA khi đo dòng, đo xong trả về VΩ ngay.', 'Vị trí 3 lỗ khác nhau giữa các đời máy, nên đọc chữ in cạnh lỗ trên máy của bạn.'],
       gioi_han: 'Lỗ mA thường có cầu chì ~200mA; lỗ 10A không cầu chì.',
-      bay: 'Que đỏ ở lỗ mA mà đặt song song đo áp pin = nối tắt pin qua đồng hồ.',
+      bay: 'Que đỏ đang ở lỗ mA mà đặt song song để đo áp pin là nối tắt pin qua đồng hồ.',
       bai: null },
 
     { id: 'kep-ca-sau', nhom: 'dc', ten: 'Kẹp cá sấu', tim: 'kẹp cá sấu',
@@ -214,7 +214,7 @@
         ${chu(130, 20, '3 × 1.5V nối tiếp = 4.5V (pin mới ~4.8V)', 'lk-chu')}${chu(216, 146, 'đỏ = +', 'lk-chu', 'end')}${chu(46, 146, 'đen = −', 'lk-chu', 'start')}`, 'Hộp 3 pin AAA nối tiếp, dây đỏ cực dương, dây đen cực âm'),
       kh: kh(net('8,28 52,28') + net('52,14 52,42') + net('62,20 62,36') + net('62,28 112,28') + chu(46, 12, '+', 'lk-mo'), 'nguồn pin'),
       chan: ['Dây đỏ = +, dây đen = −.', 'Áp: pin mới ~4.7–4.8V, gần hết ~3.3V.'],
-      gioi_han: 'Dòng nối tắt vài A trong tích tắc — đủ làm nóng dây, cháy biến trở.',
+      gioi_han: 'Nối tắt là ra vài A trong tích tắc, đủ làm nóng dây và cháy biến trở.',
       bay: 'Không nối 2 hộp với nhau. Tháo pin trước mỗi lần sửa mạch.',
       bai: null },
 
@@ -228,8 +228,8 @@
         ${chu(134, 22, 'lúc khởi động hút dòng lớn', 'lk-canh')}`, 'Motor DC hình trụ bạc, trục bên phải, 2 cực nối dây đỏ và đen'),
       kh: kh('<circle cx="60" cy="28" r="16" class="lk-net"/>' + net('8,28 44,28') + net('76,28 112,28') + chu(60, 33, 'M', 'lk-chu-kh'), 'motor'),
       chan: ['2 cực, không có cực tính cố định: đảo dây thì quay ngược.'],
-      gioi_han: 'Chưa đo dòng. Đo trước (bài 1.2) rồi mới chọn transistor/driver.',
-      bay: 'Tắt motor sinh xung áp ngược → cần diode 1N4007 song song (bài 7.4). Không chạy motor từ chân ESP32.',
+      gioi_han: 'Dòng tuỳ từng motor, không in sẵn trên vỏ. Đo trước (bài 1.2) rồi mới chọn transistor hay driver.',
+      bay: 'Lúc tắt, motor sinh xung áp ngược, nên cần diode 1N4007 mắc song song (bài 7.4). Không chạy motor thẳng từ chân ESP32.',
       bai: ['7.3', '7.4', '13.4'] },
 
     { id: 'pin-li', nhom: 'quat', ten: 'Pin lithium 1S (trong quạt)', tim: 'pin 1S',
@@ -239,7 +239,7 @@
         ${g(219, 75, 240, 112, '+', 'middle')}${chu(130, 144, 'hình minh hoạ — chưa tháo nên chưa biết loại', 'lk-mo')}
         ${chu(130, 26, 'nối tắt = nóng, cháy thật · chưa dùng', 'lk-xau')}`, 'Pin lithium 1S hình trụ xanh 3.7V'),
       kh: kh(net('8,28 52,28') + net('52,14 52,42') + net('62,20 62,36') + net('62,28 112,28') + chu(46, 12, '+', 'lk-mo'), 'pin 1 cell'),
-      chan: ['1 cell: 3.0V (cạn) → 4.2V (đầy), danh định 3.7V.'],
+      chan: ['1 cell đi từ 3.0V (cạn) tới 4.2V (đầy), danh định 3.7V.'],
       gioi_han: 'Phải có mạch bảo vệ + mạch sạc riêng cho lithium (TP4056 kiểu có bảo vệ).',
       bay: 'Không dùng cho bài breadboard. Chập mạch pin lithium là cháy thật, không chỉ nóng như AAA.',
       bai: [] },
@@ -254,7 +254,7 @@
         ${chu(130, 136, 'men là cách điện: chưa cạo thì không dẫn', 'lk-mo')}`, 'Cuộn dây đồng emay, đầu dây đã cạo men sáng màu'),
       kh: kh('<path d="M8 36 H28 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0 H112" class="lk-net"/>' + chu(60, 52, 'L', 'lk-mo'), 'cuộn cảm'),
       chan: ['Cạo men 2 đầu bằng giấy nhám tới khi thấy màu đồng sáng; đo thông mạch 2 đầu để chắc đã cạo đủ.'],
-      gioi_han: 'Cuộn vài chục vòng chỉ cỡ 1Ω → nối vào pin là gần như nối tắt.',
+      gioi_han: 'Cuộn vài chục vòng chỉ cỡ 1Ω, nên nối vào pin là gần như nối tắt.',
       bay: 'Chỉ dùng 1 viên AAA, chạm vài giây rồi nhả (dây và pin nóng nhanh). Không bao giờ với pin lithium.',
       bai: ['7.1', '7.2'] },
 
@@ -276,7 +276,7 @@
         <rect x="186" y="88" width="56" height="44" rx="2" fill="#C9A77A"/>
         ${g(120, 46, 120, 24, 'đinh sắt: lõi nam châm điện', 'middle')}${g(150, 96, 164, 78, 'kẹp giấy')}${g(190, 124, 172, 140, 'giấy nhám', 'end')}`, 'Đinh sắt, kẹp giấy và một miếng giấy nhám'),
       kh: '',
-      chan: ['Đinh phải là sắt (nam châm hút được) — nhôm/đồng thì không làm lõi được.', 'Kẹp giấy làm vật để hút và làm giá đỡ trục motor tự quấn (7.2).'],
+      chan: ['Đinh phải là sắt (nam châm hút được). Nhôm hay đồng không làm lõi được.', 'Kẹp giấy làm vật để hút và làm giá đỡ trục motor tự quấn (7.2).'],
       gioi_han: '',
       bay: '',
       bai: ['7.1', '7.2'] },
@@ -293,8 +293,8 @@
         ${chu(130, 140, 'luôn gác lên đế · rút điện khi xong', 'lk-xau')}`, 'Mỏ hàn bút: tay cầm đen có núm chỉnh nhiệt, thân kim loại, mũi nhọn'),
       kh: '',
       chan: ['Cầm ở tay cầm như cầm bút. Hàn ở ~320–350°C; lau mũi vào búi đồng trước mỗi mối.', 'Mối hàn: đặt mũi chạm cả chân linh kiện lẫn pad, đưa thiếc vào chỗ tiếp xúc (không đưa lên mũi), 2–3 giây rồi nhấc.'],
-      gioi_han: 'Loại cắm thẳng không chỉnh nhiệt dễ quá nóng → bong pad mạch in.',
-      bay: 'Thân và mũi ~350°C: bỏng ngay. Không để nằm trên bàn; mở cửa sổ vì khói nhựa thông.',
+      gioi_han: 'Loại cắm thẳng không chỉnh nhiệt dễ quá nóng, làm bong pad mạch in.',
+      bay: 'Thân và mũi ~350°C, chạm vào là bỏng ngay. Không để mỏ hàn nằm trên bàn, và mở cửa sổ vì khói nhựa thông.',
       bai: ['0.1', '0.2', '0.3', '0.4', '12.2', '12.3', '12.5'] },
 
     { id: 'thiec', nhom: 'han', ten: 'Thiếc hàn + flux', tim: 'thiếc hàn', mua: 'đợt 1 · can-mua.md',
@@ -331,7 +331,7 @@
         <polygon points="166,68 228,73 228,77 166,82" fill="#8A949E" ${vien}/><line x1="178" y1="75" x2="228" y2="75" stroke="#3B4652"/>
         <circle cx="170" cy="75" r="5" fill="#6E767E"/>
         ${g(214, 73, 214, 40, 'lưỡi phẳng 1 mặt', 'middle')}${chu(130, 136, 'cắt sát mối hàn · chân cắt văng: che tay', 'lk-canh')}`, 'Kìm cắt chân linh kiện tay cầm đỏ'),
-      kh: '', chan: ['Mặt phẳng của lưỡi áp về phía mối hàn để cắt sát.'], gioi_han: 'Chỉ cắt chân linh kiện, dây đồng nhỏ — không cắt dây thép.',
+      kh: '', chan: ['Mặt phẳng của lưỡi áp về phía mối hàn để cắt sát.'], gioi_han: 'Chỉ cắt chân linh kiện và dây đồng nhỏ, không cắt dây thép.',
       bay: 'Đoạn chân cắt văng ra rất nhanh: che bằng tay kia, hướng ra xa mắt.', bai: ['0.1', '0.4', '12.5'] },
 
     { id: 'kim-tuot', nhom: 'han', ten: 'Kìm tuốt dây', tim: 'tuốt dây', mua: 'đợt 1 · can-mua.md',
@@ -340,7 +340,7 @@
         <rect x="162" y="62" width="74" height="26" rx="3" fill="#8A949E" ${vien}/>
         ${[176, 192, 208, 222].map(x => `<circle cx="${x}" cy="75" r="3.2" fill="#3B4652"/>`).join('')}
         ${g(192, 75, 192, 40, 'lỗ theo cỡ dây (AWG)', 'middle')}${chu(130, 136, 'chọn đúng lỗ: tuốt vỏ, không đứt lõi', 'lk-mo')}`, 'Kìm tuốt dây có hàng lỗ theo cỡ dây'),
-      kh: '', chan: ['Dây 22AWG → lỗ 22. Lỗ nhỏ hơn là cắt vào lõi đồng.'], gioi_han: '', bay: '', bai: ['12.5'] },
+      kh: '', chan: ['Dây 22AWG thì dùng lỗ 22. Lỗ nhỏ hơn sẽ cắt vào lõi đồng.'], gioi_han: '', bay: '', bai: ['12.5'] },
 
     { id: 'tay-3', nhom: 'han', ten: 'Kẹp "bàn tay thứ ba"', tim: 'bàn tay thứ ba', mua: 'đợt 1 · can-mua.md',
       anh: anh(`<rect x="60" y="120" width="140" height="16" rx="3" fill="#3B4652"/><line x1="130" y1="120" x2="130" y2="46" stroke="#6E767E" stroke-width="4"/>
@@ -356,7 +356,7 @@
         <rect x="120" y="71" width="100" height="6" fill="#B8BEC4"/><polygon points="220,70 234,72 234,76 220,78" fill="#8A949E"/>
         ${g(232, 74, 232, 104, 'đầu dẹt 2mm', 'middle')}${chu(120, 40, 'vặn biến trở RM065', 'lk-mo')}
         ${chu(130, 136, 'tới chặn thì dừng, vặn cố là gãy', 'lk-canh')}`, 'Tua vít mini đầu dẹt tay cầm xanh'),
-      kh: '', chan: ['Đầu dẹt 2mm vừa rãnh rotor RM065.'], gioi_han: '', bay: 'Tua vít kim loại chạm 2 chân đang có điện = nối tắt.', bai: ['2.3'] },
+      kh: '', chan: ['Đầu dẹt 2mm vừa rãnh rotor RM065.'], gioi_han: '', bay: 'Tua vít kim loại chạm 2 chân đang có điện là nối tắt.', bai: ['2.3'] },
 
     { id: 'day-loi-don', nhom: 'han', ten: 'Dây lõi đơn 22AWG', tim: 'lõi đơn', mua: 'đợt 1 · can-mua.md',
       anh: anh(`<path d="M30 112 V60 H90 V112" fill="none" stroke="#D8322A" stroke-width="5"/><path d="M110 112 V44 H190 V112" fill="none" stroke="#E8B90C" stroke-width="5"/>
@@ -378,9 +378,9 @@
         ${chu(120, 16, 'GPIO 3.3V — không chịu 5V', 'lk-xau')}${chu(110, 30, '2 × 22 chân: ghép 2 breadboard', 'lk-mo')}
         ${chu(130, 146, 'đọc chữ in cạnh chân: 3V3 · 5V · GND · số GPIO', 'lk-mo')}`, 'Board ESP32-S3: module kim loại có ăng-ten, 2 hàng 22 chân, cổng USB-C, nút BOOT và RST'),
       kh: '',
-      chan: ['Chân nguồn: 3V3, 5V (có board ghi VIN), GND. Còn lại là GPIO — số in cạnh chân.', 'Nếu board có 2 cổng USB-C: một cổng qua chip UART (COM), một cổng USB của chip — xem chữ in.', 'Không đụng: GPIO0/3/45/46 (strapping), 26–37 (flash/PSRAM bản R8), 19/20 (USB), 43/44 (UART nạp code) — đã đối chiếu datasheet v2.2, chi tiết ở bài 9.6.'],
-      gioi_han: 'Mọi chân tối đa 3.6V. Mặc định 20mA/chân (GPIO17/18: 10mA). ADC đo đúng 0–2.9V (suy hao 12dB). Nguồn: datasheet ESP32-S3 v2.2.',
-      bay: 'Nối 5V vào GPIO hoặc nối tắt 3V3–GND khi đang cắm USB → hỏng chip/cổng USB máy tính. Rút USB trước khi sửa dây.',
+      chan: ['Chân nguồn là 3V3, 5V (có board ghi VIN) và GND. Còn lại là GPIO, số in cạnh chân.', 'Board có 2 cổng USB-C thì một cổng đi qua chip UART (COM), cổng kia là USB của chính chip. Xem chữ in cạnh cổng.', 'Tránh các chân GPIO0/3/45/46 (strapping), 26–37 (flash/PSRAM bản R8), 19/20 (USB), 43/44 (UART nạp code). Danh sách này đã đối chiếu datasheet v2.2, chi tiết ở bài 9.6.'],
+      gioi_han: 'Mọi chân chịu tối đa 3.6V. Mặc định mỗi chân cho 20mA (GPIO17/18 chỉ 10mA). ADC đo đúng trong khoảng 0–2.9V (suy hao 12dB). Nguồn: datasheet ESP32-S3 v2.2.',
+      bay: 'Nối 5V vào GPIO, hoặc nối tắt 3V3 với GND khi đang cắm USB, là hỏng chip hoặc hỏng cổng USB máy tính. Rút USB trước khi sửa dây.',
       bai: ['8.1', '8.3', '8.4', '9.1', '9.2', '9.3', '9.4', '9.5', '9.6', '9.7', '9.8', '10.1', '10.2', '10.3', '10.4', '11.1', '11.2', '11.3', '11.4', '12.1', '12.2', '12.3', '12.4', '12.5', '13.1', '13.2', '13.3', '13.4', '15.4', '17.2'] },
 
     { id: 'inmp441', nhom: 'esp', ten: 'Mic I2S INMP441', tim: 'INMP441', mua: 'giỏ đã chốt · xiaozhi-bom.md',
@@ -391,9 +391,9 @@
         ${chu(130, 138, '6 chân: SCK · WS · L/R · SD · VDD · GND', 'lk-mo')}
         ${chu(130, 152, 'thứ tự chân: đọc chữ in trên module', 'lk-canh')}`, 'Module mic INMP441 tròn màu tím, 6 chân', 160),
       kh: '',
-      chan: ['SCK → GPIO5, WS → GPIO4, SD → GPIO6 (bread-compact-wifi). L/R → GND (kênh trái). VDD → 3V3, GND → GND.'],
+      chan: ['Nối theo board bread-compact-wifi: SCK → GPIO5, WS → GPIO4, SD → GPIO6.', 'L/R nối GND để mic ra kênh trái. VDD → 3V3, GND → GND.'],
       gioi_han: 'VDD 1.8–3.3V.',
-      bay: 'Cấp 5V vào VDD là hỏng mic. Header phải tự hàn.',
+      bay: 'Cấp 5V vào VDD là hỏng mic. Module bán kèm header rời, bạn phải tự hàn.',
       bai: ['0.2', '12.2', '12.5', '17.2'] },
 
     { id: 'max98357a', nhom: 'esp', ten: 'Ampli I2S MAX98357A', tim: 'MAX98357A', mua: 'giỏ đã chốt · xiaozhi-bom.md',
@@ -404,9 +404,9 @@
         ${g(210, 84, 236, 108, 'ra loa', 'middle')}${chu(130, 18, 'loa: không nối đầu nào xuống GND', 'lk-xau')}
         ${chu(130, 140, 'LRC · BCLK · DIN · GAIN · SD · GND · VIN', 'lk-mo')}`, 'Module ampli MAX98357A tím, 7 chân và cọc bắt 2 dây loa'),
       kh: '',
-      chan: ['DIN → GPIO7, BCLK → GPIO15, LRC → GPIO16. VIN → 5V, GND → GND. GAIN, SD để trống theo mặc định.', 'Loa nối 2 cọc +/− của module.'],
-      gioi_han: 'VIN 2.5–5.5V. Ra ~3W ở 5V/4Ω — loa điện thoại chịu ít hơn nhiều.',
-      bay: 'Ngõ ra loa là cầu (BTL): nối đầu − loa xuống GND là nối tắt ngõ ra.',
+      chan: ['Nối theo board bread-compact-wifi: DIN → GPIO7, BCLK → GPIO15, LRC → GPIO16.', 'VIN → 5V, GND → GND. GAIN và SD để trống (dùng mặc định).', 'Loa nối vào 2 cọc +/− của module.'],
+      gioi_han: 'VIN 2.5–5.5V. Ở 5V với loa 4Ω, module ra được ~3W, nhiều hơn hẳn sức chịu của loa điện thoại.',
+      bay: 'Ngõ ra loa kiểu cầu (BTL): cả 2 cọc đều mang tín hiệu, không cọc nào là GND. Nối đầu − loa xuống GND là nối tắt ngõ ra.',
       bai: ['12.3', '12.5'] },
 
     { id: 'oled', nhom: 'esp', ten: 'OLED 0.96" 128×64 I2C', tim: 'OLED', mua: 'giỏ đã chốt · xiaozhi-bom.md',
@@ -417,8 +417,8 @@
         ${chu(130, 12, 'GND · VCC · SCL · SDA ?', 'lk-mo')}
         ${g(182, 80, 214, 80, '128×64')}${chu(130, 140, 'thứ tự 4 chân tuỳ shop → đọc chữ in', 'lk-canh')}`, 'Màn OLED 0.96 inch trên mạch xanh, 4 chân I2C ở cạnh trên'),
       kh: '',
-      chan: ['4 chân: GND, VCC, SCL → GPIO42, SDA → GPIO41. Thứ tự GND/VCC có shop đảo ngược — đọc chữ in.', 'Địa chỉ I2C thường 0x3C.'],
-      gioi_han: 'VCC thường 3.3–5V (module có ổn áp) — kiểm chữ in/shop; cấp 3V3 cho chắc.',
+      chan: ['4 chân GND, VCC, SCL, SDA. Nối SCL → GPIO42, SDA → GPIO41.', 'Có shop bán loại đảo chỗ GND với VCC, nên đọc chữ in trên module trước khi cắm.', 'Địa chỉ I2C thường là 0x3C.'],
+      gioi_han: 'Module thường có ổn áp nên VCC nhận 3.3–5V. Kiểm chữ in hoặc trang shop, và cấp 3V3 cho chắc.',
       bay: 'Cắm đảo GND/VCC là hỏng màn.',
       bai: ['12.1', '12.4', '12.5'] },
 
@@ -426,10 +426,10 @@
       anh: anh(`<rect x="80" y="40" width="100" height="60" rx="8" fill="#2A3440" ${vien}/><rect x="90" y="50" width="80" height="40" rx="4" fill="#46525E"/>
         ${Array.from({ length: 24 }, (_, i) => `<circle cx="${98 + (i % 8) * 9.5}" cy="${57 + Math.floor(i / 8) * 13}" r="1.6" fill="#1B1F24"/>`).join('')}
         <rect x="68" y="54" width="12" height="8" fill="#C9A640"/><rect x="68" y="78" width="12" height="8" fill="#C9A640"/>
-        ${g(70, 58, 56, 40, '2 miếng hàn', 'end')}${chu(130, 128, 'chịu ~0.5–1W (chưa kiểm) · volume ~60%', 'lk-canh')}`, 'Loa điện thoại hình chữ nhật có lưới, 2 miếng hàn'),
+        ${g(70, 58, 56, 40, '2 miếng hàn', 'end')}${chu(130, 128, 'thường ~0.5–1W · để volume ~60%', 'lk-canh')}`, 'Loa điện thoại hình chữ nhật có lưới, 2 miếng hàn'),
       kh: kh(net('8,20 36,20') + net('8,36 36,36') + '<rect x="36" y="14" width="12" height="28" class="lk-net"/>' + '<polygon points="48,14 70,2 70,54 48,42" class="lk-net"/>', 'loa'),
       chan: ['2 miếng hàn, không có cực quan trọng với 1 loa. Hàn 2 dây rồi bắt vào cọc của MAX98357A.'],
-      gioi_han: 'Công suất chưa kiểm: để volume vừa.', bay: 'Hàn lâu trên miếng hàn nhỏ → bong. Hàn nhanh, đã tráng thiếc sẵn.', bai: ['12.3', '12.5'] },
+      gioi_han: 'Loa tháo từ điện thoại không ghi công suất (thường cỡ 0.5–1W), nên để volume vừa phải.', bay: 'Hàn lâu trên miếng hàn nhỏ là bong. Tráng thiếc sẵn rồi hàn nhanh.', bai: ['12.3', '12.5'] },
 
     { id: 'cap-usbc', nhom: 'esp', ten: 'Cáp USB-C có truyền data', tim: 'USB-C có data', mua: 'kiểm cáp đang có',
       anh: anh(`<path d="M60 75 C 100 120, 160 30, 200 75" fill="none" stroke="#23303D" stroke-width="5"/>
@@ -437,7 +437,7 @@
         <rect x="200" y="66" width="40" height="18" rx="8" fill="#B8BEC4" ${vien}/><rect x="240" y="70" width="12" height="10" rx="4" fill="#3B4652"/>
         ${g(2, 75, 2, 110, 'USB-A (máy tính)', 'start')}${g(246, 75, 246, 110, 'USB-C', 'middle')}
         ${chu(130, 140, 'cáp chỉ sạc → máy không thấy board', 'lk-canh')}`, 'Cáp USB-A sang USB-C'),
-      kh: '', chan: ['Cắm board vào máy: máy phải hiện cổng mới (ls /dev/cu.*). Không hiện → thử cáp khác trước.'], gioi_han: '',
+      kh: '', chan: ['Cắm board vào máy thì máy phải hiện thêm một cổng mới (macOS: <code>ls /dev/cu.*</code>). Không thấy cổng mới thì thử cáp khác trước.'], gioi_han: '',
       bay: 'Cáp sạc rẻ thiếu dây data: board vẫn sáng đèn nhưng không nạp được code.', bai: ['8.1'] },
 
     { id: 'day-duc-cai', nhom: 'esp', ten: 'Dây nhảy đực–cái', tim: 'đực–cái', mua: 'đợt 2 · can-mua.md',
@@ -456,8 +456,8 @@
         ${[110, 130, 150].map(x => `<circle cx="${x}" cy="94" r="2.6" fill="#C9A640"/>${chan(x, 97, 122)}`).join('')}
         ${chu(130, 136, 'chân: đọc chữ in (VIN · GND · VOUT)', 'lk-canh')}${chu(130, 20, 'áp vào phải ≳ 4.4V mới ra đủ 3.3V', 'lk-mo')}`, 'Module ổn áp AMS1117 xanh, 3 chân'),
       kh: kh('<rect x="40" y="10" width="40" height="26" class="lk-net"/>' + net('8,20 40,20') + net('80,20 112,20') + net('60,36 60,52') + chu(60, 27, 'REG', 'lk-mo') + chu(16, 14, 'IN', 'lk-mo') + chu(104, 14, 'OUT', 'lk-mo'), 'ổn áp'),
-      chan: ['3 chân: VIN, GND, VOUT (3.3V). Thứ tự trên module tuỳ loại — đọc chữ in.'],
-      gioi_han: 'Sụt ~1.1V: vào 5V ra 3.3V ổn; vào 4.5V là sát ngưỡng. Phần áp dư thành nhiệt.',
+      chan: ['3 chân VIN, GND, VOUT (3.3V). Thứ tự chân đổi theo loại module, nên đọc chữ in.'],
+      gioi_han: 'Áp vào phải cao hơn áp ra khoảng 1.1V. Vào 5V ra 3.3V là ổn, vào 4.5V thì sát ngưỡng. Phần áp dư biến thành nhiệt.',
       bay: 'Nối ngược VIN/VOUT hoặc cấp quá áp → nóng, hỏng.', bai: ['8.2'] },
 
     { id: 'driver-motor', nhom: 'sau', ten: 'Module driver motor (cầu H)', tim: 'driver motor', mua: 'đợt 3 · chọn lúc tới nơi',
@@ -467,9 +467,9 @@
         ${g(42, 55, 30, 40, 'motor A', 'end')}${g(42, 89, 42, 120, 'nguồn motor', 'middle')}${g(206, 62, 236, 40, 'IN ← GPIO', 'middle')}
         ${chu(150, 146, 'chưa chọn loại — hình chung chung', 'lk-mo')}`, 'Module driver motor chung: IC giữa, cọc bắt dây motor và nguồn, chân điều khiển'),
       kh: kh(net('20,4 20,14') + net('20,14 14,22') + net('20,22 20,34') + net('20,34 14,42') + net('20,42 20,52') + net('100,4 100,14') + net('100,14 106,22') + net('100,22 100,34') + net('100,34 106,42') + net('100,42 100,52') + net('20,4 100,4') + net('20,52 100,52') + net('20,28 48,28') + net('72,28 100,28') + '<circle cx="60" cy="28" r="12" class="lk-net"/>' + chu(60, 33, 'M', 'lk-chu-kh'), 'cầu H'),
-      chan: ['Thường có: cọc motor (OUT), cọc nguồn motor (VM/VS + GND), chân điều khiển IN1/IN2 (hoặc EN/PWM) từ GPIO, và GND chung với ESP32.'],
-      gioi_han: 'Chọn theo dòng motor đo được ở 7.4 + áp pin robot.',
-      bay: 'Quên GND chung giữa driver và ESP32 → điều khiển không ăn. Nguồn motor không lấy từ chân 3V3 của board.', bai: ['13.1', '13.2', '13.3'] },
+      chan: ['Thường có cọc motor (OUT), cọc nguồn motor (VM/VS và GND), chân điều khiển IN1/IN2 (hoặc EN/PWM) nối GPIO, và GND chung với ESP32.'],
+      gioi_han: 'Chọn theo dòng motor đo được ở bài 7.4 và áp pin của robot.',
+      bay: 'Quên nối GND chung giữa driver và ESP32 thì điều khiển không ăn. Nguồn motor không lấy từ chân 3V3 của board.', bai: ['13.1', '13.2', '13.3'] },
 
     { id: 'logic-analyzer', nhom: 'sau', ten: 'Logic analyzer 8 kênh 24MHz', tim: 'logic analyzer', mua: 'đợt 3 · can-mua.md',
       anh: anh(`<rect x="80" y="40" width="110" height="64" rx="8" fill="#9AA3AD" ${vien}/>${chu(135, 68, 'LOGIC', 'lk-toi')}${chu(135, 84, '24MHz · 8CH', 'lk-mo')}
@@ -493,94 +493,92 @@
         ${[92, 130, 168].map(x => chan(x, 96, 124)).join('')}
         ${chu(92, 138, 'COM?', 'lk-canh')}${chu(130, 138, 'NO?', 'lk-canh')}${chu(168, 138, 'NC?', 'lk-canh')}
         ${g(196, 18, 226, 30, 'cần gạt')}${g(124, 38, 110, 12, 'nút bên trong', 'end')}${chu(130, 74, 'KW11', 'lk-trang')}`, 'Công tắc hành trình: thân đen chữ nhật, cần gạt kim loại phía trên, 3 chân dưới'),
-      kh: kh(net('8,40 44,40') + '<circle cx="46" cy="40" r="2.5" class="lk-dac"/>' + net('48,39 86,22') + '<circle cx="90" cy="20" r="2.5" class="lk-dac"/><circle cx="90" cy="46" r="2.5" class="lk-dac"/>' + net('92,20 112,20') + net('92,46 112,46') + chu(18, 32, 'COM', 'lk-mo') + chu(104, 14, 'NC', 'lk-mo') + chu(104, 56, 'NO', 'lk-mo'), 'công tắc 1 cực 2 ngả'),
-      chan: ['3 chân: <b>COM</b> (chung), <b>NO</b> (thường hở — chỉ thông COM khi nhấn), <b>NC</b> (thường đóng — thông COM khi nhả).', 'Chữ in trên thân thường ghi C/NO/NC; không có chữ thì <b>đo mới biết</b>: thang thông mạch, tìm cặp kêu khi nhả (COM–NC), nhấn giữ thì cặp COM–NO kêu.'],
-      gioi_han: 'Tiếp điểm chịu 5A 250VAC — thừa xa cho tín hiệu 3.3V vài µA.',
-      bay: 'Dùng nhầm NC thay NO: logic đảo ngược (nhả = 0). Nối COM vào 3V3 và NO vào GND: nhấn là nối tắt nguồn.', bai: ['14.1', '17.1'] },
+      kh: kh(net('8,40 44,40') + '<circle cx="46" cy="40" r="2.5" class="lk-dac"/>' + net('48,39 86,22') + '<circle cx="90" cy="20" r="2.5" class="lk-dac"/><circle cx="90" cy="46" r="2.5" class="lk-dac"/>' + net('92,20 112,20') + net('92,46 112,46') + chu(18, 32, 'COM', 'lk-mo') + chu(104, 14, 'NC', 'lk-mo') + chu(76, 53, 'NO', 'lk-mo'), 'công tắc 1 cực 2 ngả'),
+      chan: ['3 chân: <b>COM</b> (chung), <b>NO</b> (thường hở — chỉ thông COM khi nhấn), <b>NC</b> (thường đóng — thông COM khi nhả).', 'Thân thường in C/NO/NC. Không có chữ thì <b>đo mới biết</b>: dùng thang thông mạch, cặp kêu khi nhả là COM–NC, còn cặp kêu khi nhấn giữ là COM–NO.'],
+      gioi_han: 'Tiếp điểm chịu 5A 250VAC, thừa xa cho tín hiệu 3.3V vài µA.',
+      bay: 'Dùng nhầm NC thay NO thì logic đảo ngược (nhả ra 0). Nối COM vào 3V3 và NO vào GND thì mỗi lần nhấn là nối tắt nguồn.', bai: ['14.1', '17.1'] },
 
     { id: 'fc51', nhom: 'robot', ten: 'Module hồng ngoại tránh vật FC-51', tim: 'FC-51', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="60" y="40" width="170" height="60" rx="3" fill="#1F5AA8" ${vien}/>
         <rect x="20" y="46" width="40" height="18" rx="9" fill="#1E2328"/><rect x="20" y="76" width="40" height="18" rx="9" fill="#E8EEF2" stroke="#9AA3AD"/>
         <rect x="104" y="52" width="24" height="24" fill="#2F6FD6" stroke="#fff"/><circle cx="116" cy="64" r="6" fill="#fff"/>
         <rect x="140" y="72" width="26" height="18" fill="#1E2226"/>
-        ${[196, 208, 220].map(y => `<circle cx="232" cy="${y - 140}" r="2.6" fill="#C9A640"/>${chan(232, y - 140, y - 140)}`).join('')}
-        ${[56, 68, 80].map(y => `<line x1="232" y1="${y}" x2="258" y2="${y}" class="lk-chan"/>`).join('')}
-        ${g(20, 55, 6, 30, 'thu IR (đen)', 'end')}${g(20, 85, 6, 120, 'phát IR (trong)', 'end')}${g(116, 52, 116, 22, 'biến trở tầm', 'middle')}${g(153, 90, 153, 124, 'LM393', 'middle')}
-        ${chu(262, 60, 'VCC?', 'lk-canh', 'start')}${chu(262, 72, 'GND?', 'lk-canh', 'start')}${chu(262, 84, 'OUT?', 'lk-canh', 'start')}`, 'Module FC-51: mạch xanh, 2 bóng hồng ngoại đen và trong ở một đầu, biến trở xanh, 3 chân ở đầu kia'),
+        ${[56, 70, 84].map(y => `<circle cx="232" cy="${y}" r="2.6" fill="#C9A640"/><line x1="232" y1="${y}" x2="246" y2="${y}" class="lk-chan"/>`).join('')}
+        ${g(34, 46, 30, 22, 'thu IR (đen)', 'middle')}${g(34, 94, 30, 116, 'phát IR (trong)', 'middle')}${g(116, 52, 116, 22, 'biến trở tầm', 'middle')}${g(153, 90, 153, 124, 'LM393', 'middle')}
+        ${chu(250, 60, 'VCC?', 'lk-canh', 'start')}${chu(250, 74, 'GND?', 'lk-canh', 'start')}${chu(250, 88, 'OUT?', 'lk-canh', 'start')}`, 'Module FC-51: mạch xanh, 2 bóng hồng ngoại đen và trong ở một đầu, biến trở xanh, 3 chân ở đầu kia'),
       kh: '',
-      chan: ['3 chân VCC, GND, OUT — thứ tự tuỳ shop, <b>đọc chữ in</b>.', 'Bóng trong = LED phát hồng ngoại (mắt không thấy, camera điện thoại thấy tím), bóng đen = thu.', 'OUT thấp (≈0V) khi có vật, cao khi trống; đèn nhỏ trên board sáng khi có vật.'],
-      gioi_han: 'OUT được kéo lên <b>VCC</b> qua 10k → cấp 5V là OUT lên 5V, quá sức chân GPIO. Với ESP32 cấp <b>3V3</b>. Tầm quảng cáo 2–30cm, thực tế tuỳ màu vật.',
-      bay: 'Vật đen / nắng chiếu thẳng: không thấy vật hoặc báo sai. Vặn biến trở quá tay: luôn báo có vật.', bai: ['14.2', '17.1'] },
+      chan: ['3 chân VCC, GND, OUT. Thứ tự tuỳ shop, <b>đọc chữ in</b>.', 'Bóng trong = LED phát hồng ngoại (mắt không thấy, camera điện thoại thấy tím), bóng đen = thu.', 'OUT xuống thấp (≈0V) khi có vật, lên cao khi trống. Đèn nhỏ trên board sáng khi có vật.'],
+      gioi_han: 'OUT được kéo lên <b>VCC</b> qua 10k, nên cấp 5V thì OUT lên 5V, quá sức chân GPIO. Dùng với ESP32 thì cấp <b>3V3</b>. Tầm quảng cáo 2–30cm, thực tế tuỳ màu vật.',
+      bay: 'Vật màu đen hoặc nắng chiếu thẳng làm module không thấy vật hay báo sai. Vặn biến trở quá tay thì nó luôn báo có vật.', bai: ['14.2', '17.1'] },
 
     { id: 'hc-sr04', nhom: 'robot', ten: 'Cảm biến siêu âm HC-SR04', tim: 'HC-SR04', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="30" y="36" width="200" height="64" rx="3" fill="#1F5AA8" ${vien}/>
         <circle cx="72" cy="66" r="27" fill="#B8BEC4" ${vien}/><circle cx="72" cy="66" r="19" fill="#5B6573"/>
         <circle cx="188" cy="66" r="27" fill="#B8BEC4" ${vien}/><circle cx="188" cy="66" r="19" fill="#5B6573"/>
         <rect x="116" y="42" width="28" height="12" rx="4" fill="#C9CED3"/>
-        ${[112, 124, 136, 148].map(x => `<circle cx="${x}" cy="94" r="2.6" fill="#C9A640"/>${chan(x, 100, 126)}`).join('')}
-        ${chu(112, 140, 'VCC', 'lk-chu')}${chu(124, 150, 'Trig', 'lk-chu')}${chu(136, 140, 'Echo', 'lk-chu')}${chu(148, 150, 'GND', 'lk-chu')}
-        ${g(52, 46, 30, 20, 'T: loa phát', 'end')}${g(208, 46, 232, 20, 'R: micro thu')}`, 'HC-SR04: mạch xanh với 2 ống tròn bạc (phát và thu), 4 chân VCC Trig Echo GND ở giữa cạnh dưới'),
+        ${[100, 120, 140, 160].map((x, i) => `<circle cx="${x}" cy="94" r="2.6" fill="#C9A640"/>${chan(x, 100, i % 2 ? 134 : 122)}`).join('')}
+        ${chu(100, 134, 'VCC', 'lk-chu')}${chu(120, 146, 'Trig', 'lk-chu')}${chu(140, 134, 'Echo', 'lk-chu')}${chu(160, 146, 'GND', 'lk-chu')}
+        ${g(60, 42, 50, 20, 'T: loa phát', 'middle')}${g(200, 42, 210, 20, 'R: micro thu', 'middle')}`, 'HC-SR04: mạch xanh với 2 ống tròn bạc (phát và thu), 4 chân VCC Trig Echo GND ở giữa cạnh dưới'),
       kh: '',
-      chan: ['4 chân theo thứ tự in trên board: <b>VCC · Trig · Echo · GND</b> (bản gốc Elecfreaks). Bản clone vẫn đọc chữ in.', 'Trig: GPIO đưa mức cao ≥ 10µs để bắt đầu đo. Echo: module trả 1 xung cao dài bằng thời gian sóng đi và về.'],
-      gioi_han: 'Nguồn 5V, 15mA. Echo ra mức 5V → qua cầu 10k/20k (bài 9.5) mới vào GPIO. Đo 2–400cm, góc ~15°; mỗi lần đo cách nhau ≥ 60ms. <code>cm = µs / 58</code>.',
-      bay: 'Echo nối thẳng GPIO: 5V vào chân 3.3V. Vật mềm (vải, rèm) hoặc mặt xiên: sóng không dội về → đo ra rất xa hoặc không ra.', bai: ['14.3', '17.1'] },
+      chan: ['4 chân theo thứ tự in trên board: <b>VCC · Trig · Echo · GND</b> (bản gốc Elecfreaks). Bản clone vẫn đọc chữ in.', 'Muốn đo, GPIO đưa chân Trig lên mức cao ≥ 10µs. Module trả về ở chân Echo 1 xung cao, dài bằng thời gian sóng đi và về.'],
+      gioi_han: 'Nguồn 5V, 15mA. Chân Echo ra mức 5V nên phải qua cầu 10k/20k (bài 9.5) rồi mới vào GPIO. Đo được 2–400cm trong góc ~15°, mỗi lần đo cách nhau ≥ 60ms. Đổi ra khoảng cách: <code>cm = µs / 58</code>.',
+      bay: 'Nối Echo thẳng vào GPIO là đưa 5V vào chân 3.3V. Vật mềm (vải, rèm) hoặc mặt xiên làm sóng không dội về, số đo ra rất xa hoặc không ra.', bai: ['14.3', '17.1'] },
 
     { id: 'tcrt5000', nhom: 'robot', ten: 'Module TCRT5000 (dò vạch / chống rơi)', tim: 'TCRT5000', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="50" y="40" width="180" height="56" rx="3" fill="#1F5AA8" ${vien}/>
         <rect x="18" y="50" width="32" height="36" rx="3" fill="#1E2328"/><circle cx="34" cy="60" r="6" fill="#2E6FB0"/><circle cx="34" cy="76" r="6" fill="#111"/>
         <rect x="96" y="50" width="22" height="22" fill="#2F6FD6" stroke="#fff"/><circle cx="107" cy="61" r="5" fill="#fff"/>
-        ${[52, 62, 72, 82].map(y => `<circle cx="232" cy="${y}" r="2.6" fill="#C9A640"/><line x1="232" y1="${y}" x2="258" y2="${y}" class="lk-chan"/>`).join('')}
-        ${chu(262, 56, 'VCC?', 'lk-canh', 'start')}${chu(262, 66, 'GND?', 'lk-canh', 'start')}${chu(262, 76, 'DO?', 'lk-canh', 'start')}${chu(262, 86, 'AO?', 'lk-canh', 'start')}
-        ${g(18, 68, 4, 30, 'TCRT5000: phát + thu', 'end')}${g(107, 50, 107, 22, 'biến trở ngưỡng DO', 'middle')}`, 'Module TCRT5000: khối đen có 2 mắt ở một đầu, biến trở xanh, 4 chân VCC GND DO AO'),
-      kh: kh(net('10,12 10,44') + '<polygon points="4,24 16,24 10,34" class="lk-net"/>' + net('4,34 16,34') + net('20,24 30,18') + net('20,30 30,24') + net('60,14 60,44') + net('60,24 76,14') + net('60,34 76,44') + net('76,14 76,4') + net('76,44 76,54') + net('40,22 52,26') + net('40,28 52,32') + chu(10, 54, 'LED IR', 'lk-mo') + chu(92, 30, 'thu', 'lk-mo'), 'LED hồng ngoại + phototransistor'),
-      chan: ['4 chân VCC, GND, DO (số), AO (tương tự) — đọc chữ in.', 'DO thấp khi thấy mặt phản xạ (bàn sáng màu) — kiểu như FC-51. AO: áp đổi liên tục theo lượng hồng ngoại dội về.'],
-      gioi_han: 'Mắt TCRT5000 làm việc tốt nhất ở ~2.5mm, dùng được 0.2–15mm (Vishay) → gắn sát mặt sàn. Cấp <b>3V3</b> cho ESP32 (DO/AO lên tới VCC).',
-      bay: 'Gắn cao quá 1.5cm: gần như luôn báo "không thấy sàn". Sàn đen / thảm tối cũng bị coi như mép vực.', bai: ['14.4'] },
+        ${[48, 61, 74, 87].map(y => `<circle cx="232" cy="${y}" r="2.6" fill="#C9A640"/><line x1="232" y1="${y}" x2="246" y2="${y}" class="lk-chan"/>`).join('')}
+        ${chu(250, 52, 'VCC?', 'lk-canh', 'start')}${chu(250, 65, 'GND?', 'lk-canh', 'start')}${chu(250, 78, 'DO?', 'lk-canh', 'start')}${chu(250, 91, 'AO?', 'lk-canh', 'start')}
+        ${g(34, 50, 60, 22, 'mắt TCRT5000: phát + thu', 'middle')}${g(107, 72, 107, 118, 'biến trở ngưỡng DO', 'middle')}`, 'Module TCRT5000: khối đen có 2 mắt ở một đầu, biến trở xanh, 4 chân VCC GND DO AO'),
+      kh: kh(net('10,12 10,44') + '<polygon points="4,24 16,24 10,34" class="lk-net"/>' + net('4,34 16,34') + net('20,24 30,18') + net('20,30 30,24') + net('60,14 60,44') + net('60,24 76,14') + net('60,34 76,44') + net('76,14 76,4') + net('76,44 76,54') + net('40,22 52,26') + net('40,28 52,32') + chu(24, 54, 'LED IR', 'lk-mo') + chu(92, 30, 'thu', 'lk-mo'), 'LED hồng ngoại + phototransistor'),
+      chan: ['4 chân VCC, GND, DO (số), AO (tương tự). Đọc chữ in.', 'DO xuống thấp khi thấy mặt phản xạ (bàn sáng màu), giống FC-51. AO là áp đổi liên tục theo lượng hồng ngoại dội về.'],
+      gioi_han: 'Mắt TCRT5000 nhạy nhất ở ~2.5mm, dùng được 0.2–15mm (theo Vishay), nên phải gắn sát mặt sàn. Dùng với ESP32 thì cấp <b>3V3</b>, vì DO/AO lên tới VCC.',
+      bay: 'Gắn cao quá 1.5cm thì gần như luôn báo "không thấy sàn". Sàn đen hay thảm tối cũng bị coi là mép vực.', bai: ['14.4'] },
 
     { id: 'sg90', nhom: 'robot', ten: 'Servo SG90', tim: 'SG90', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="60" y="50" width="100" height="56" rx="3" fill="#2F58B8" ${vien}/><rect x="44" y="60" width="132" height="10" rx="2" fill="#2F58B8" ${vien}/>
         <circle cx="90" cy="44" r="12" fill="#E8EEF2" stroke="#9AA3AD"/><path d="M90 44 L 150 30" stroke="#E8EEF2" stroke-width="8" stroke-linecap="round"/>
-        <path d="M160 92 C 200 92, 200 120, 236 120" stroke="#E07020" stroke-width="3" fill="none"/><path d="M160 97 C 196 97, 196 128, 236 128" stroke="#C8322B" stroke-width="3" fill="none"/><path d="M160 102 C 192 102, 192 136, 236 136" stroke="#6D4C41" stroke-width="3" fill="none"/>
-        ${chu(240, 123, 'cam = tín hiệu', 'lk-chu', 'start')}${chu(240, 131, 'đỏ = + (4.8–6V)', 'lk-chu', 'start')}${chu(240, 139, 'nâu = −', 'lk-chu', 'start')}
+        <path d="M160 92 C 176 92, 170 112, 186 112" stroke="#E07020" stroke-width="3" fill="none"/><path d="M160 97 C 172 97, 168 125, 186 125" stroke="#C8322B" stroke-width="3" fill="none"/><path d="M160 102 C 168 102, 166 138, 186 138" stroke="#6D4C41" stroke-width="3" fill="none"/>
+        ${chu(190, 116, 'cam: tín hiệu', 'lk-chu', 'start')}${chu(190, 129, 'đỏ: + 4.8–6V', 'lk-chu', 'start')}${chu(190, 142, 'nâu: −', 'lk-chu', 'start')}
         ${g(150, 30, 190, 20, 'tay quay')}${chu(110, 86, 'SG90', 'lk-trang')}`, 'Servo SG90: hộp xanh dương, tay quay trắng phía trên, 3 dây cam đỏ nâu'),
       kh: '',
       chan: ['3 dây: <b>cam</b> = tín hiệu PWM, <b>đỏ</b> = nguồn +, <b>nâu</b> = GND (TowerPro). Bản clone có thể vàng/đỏ/đen: vàng = tín hiệu, đen = GND.'],
-      gioi_han: 'Nguồn 4.8–6V; xung 1–2ms mỗi 20ms (50Hz): 1ms = một đầu, 1.5ms = giữa, 2ms = đầu kia (~180°). Dòng kẹt không ghi trong datasheet: <b>đo mới biết</b> — vì vậy không lấy nguồn từ chân 5V/3V3 của board.',
-      bay: 'Lấy nguồn servo từ board: servo khởi động kéo dòng → board reset. Quên GND chung: servo giật lung tung. Bẻ tay quay bằng tay khi đang cấp điện: hỏng bánh răng.', bai: ['15.1'] },
+      gioi_han: 'Nguồn 4.8–6V. Điều khiển bằng xung 1–2ms lặp lại mỗi 20ms (50Hz): xung 1ms quay về một đầu, 1.5ms ra giữa, 2ms sang đầu kia (~180°). Datasheet không ghi dòng lúc kẹt, <b>đo mới biết</b>, nên đừng lấy nguồn từ chân 5V/3V3 của board.',
+      bay: 'Lấy nguồn servo từ board thì lúc khởi động servo kéo dòng mạnh, board sụt áp và reset. Quên nối GND chung thì servo giật lung tung. Bẻ tay quay bằng tay khi đang cấp điện dễ hỏng bánh răng.', bai: ['15.1'] },
 
     { id: 'motor-tt', nhom: 'robot', ten: 'Motor giảm tốc TT 1:48 + bánh', tim: 'motor TT', mua: 'đợt 4 · trong khung 2WD',
       anh: anh(`<rect x="40" y="46" width="130" height="44" rx="4" fill="#E8C24A" ${vien}/><rect x="170" y="54" width="40" height="28" rx="12" fill="#B8BEC4" ${vien}/>
         <rect x="90" y="30" width="12" height="16" fill="#F2F2F2" stroke="#9AA3AD"/><circle cx="96" cy="68" r="6" fill="#F2F2F2" stroke="#9AA3AD"/>
         <circle cx="236" cy="68" r="4" fill="#C9A640"/><circle cx="236" cy="80" r="4" fill="#C9A640"/>
-        ${g(96, 30, 96, 12, 'trục ra (2 phía)', 'middle')}${g(190, 54, 214, 30, 'motor DC')}${g(96, 90, 96, 122, 'hộp số nhựa 1:48', 'middle')}${g(236, 80, 250, 104, '2 cực hàn dây')}`, 'Motor TT: hộp số nhựa vàng, motor bạc gắn một đầu, trục trắng ra 2 bên'),
-      kh: '',
-      chan: ['2 cực, không phân cực: đảo 2 dây = đổi chiều quay.', 'Trục ra 2 phía hộp số: một bên gắn bánh, bên kia gắn đĩa encoder (15.2).'],
-      gioi_han: 'Bản Adafruit: 3–6V; không tải 150mA; <b>kẹt 1.2A ở 4.5V, 1.5A ở 6V</b>; 185 vòng/phút ở 4.5V. Motor shop khác: đo dòng mới biết (7.4). Dòng kẹt vượt S8050 → cần driver.',
-      bay: 'Cấp thẳng pack 2S (8.4V) toàn thời gian: quá áp định mức 6V → giới hạn duty PWM ≤ 70% (bài 17.1).', bai: ['15.2', '15.4', '17.1', '17.2'] },
+        ${g(96, 30, 96, 18, 'trục ra (2 phía)', 'middle')}${g(190, 54, 214, 30, 'motor DC')}${g(96, 90, 96, 122, 'hộp số nhựa 1:48', 'middle')}${g(236, 84, 236, 112, '2 cực hàn dây', 'middle')}`, 'Motor TT: hộp số nhựa vàng, motor bạc gắn một đầu, trục trắng ra 2 bên'),
+      kh: kh('<circle cx="60" cy="28" r="16" class="lk-net"/>' + net('8,28 44,28') + net('76,28 112,28') + chu(60, 33, 'M', 'lk-chu-kh'), 'motor'),
+      chan: ['2 cực, không phân cực: đảo 2 dây thì motor quay ngược lại.', 'Trục ra 2 phía hộp số: một bên gắn bánh, bên kia gắn đĩa encoder (bài 15.2).'],
+      gioi_han: 'Theo số của bản Adafruit: chạy 3–6V, không tải ăn 150mA, quay 185 vòng/phút ở 4.5V. Khi bị kẹt, dòng lên <b>1.2A ở 4.5V và 1.5A ở 6V</b>. Motor mua shop khác thì đo dòng mới biết (bài 7.4). Dòng kẹt lớn hơn sức S8050, nên cần driver.',
+      bay: 'Cấp thẳng pack 2S (8.4V) liên tục là vượt định mức 6V. Vì vậy bài 17.1 giới hạn duty PWM ≤ 70%.', bai: ['15.2', '15.4', '17.1', '17.2'] },
 
     { id: 'khe-quang', nhom: 'robot', ten: 'Cảm biến tốc độ khe quang + đĩa 20 lỗ', tim: 'khe quang', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="110" y="70" width="120" height="44" rx="3" fill="#1F5AA8" ${vien}/>
         <rect x="118" y="30" width="16" height="40" fill="#1E2328"/><rect x="146" y="30" width="16" height="40" fill="#1E2328"/>
         <circle cx="60" cy="70" r="46" fill="#2A3038" ${vien}/>${Array.from({ length: 20 }, (_, i) => { const a = i * Math.PI / 10; return `<rect x="${60 + 38 * Math.cos(a) - 2}" y="${70 + 38 * Math.sin(a) - 4}" width="4" height="8" fill="#F3F1EA" transform="rotate(${i * 18} ${60 + 38 * Math.cos(a)} ${70 + 38 * Math.sin(a)})"/>`; }).join('')}<circle cx="60" cy="70" r="6" fill="#E8EEF2"/>
-        ${[80, 90, 100].map(y => `<circle cx="232" cy="${y}" r="2.6" fill="#C9A640"/><line x1="232" y1="${y}" x2="258" y2="${y}" class="lk-chan"/>`).join('')}
-        ${chu(262, 84, 'VCC?', 'lk-canh', 'start')}${chu(262, 94, 'GND?', 'lk-canh', 'start')}${chu(262, 104, 'OUT?', 'lk-canh', 'start')}
-        ${g(140, 30, 150, 12, 'khe: đĩa quay lọt giữa', 'middle')}${g(60, 116, 60, 140, 'đĩa 20 lỗ trên trục motor', 'middle')}`, 'Cảm biến khe quang: mạch xanh với khe đen hình chữ U; bên cạnh là đĩa đen có 20 lỗ quanh vành'),
+        ${[78, 92, 106].map(y => `<circle cx="232" cy="${y}" r="2.6" fill="#C9A640"/><line x1="232" y1="${y}" x2="246" y2="${y}" class="lk-chan"/>`).join('')}
+        ${chu(250, 82, 'VCC?', 'lk-canh', 'start')}${chu(250, 96, 'GND?', 'lk-canh', 'start')}${chu(250, 110, 'OUT?', 'lk-canh', 'start')}
+        ${g(162, 40, 168, 22, 'khe: đĩa lọt giữa')}${g(60, 116, 72, 130, 'đĩa 20 lỗ trên trục motor', 'middle')}`, 'Cảm biến khe quang: mạch xanh với khe đen hình chữ U; bên cạnh là đĩa đen có 20 lỗ quanh vành'),
       kh: '',
-      chan: ['3 chân VCC, GND, OUT (có loại 4 chân thêm AO) — đọc chữ in.', 'Lỗ đĩa đi qua khe → OUT đổi mức 1 lần. 20 lỗ = 20 xung mỗi vòng.'],
-      gioi_han: 'Shop ghi khác nhau: có loại chỉ chạy <b>5V và ra 5V</b> (HC-020K), có loại 3.3–5V (LM393, FC-03). <b>Đo chân OUT bằng đồng hồ trước khi nối GPIO.</b> Ra 5V → cầu 10k/20k (9.5).',
-      bay: 'Đĩa cọ vào khe: kêu, đếm sai. Ánh sáng mạnh chiếu vào khe: đếm nhiễu.', bai: ['15.2', '15.4'] },
+      chan: ['3 chân VCC, GND, OUT (có loại 4 chân thêm AO). Đọc chữ in.', 'Mỗi lần một lỗ đĩa đi qua khe, OUT đổi mức 1 lần. Đĩa 20 lỗ cho 20 xung mỗi vòng.'],
+      gioi_han: 'Mỗi shop ghi một kiểu: có loại chỉ chạy <b>5V và ra 5V</b> (HC-020K), có loại chạy 3.3–5V (LM393, FC-03). <b>Đo chân OUT bằng đồng hồ trước khi nối GPIO.</b> Nếu ra 5V thì cho qua cầu 10k/20k (bài 9.5).',
+      bay: 'Đĩa cọ vào khe thì kêu và đếm sai. Ánh sáng mạnh chiếu vào khe làm đếm nhiễu.', bai: ['15.2', '15.4'] },
 
     { id: 'gy521', nhom: 'robot', ten: 'Module GY-521 (IMU MPU-6050)', tim: 'GY-521', mua: 'đợt 4 · can-mua.md',
-      anh: anh(`<rect x="70" y="26" width="120" height="96" rx="3" fill="#1F5AA8" ${vien}/><rect x="112" y="60" width="30" height="30" fill="#1E2226"/>
+      anh: anh(`<rect x="70" y="26" width="120" height="80" rx="3" fill="#1F5AA8" ${vien}/><rect x="112" y="60" width="30" height="30" fill="#1E2226"/>
         <circle cx="84" cy="40" r="6" fill="none" stroke="#C9A640" stroke-width="3"/><circle cx="176" cy="40" r="6" fill="none" stroke="#C9A640" stroke-width="3"/>
-        ${[80, 93, 106, 119, 132, 145, 158, 171].map(x => `<circle cx="${x}" cy="114" r="2.6" fill="#C9A640"/>${chan(x, 122, 134)}`).join('')}
-        ${chu(80, 146, 'VCC', 'lk-mo')}${chu(106, 146, 'SCL', 'lk-mo')}${chu(132, 146, 'XCL…', 'lk-mo')}${chu(93, 156, 'GND', 'lk-mo')}${chu(119, 156, 'SDA', 'lk-mo')}${chu(158, 156, 'AD0 · INT', 'lk-mo')}
-        <path d="M150 50 L 176 50 M 150 50 L 150 24" stroke="#fff" stroke-width="1.5"/>${chu(180, 53, 'X', 'lk-trang', 'start')}${chu(150, 20, 'Y', 'lk-trang')}
+        ${['VCC', 'GND', 'SCL', 'SDA', 'XDA', 'XCL', 'AD0', 'INT'].map((t, i) => { const x = 80 + i * 13, y = i % 2 ? 128 : 114; return `<circle cx="${x}" cy="98" r="2.6" fill="#C9A640"/>${chan(x, 106, y)}${chu(x, y + 11, t, i < 4 ? 'lk-chu' : 'lk-mo')}`; }).join('')}
+        <path d="M150 50 L 176 50 M 150 50 L 150 32" stroke="#fff" stroke-width="1.5"/>${chu(180, 53, 'X', 'lk-trang', 'start')}${chu(155, 40, 'Y', 'lk-trang', 'start')}
         ${g(127, 60, 214, 70, 'MPU-6050')}`, 'Module GY-521: mạch xanh vuông, chip MPU-6050 giữa, 8 chân một hàng: VCC GND SCL SDA XDA XCL AD0 INT, có mũi tên trục X Y'),
       kh: '',
-      chan: ['8 chân: VCC, GND, SCL, SDA, XDA, XCL, AD0, INT. Bài chỉ dùng 4 chân đầu. AD0 để hở (board kéo xuống 4.7k) → địa chỉ <code>0x68</code>; nối AD0 lên 3V3 → <code>0x69</code>.', 'Mũi tên X/Y in trên board = chiều trục; Z vuông góc mặt board (xoay board trên bàn = quay quanh Z).'],
-      gioi_han: 'Chip MPU-6050: 2.375–3.46V; board có ổn áp 3.3V nên VCC nhận 3.3–5V — cấp <b>3V3</b> để chân SDA/SCL không bị kéo lên 5V. Gyro ±250°/s: 131 đơn vị = 1°/s.',
-      bay: 'Quên đánh thức: chip bật lên đang ngủ (thanh ghi 0x6B = 0x40), đọc ra toàn 0. Gyro cộng dồn thì góc trôi dần: phải trừ sai lệch lúc đứng yên, và vẫn trôi theo thời gian.', bai: ['15.3'] },
+      chan: ['8 chân: VCC, GND, SCL, SDA, XDA, XCL, AD0, INT. Các bài chỉ dùng 4 chân đầu.', 'AD0 để hở thì board kéo nó xuống qua 4.7k, địa chỉ là <code>0x68</code>. Nối AD0 lên 3V3 thì địa chỉ thành <code>0x69</code>.', 'Mũi tên X/Y in trên board là chiều hai trục. Trục Z vuông góc với mặt board, nên xoay board trên mặt bàn là quay quanh Z.'],
+      gioi_han: 'Chip MPU-6050 chạy 2.375–3.46V. Board có ổn áp 3.3V nên chân VCC nhận được 3.3–5V, nhưng vẫn nên cấp <b>3V3</b> để SDA/SCL không bị kéo lên 5V. Ở thang gyro ±250°/s, 131 đơn vị đọc được bằng 1°/s.',
+      bay: 'Quên đánh thức chip: lúc bật nguồn nó đang ngủ (thanh ghi 0x6B = 0x40) nên đọc ra toàn 0. Góc tính bằng cách cộng dồn gyro sẽ trôi dần: phải trừ sai lệch đo lúc đứng yên, mà vẫn trôi theo thời gian.', bai: ['15.3'] },
 
     { id: 'drv8833', nhom: 'robot', ten: 'Module driver motor DRV8833', tim: 'DRV8833', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="70" y="30" width="120" height="86" rx="3" fill="#A3302A" ${vien}/><rect x="112" y="56" width="36" height="30" fill="#1E2226"/>
@@ -588,31 +586,31 @@
         ${[42, 54, 66, 78, 90, 102].map(y => `<circle cx="198" cy="${y}" r="2.6" fill="#C9A640"/><line x1="198" y1="${y}" x2="224" y2="${y}" class="lk-chan"/>`).join('')}
         ${chu(32, 46, 'IN1', 'lk-mo', 'end')}${chu(32, 58, 'IN2', 'lk-mo', 'end')}${chu(32, 70, 'IN3', 'lk-mo', 'end')}${chu(32, 82, 'IN4', 'lk-mo', 'end')}${chu(32, 94, 'EEP/SLP', 'lk-canh', 'end')}${chu(32, 106, 'ULT/FLT', 'lk-mo', 'end')}
         ${chu(228, 46, 'OUT1', 'lk-mo', 'start')}${chu(228, 58, 'OUT2', 'lk-mo', 'start')}${chu(228, 70, 'OUT3', 'lk-mo', 'start')}${chu(228, 82, 'OUT4', 'lk-mo', 'start')}${chu(228, 94, 'VCC/VM', 'lk-mo', 'start')}${chu(228, 106, 'GND', 'lk-mo', 'start')}
-        ${g(130, 86, 130, 134, 'DRV8833 — đọc mã vỏ chip', 'middle')}${chu(130, 148, 'tên + thứ tự chân tuỳ shop', 'lk-canh')}`, 'Module DRV8833 đỏ: chip giữa, một hàng chân điều khiển IN1–IN4 và SLEEP, hàng kia OUT1–OUT4, VM, GND'),
+        ${g(130, 86, 130, 122, 'DRV8833 — đọc mã vỏ chip', 'middle')}${chu(130, 150, 'tên + thứ tự chân tuỳ shop', 'lk-canh')}`, 'Module DRV8833 đỏ: chip giữa, một hàng chân điều khiển IN1–IN4 và SLEEP, hàng kia OUT1–OUT4, VM, GND', 158),
       kh: '',
-      chan: ['Điều khiển: IN1/IN2 = motor A, IN3/IN4 = motor B (datasheet gọi AIN1/AIN2/BIN1/BIN2). Ra: OUT1/OUT2 → motor A, OUT3/OUT4 → motor B. Nguồn motor VM + GND.', 'Chân ngủ <b>nSLEEP</b> (module in EEP/SLP/STBY): chip kéo xuống bên trong → <b>phải nối lên 3V3</b> mới chạy (có module kéo sẵn — đo mới biết).', 'Bảng (TI): IN1=1 IN2=0 tiến · 0/1 lùi · 0/0 thả trôi · 1/1 phanh. PWM vào 1 chân, chân kia 0 = chỉnh tốc độ.'],
-      gioi_han: 'VM 2.7–10.8V (tuyệt đối 11.8V) — pack 2S 8.4V nằm trong. Dòng liên tục/kênh: <b>1.5A nếu vỏ HTSSOP có miếng tản nhiệt dưới, chỉ 0.5A nếu vỏ TSSOP</b>. Tự ngắt khi quá dòng (≥ 2A) hoặc quá nhiệt. Logic mức 1 ≥ 2V → GPIO 3.3V đủ.',
-      bay: 'Quên kéo nSLEEP lên: motor không chạy dù code đúng. Motor TT kẹt kéo 1.2–1.5A: chip vỏ TSSOP sẽ tự ngắt liên tục.', bai: ['15.2', '15.4', '17.1', '17.2'] },
+      chan: ['IN1/IN2 điều khiển motor A, IN3/IN4 điều khiển motor B (datasheet gọi là AIN1/AIN2/BIN1/BIN2). OUT1/OUT2 nối motor A, OUT3/OUT4 nối motor B. Nguồn motor vào VM và GND.', 'Chân ngủ <b>nSLEEP</b> (module in EEP/SLP/STBY) bị chip kéo xuống bên trong, nên <b>phải nối lên 3V3</b> thì chip mới chạy. Có module đã kéo lên sẵn, đo mới biết.', 'Bảng chân lý (TI): IN1=1, IN2=0 là tiến; 0/1 lùi; 0/0 thả trôi; 1/1 phanh. Muốn chỉnh tốc độ thì đưa PWM vào một chân, chân kia giữ 0.'],
+      gioi_han: 'VM 2.7–10.8V (tuyệt đối 11.8V), pack 2S 8.4V nằm trong khoảng này. Dòng liên tục mỗi kênh: <b>1.5A nếu vỏ HTSSOP có miếng tản nhiệt dưới, chỉ 0.5A nếu vỏ TSSOP</b>. Chip tự ngắt khi quá dòng (≥ 2A) hoặc quá nhiệt. Mức logic 1 chỉ cần ≥ 2V nên GPIO 3.3V là đủ.',
+      bay: 'Quên kéo nSLEEP lên thì motor không chạy dù code đúng. Motor TT lúc kẹt kéo 1.2–1.5A, chip vỏ TSSOP sẽ tự ngắt liên tục.', bai: ['15.2', '15.4', '17.1', '17.2'] },
 
     { id: 'cell-18650', nhom: 'pin', ten: 'Cell lithium 18650', tim: '18650', mua: 'đợt 4 · hàng hãng',
       anh: anh(`<rect x="40" y="46" width="170" height="48" rx="8" fill="#2E7D5B" ${vien}/><rect x="210" y="58" width="10" height="24" rx="2" fill="#B8BEC4"/><rect x="34" y="50" width="6" height="40" fill="#B8BEC4"/>
-        ${chu(125, 74, '3.6V · 18650', 'lk-trang')}${g(220, 70, 246, 40, '+ (núm lồi)')}${g(34, 70, 14, 40, '− (phẳng)', 'end')}
+        ${chu(125, 74, '3.6V · 18650', 'lk-trang')}${g(216, 60, 232, 30, '+ (núm lồi)', 'end')}${g(36, 52, 30, 30, '− (phẳng)', 'start')}
         ${g(125, 94, 125, 124, 'vỏ bọc nhựa: rách = cách điện hở', 'middle')}`, 'Cell 18650: hình trụ dài 65mm, đầu + có núm lồi, đầu − phẳng'),
-      kh: kh(net('10,28 46,28') + net('46,14 46,42') + '<rect x="54" y="20" width="4" height="16" class="lk-dac"/>' + net('58,28 110,28') + chu(38, 12, '+', 'lk-chu-kh') + chu(70, 12, '−', 'lk-chu-kh'), 'pin 1 cell'),
-      chan: ['Đầu có <b>núm lồi = +</b>, đầu phẳng = −. Đo DCV để chắc: que đỏ vào đầu nghĩ là +, ra số dương là đúng.'],
-      gioi_han: 'Danh nghĩa 3.6–3.7V, sạc đầy <b>4.2V</b>, cạn 2.5–3.0V (Samsung 25R cắt ở 2.5V). Cell hãng xả được 10–20A — nghĩa là nối tắt sẽ ra hàng chục ampe. Cell không rõ hãng: số mAh/A trên vỏ thường sai.',
-      bay: '<b>Nối tắt 2 cực</b> (dây, kẹp, đồng xu trong túi): nóng đỏ dây, cháy. Vỏ nhựa rách ở đầu +: vỏ kim loại cả thân là cực −, chạm + là chập. Cell < 2.5V, phồng, móp: bỏ, không sạc.', bai: ['16.1', '16.2', '16.3', '17.1'] },
+      kh: kh(net('10,28 46,28') + net('46,14 46,42') + '<rect x="54" y="20" width="4" height="16" class="lk-dac"/>' + net('58,28 110,28') + chu(38, 14, '+', 'lk-chu-kh') + chu(70, 14, '−', 'lk-chu-kh'), 'pin 1 cell'),
+      chan: ['Đầu có <b>núm lồi là +</b>, đầu phẳng là −. Muốn chắc thì đo DCV: que đỏ vào đầu bạn nghĩ là +, ra số dương là đúng.'],
+      gioi_han: 'Danh nghĩa 3.6–3.7V, sạc đầy <b>4.2V</b>, cạn ở 2.5–3.0V (Samsung 25R cắt ở 2.5V). Cell hãng xả được 10–20A, tức là nối tắt sẽ ra hàng chục ampe. Cell không rõ hãng thì số mAh/A in trên vỏ thường sai.',
+      bay: '<b>Nối tắt 2 cực</b> (dây, kẹp, đồng xu trong túi) làm dây nóng đỏ và cháy. Cả thân vỏ kim loại là cực −, nên vỏ nhựa rách ở đầu + thì rất dễ chạm + vào − mà chập. Cell dưới 2.5V, phồng hoặc móp thì bỏ, không sạc.', bai: ['16.1', '16.2', '16.3', '17.1'] },
 
     { id: 'tp4056', nhom: 'pin', ten: 'Module sạc TP4056 có bảo vệ (6 chân)', tim: 'TP4056', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="50" y="40" width="160" height="60" rx="3" fill="#1F5AA8" ${vien}/><rect x="34" y="56" width="22" height="28" rx="3" fill="#B8BEC4"/>
-        <rect x="100" y="52" width="22" height="16" fill="#1E2226"/><rect x="100" y="74" width="16" height="12" fill="#1E2226"/><rect x="130" y="74" width="16" height="12" fill="#1E2226"/>
+        <rect x="96" y="50" width="32" height="18" fill="#1E2226"/>${chu(112, 63, '4056', 'lk-trang')}<rect x="100" y="74" width="16" height="12" fill="#1E2226"/><rect x="130" y="74" width="16" height="12" fill="#1E2226"/>
         <circle cx="160" cy="54" r="4" fill="#E5372C"/><circle cx="172" cy="54" r="4" fill="#2FA84F"/>
         ${[[200, 48, 'OUT+'], [200, 92, 'OUT−'], [186, 60, 'B+'], [186, 80, 'B−']].map(([x, y, t]) => `<circle cx="${x}" cy="${y}" r="4" fill="#C9A640"/>${chu(x + 18, y + 4, t, 'lk-chu', 'start')}`).join('')}
-        ${g(34, 70, 14, 40, 'Type-C 5V vào', 'end')}${g(111, 52, 96, 22, 'TP4056', 'end')}${g(108, 86, 90, 124, 'DW01A + 8205A = bảo vệ', 'middle')}${g(166, 54, 170, 20, 'đỏ sạc · xanh đầy', 'middle')}`, 'Module TP4056 6 chân: cổng USB một đầu, 2 đèn đỏ xanh, cọc B+ B- cho pin và OUT+ OUT- cho tải'),
+        ${g(40, 56, 30, 24, 'USB-C 5V vào', 'middle')}${g(108, 86, 90, 124, 'DW01A + 8205A = bảo vệ', 'middle')}${g(166, 54, 170, 20, 'đỏ sạc · xanh đầy', 'middle')}`, 'Module TP4056 6 chân: cổng USB một đầu, 2 đèn đỏ xanh, cọc B+ B- cho pin và OUT+ OUT- cho tải'),
       kh: '',
-      chan: ['<b>B+ / B−</b> → 2 cực cell (qua đế pin). <b>OUT+ / OUT−</b> → tải (đi qua mạch bảo vệ). Cổng USB (hoặc IN+/IN−) → nguồn 5V.', 'Loại 4 chân (chỉ có B+/B−/IN) là <b>không có bảo vệ</b> — không dùng cho bài này.'],
-      gioi_han: 'Vào 4.0–8V (tuyệt đối 8V). Sạc tới 4.2V ±1.5%, dòng 1A (điện trở 1.2k trên module). Pin dưới 2.9V: sạc nhỏ 130mA. Chỉ <b>1 cell</b>. Bảo vệ DW01A: ngắt ở 4.30V (sạc) / 2.50V (xả), quá dòng.',
-      bay: '<b>Cắm pin ngược vào B+/B−</b>: hỏng module, có thể nóng cháy — đo cực đế pin bằng DCV trước. Dùng để sạc pack 2S: sai hoàn toàn (4.2V/cell). Tải nối vào B+/B− thay vì OUT: mất bảo vệ xả.', bai: ['16.1'] },
+      chan: ['<b>B+ / B−</b> nối 2 cực cell (qua đế pin). <b>OUT+ / OUT−</b> nối tải, dòng đi qua mạch bảo vệ. Cổng USB (hoặc IN+/IN−) nhận nguồn 5V.', 'Loại 4 chân (chỉ có B+/B−/IN) <b>không có bảo vệ</b>, không dùng cho bài này.'],
+      gioi_han: 'Vào 4.0–8V (tuyệt đối 8V). Sạc tới 4.2V ±1.5% với dòng 1A (do điện trở 1.2k trên module). Pin dưới 2.9V thì sạc nhỏ 130mA. Chỉ cho <b>1 cell</b>. Mạch bảo vệ DW01A ngắt ở 4.30V khi sạc, 2.50V khi xả, và khi quá dòng.',
+      bay: '<b>Cắm pin ngược vào B+/B−</b> là hỏng module, có thể nóng cháy, nên đo cực đế pin bằng DCV trước. Không dùng để sạc pack 2S: module chỉ sạc tới 4.2V, đúng cho 1 cell. Nối tải vào B+/B− thay vì OUT là mất bảo vệ xả.', bai: ['16.1'] },
 
     { id: 'de-18650', nhom: 'pin', ten: 'Đế / hộp pin 18650 (1 ô, 2 ô nối tiếp)', tim: 'đế pin 18650', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="30" y="30" width="200" height="34" rx="3" fill="#1E2328"/><rect x="30" y="74" width="200" height="34" rx="3" fill="#1E2328"/>
@@ -621,39 +619,39 @@
         <path d="M230 40 C 250 40, 250 20, 262 20" stroke="#C8322B" stroke-width="3" fill="none"/><path d="M230 98 C 250 98, 250 122, 262 122" stroke="#23303D" stroke-width="3" fill="none"/>
         ${chu(130, 128, 'hộp 2 ô: 2 cell đặt ngược chiều nhau', 'lk-mo')}${chu(130, 142, '→ nối tiếp bên trong, dây ra = tổng áp', 'lk-mo')}`, 'Hộp pin 2 ô 18650: 2 cell nằm song song nhưng ngược chiều, dây đỏ đen ra một đầu'),
       kh: '',
-      chan: ['Ký hiệu + / − dập trong đáy từng ô: lắp cell đúng chiều in. Dây đỏ = +, đen = − (đo DCV để chắc).', 'Hộp 2 ô nối tiếp: dây ra = tổng 2 cell (~7.4V). Có hộp có thêm dây giữa (điểm giữa 2 cell) → nối BM của BMS.'],
-      gioi_han: 'Lò xo + tiếp điểm mỏng: dòng lớn (motor kẹt ~3A) làm nóng lò xo. Robot nhỏ 2 motor TT vẫn trong mức.',
-      bay: 'Lắp ngược 1 cell trong hộp 2 ô: tổng chỉ còn ~0V, 2 cell xả vào nhau. Luôn đo DCV dây ra sau khi lắp.', bai: ['16.1', '16.2', '16.3', '17.1'] },
+      chan: ['Đáy từng ô có dập ký hiệu + / −, lắp cell đúng chiều in. Dây đỏ là +, đen là − (đo DCV để chắc).', 'Hộp 2 ô nối tiếp cho dây ra bằng tổng 2 cell (~7.4V). Có hộp có thêm dây giữa (điểm giữa 2 cell), dây này nối vào BM của BMS.'],
+      gioi_han: 'Lò xo và tiếp điểm mỏng, dòng lớn (2 motor kẹt ~3A) làm nóng lò xo. Robot nhỏ 2 motor TT vẫn trong mức chịu được.',
+      bay: 'Lắp ngược 1 cell trong hộp 2 ô thì tổng chỉ còn ~0V và 2 cell xả vào nhau. Luôn đo DCV dây ra sau khi lắp.', bai: ['16.1', '16.2', '16.3', '17.1'] },
 
     { id: 'bms-2s', nhom: 'pin', ten: 'Mạch bảo vệ BMS 2S', tim: 'BMS 2S', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="50" y="40" width="160" height="56" rx="3" fill="#1F5AA8" ${vien}/><rect x="96" y="54" width="18" height="14" fill="#1E2226"/><rect x="124" y="54" width="18" height="14" fill="#1E2226"/><rect x="152" y="54" width="18" height="14" fill="#1E2226"/>
         ${[[64, 'B−'], [96, 'BM'], [128, 'B+'], [164, 'P−'], [196, 'P+']].map(([x, t]) => `<rect x="${x - 7}" y="84" width="14" height="8" fill="#C9A640"/>${chu(x, 112, t, 'lk-chu')}`).join('')}
-        ${g(128, 54, 128, 22, 'IC bảo vệ + MOSFET', 'middle')}${chu(96, 130, 'B = phía pin', 'lk-mo')}${chu(180, 130, 'P = phía tải/sạc', 'lk-mo')}`, 'Mạch BMS 2S: mạch in dài, 5 miếng hàn B- BM B+ P- P+'),
+        ${g(128, 54, 128, 22, 'IC bảo vệ + MOSFET', 'middle')}${chu(96, 130, 'B = phía pin', 'lk-mo')}${chu(180, 144, 'P = phía tải/sạc', 'lk-mo')}`, 'Mạch BMS 2S: mạch in dài, 5 miếng hàn B- BM B+ P- P+'),
       kh: '',
-      chan: ['<b>B−</b> = cực − cell dưới, <b>BM</b> = điểm giữa 2 cell, <b>B+</b> = cực + cell trên. <b>P−/P+</b> = đầu ra cho tải (và vào sạc 2S). Tên in trên board có thể là B−/B1/B+ hoặc 0V/4.2V/8.4V.', 'B+ ↔ BM = áp cell trên, BM ↔ B− = áp cell dưới.'],
-      gioi_han: 'Chỉ cho <b>2 cell nối tiếp</b>. Ngắt khi 1 cell quá thấp/quá cao hoặc quá dòng (ngưỡng tuỳ board — đọc trang shop). Board rẻ thường <b>không cân bằng</b> 2 cell.',
-      bay: 'Hàn/kẹp sai thứ tự B−, BM, B+: nối tắt 1 cell qua board. Nối dây BM trước khi đo: luôn đo từng điểm bằng DCV rồi mới nối. Đầu ra P đọc 0V trong khi cell còn áp = bảo vệ đang ngắt.', bai: ['16.2', '16.3', '17.1'] },
+      chan: ['<b>B−</b> = cực − cell dưới, <b>BM</b> = điểm giữa 2 cell, <b>B+</b> = cực + cell trên. <b>P−/P+</b> = đầu ra cho tải (và vào sạc 2S). Tên in trên board có thể là B−/B1/B+ hoặc 0V/4.2V/8.4V.', 'Đo giữa B+ và BM là áp cell trên, giữa BM và B− là áp cell dưới.'],
+      gioi_han: 'Chỉ cho <b>2 cell nối tiếp</b>. Mạch ngắt khi 1 cell quá thấp, quá cao hoặc khi quá dòng (ngưỡng tuỳ board, đọc trang shop). Board rẻ thường <b>không cân bằng</b> 2 cell.',
+      bay: 'Hàn hoặc kẹp sai thứ tự B−, BM, B+ là nối tắt 1 cell qua board. Đừng nối dây BM khi chưa đo: luôn đo từng điểm bằng DCV rồi mới nối. Đầu ra P đọc 0V trong khi cell còn áp nghĩa là mạch bảo vệ đang ngắt.', bai: ['16.2', '16.3', '17.1'] },
 
     { id: 'lm2596', nhom: 'pin', ten: 'Module hạ áp LM2596 (chỉnh được)', tim: 'LM2596', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="40" y="36" width="190" height="72" rx="3" fill="#1F5AA8" ${vien}/><rect x="60" y="48" width="40" height="36" rx="4" fill="#1E2226"/>
         <circle cx="130" cy="66" r="15" fill="#2A3038"/><rect x="166" y="46" width="20" height="30" fill="#2F6FD6" stroke="#fff"/><circle cx="176" cy="54" r="4" fill="#C9A640"/>
         ${[[48, 'IN+'], [48, 'IN−']].map(([x, t], i) => `<circle cx="${x}" cy="${50 + i * 44}" r="4" fill="#C9A640"/>${chu(x - 10, 54 + i * 44, t, 'lk-chu', 'end')}`).join('')}
         ${[['OUT+'], ['OUT−']].map(([t], i) => `<circle cx="222" cy="${50 + i * 44}" r="4" fill="#C9A640"/>${chu(234, 54 + i * 44, t, 'lk-chu', 'start')}`).join('')}
-        ${g(80, 84, 80, 124, 'LM2596', 'middle')}${g(130, 81, 130, 140, 'cuộn cảm', 'middle')}${g(176, 54, 196, 20, 'vít chỉnh áp ra')}`, 'Module LM2596 xanh: IC, cuộn cảm tròn đen, biến trở xanh có vít, 4 miếng hàn IN+ IN- OUT+ OUT-'),
+        ${g(80, 84, 80, 124, 'LM2596', 'middle')}${g(130, 81, 130, 124, 'cuộn cảm', 'middle')}${g(176, 46, 186, 22, 'vít chỉnh áp ra', 'middle')}`, 'Module LM2596 xanh: IC, cuộn cảm tròn đen, biến trở xanh có vít, 4 miếng hàn IN+ IN- OUT+ OUT-'),
       kh: '',
-      chan: ['IN+ / IN− ← pin; OUT+ / OUT− → tải. In trên board, không đảo được — đảo IN là hỏng module.', 'Vít đồng trên biến trở xanh chỉnh áp ra; vặn nhiều vòng mới đổi rõ.'],
-      gioi_han: 'Vào 4.5–40V, ra tới 3A. Hạ áp kiểu <b>xung</b> (bật/tắt 150kHz + cuộn cảm) nên ít nóng hơn AMS1117. Cần áp vào cao hơn áp ra ≳ 1.5V: ra 5V cần vào ≳ 6.5V.',
-      bay: '<b>Module mới mua có thể đang chỉnh ra bất kỳ áp nào</b> (thường gần bằng áp vào): chỉnh ra 5.0V khi <b>chưa nối tải</b>, đo lại rồi mới nối board. Cấp board qua chân 5V trong khi vẫn cắm USB: 2 nguồn đấu nhau (Espressif: các cách cấp nguồn loại trừ nhau).', bai: ['16.3', '17.1'] },
+      chan: ['IN+ / IN− nối pin, OUT+ / OUT− nối tải. Chiều in sẵn trên board, không đảo được; đảo IN là hỏng module.', 'Vít đồng trên biến trở xanh chỉnh áp ra, phải vặn nhiều vòng mới thấy đổi rõ.'],
+      gioi_han: 'Vào 4.5–40V, ra tới 3A. Module hạ áp kiểu <b>xung</b> (bật/tắt 150kHz qua cuộn cảm) nên ít nóng hơn AMS1117. Áp vào phải cao hơn áp ra ≳ 1.5V, tức muốn ra 5V thì vào ≳ 6.5V.',
+      bay: '<b>Module mới mua có thể đang chỉnh ra áp bất kỳ</b> (thường gần bằng áp vào). Chỉnh ra 5.0V khi <b>chưa nối tải</b>, đo lại, rồi mới nối board. Đừng cấp board qua chân 5V trong khi vẫn cắm USB: 2 nguồn sẽ đấu vào nhau (Espressif ghi các cách cấp nguồn là loại trừ nhau).', bai: ['16.3', '17.1'] },
 
     { id: 'khung-2wd', nhom: 'robot', ten: 'Khung robot 2WD', tim: 'khung 2WD', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="60" y="30" width="140" height="90" rx="14" fill="none" stroke="#C9A640" stroke-width="3"/>
         <rect x="40" y="54" width="18" height="44" rx="4" fill="#2A3038"/><rect x="202" y="54" width="18" height="44" rx="4" fill="#2A3038"/>
         <circle cx="130" cy="112" r="8" fill="#B8BEC4"/><rect x="104" y="46" width="52" height="30" rx="3" fill="#1E2328"/>
-        ${g(49, 54, 30, 24, 'bánh trái + motor', 'end')}${g(211, 54, 232, 24, 'bánh phải + motor')}${g(130, 120, 130, 146, 'bánh mắt trâu (tự xoay)', 'middle')}${g(130, 46, 130, 16, 'đế pin / board', 'middle')}`, 'Khung robot 2 bánh nhìn từ trên: 2 bánh hai bên, bánh mắt trâu phía sau, chỗ đặt pin và board ở giữa'),
+        ${g(49, 54, 22, 24, 'bánh + motor', 'middle')}${g(211, 54, 238, 24, 'bánh + motor', 'middle')}${g(130, 120, 130, 140, 'bánh mắt trâu (tự xoay)', 'middle')}${g(130, 46, 130, 24, 'đế pin / board', 'middle')}`, 'Khung robot 2 bánh nhìn từ trên: 2 bánh hai bên, bánh mắt trâu phía sau, chỗ đặt pin và board ở giữa', 158),
       kh: '',
-      chan: ['2 motor TT (mỗi bánh 1 motor) + 1 bánh mắt trâu. Robot rẽ bằng cách cho 2 bánh quay khác tốc độ; quay tại chỗ = 2 bánh ngược chiều.'],
+      chan: ['2 motor TT (mỗi bánh 1 motor) và 1 bánh mắt trâu. Robot rẽ bằng cách cho 2 bánh quay khác tốc độ, và quay tại chỗ khi 2 bánh quay ngược chiều.'],
       gioi_han: 'Khung mica/nhôm mỏng: không chịu va mạnh. Bộ thường kèm 2 đĩa encoder 20 lỗ.',
-      bay: 'Chạy thử lần đầu khi bánh đang chạm bàn: robot lao xuống đất. Luôn kê khung cho bánh quay trên không trước.', bai: ['17.1'] },
+      bay: 'Chạy thử lần đầu khi bánh đang chạm bàn là robot lao xuống đất. Luôn kê khung cho bánh quay trên không trước.', bai: ['17.1'] },
 
     // ——— Nên có thêm: đồ nghề cho bàn làm việc (chưa bài nào bắt buộc) ———
     { id: 'que-kep-moc', nhom: 'nen', ten: 'Que đo đầu kẹp móc (test hook)', tim: 'kẹp móc', mua: 'nên có',
@@ -661,10 +659,10 @@
         <path d="M134 71 H156 q10 0 10 -10 v-6" fill="none" stroke="#B8BEC4" stroke-width="3" stroke-linecap="round"/>
         <line x1="166" y1="30" x2="166" y2="96" class="lk-chan"/>
         <path d="M-10 71 H20" stroke="#D8322A" stroke-width="3"/>
-        ${g(160, 58, 196, 30, 'móc thép kéo ra, ôm chân')}${g(55, 60, 55, 30, 'bấm đuôi để thò móc', 'middle')}${g(166, 90, 196, 110, 'chân linh kiện')}
+        ${g(163, 56, 170, 30, 'móc thép ôm chân')}${g(55, 60, 55, 30, 'bấm đuôi để thò móc', 'middle')}${g(166, 90, 180, 110, 'chân linh kiện')}
         ${chu(130, 140, 'rảnh 2 tay · không trượt que chạm chân bên cạnh', 'lk-mo')}`, 'Đầu kẹp móc: thân nhựa đỏ, bấm đuôi thì móc thép thò ra ôm lấy chân linh kiện'),
       kh: '',
-      chan: ['Bấm đuôi → móc thép thò ra, móc vào chân linh kiện hoặc chân IC rồi thả tay. Loại "mini grabber" móc được cả chân IC DIP.', 'Mua loại có đầu cắm chuối 4mm cắm thẳng vào đồng hồ, hoặc dây 2 đầu (1 đầu móc, 1 đầu cá sấu kẹp vào que đo).'],
+      chan: ['Bấm đuôi cho móc thép thò ra, móc vào chân linh kiện hoặc chân IC rồi thả tay. Loại "mini grabber" móc được cả chân IC DIP.', 'Mua loại có đầu cắm chuối 4mm cắm thẳng vào đồng hồ, hoặc dây 2 đầu (1 đầu móc, 1 đầu cá sấu kẹp vào que đo).'],
       gioi_han: 'Dây mảnh: chỉ để đo, không cho dòng tải qua.',
       bay: 'Móc 2 chân IC sát nhau: móc chạm cả 2 chân là nối tắt. Móc xong nhìn kỹ trước khi cấp điện.', bai: [] },
 
@@ -672,10 +670,10 @@
       anh: anh(`<rect x="10" y="16" width="240" height="124" rx="8" fill="#2E6A8E"/>
         ${[0, 1, 2, 3].map(i => `<rect x="${22 + i * 26}" y="28" width="20" height="20" rx="4" fill="#23546F"/>`).join('')}
         <rect x="130" y="28" width="108" height="46" rx="4" fill="#23546F"/>
-        ${Array.from({ length: 8 }, (_, i) => `<line x1="${24 + i * 14}" y1="62" x2="${24 + i * 14}" y2="126" stroke="#3E7EA3"/>`).join('')}
-        <rect x="140" y="92" width="80" height="34" rx="3" fill="#1F5AA8" ${vien}/>
-        ${g(40, 38, 40, 8, 'ngăn giữ ốc, chân cắt', 'middle')}${g(180, 92, 244, 150, 'bo mạch đặt lên: đáy không chạm kim loại', 'end')}
-        ${chu(184, 56, 'chịu ~500°C', 'lk-trang')}`, 'Thảm silicon xanh có các ngăn nhỏ đựng ốc và vùng phẳng đặt bo mạch'),
+        ${Array.from({ length: 8 }, (_, i) => `<line x1="${24 + i * 14}" y1="72" x2="${24 + i * 14}" y2="126" stroke="#3E7EA3"/>`).join('')}
+        <rect x="140" y="92" width="80" height="34" rx="3" fill="#1F5AA8" ${vien}/>${chu(180, 113, 'bo mạch', 'lk-trang')}
+        ${chu(70, 62, 'ngăn: ốc, chân cắt', 'lk-trang')}${chu(184, 56, 'chịu ~500°C', 'lk-trang')}
+        ${chu(130, 153, 'bo đặt lên thảm: đáy không chạm kim loại', 'lk-mo')}`, 'Thảm silicon xanh có các ngăn nhỏ đựng ốc và vùng phẳng đặt bo mạch', 160),
       kh: '',
       chan: ['Lót mặt bàn khi hàn và khi ráp: silicon không dẫn điện, chịu nhiệt (loại thường ghi ~500°C), thiếc rơi xuống cạy ra được.', 'Ngăn nhỏ giữ ốc, đoạn chân cắt, linh kiện đang dùng — đỡ rơi xuống sàn, đỡ lọt vào gầm mạch đang có điện.'],
       gioi_han: 'Chịu nhiệt chứ không phải đế mỏ hàn: mỏ hàn vẫn phải gác lên đế.',
@@ -706,7 +704,7 @@
         <circle cx="130" cy="80" r="38" fill="#1E2328"/>
         ${[0, 60, 120, 180, 240, 300].map(a => `<path d="M130 80 L${130 + 34 * Math.cos(a * Math.PI / 180)} ${80 + 34 * Math.sin(a * Math.PI / 180)}" stroke="#46525E" stroke-width="8" stroke-linecap="round"/>`).join('')}
         <path d="M20 70 q10 -10 20 0 t20 0 M20 90 q10 -10 20 0 t20 0" fill="none" stroke="#9AA3AD" stroke-width="2"/>
-        ${g(130, 30, 180, 16, 'lọc than hoạt tính')}${g(40, 70, 20, 40, 'khói nhựa thông', 'end')}
+        ${g(130, 30, 150, 14, 'lọc than hoạt tính')}${g(40, 92, 40, 112, 'khói hàn', 'middle')}
         ${chu(130, 146, 'đặt cách mối hàn ~15–20cm', 'lk-mo')}`, 'Quạt hút khói hàn vuông, cánh quạt phía sau có tấm lọc'),
       kh: '',
       chan: ['Đặt cạnh chỗ hàn, hút khói bay ngang ra khỏi mặt. Không có quạt thì ít nhất mở cửa sổ + quạt thổi ra ngoài.'],
@@ -717,12 +715,12 @@
       anh: anh(`<rect x="40" y="62" width="160" height="24" rx="6" fill="#B8BEC4" ${vien}/><rect x="200" y="68" width="30" height="12" fill="#E9EDF0" ${vien}/>
         <polygon points="230,68 250,72 250,76 230,80" fill="#E9EDF0" ${vien}/><rect x="10" y="68" width="30" height="12" fill="#2F6FD6"/>
         <circle cx="150" cy="58" r="7" fill="#2F6FD6"/>
-        ${g(20, 68, 20, 36, 'ấn pít-tông nạp lò xo', 'middle')}${g(150, 52, 150, 24, 'nút nhả', 'middle')}${g(248, 76, 248, 110, 'đầu teflon', 'middle')}
+        ${g(20, 68, 20, 36, 'ấn nạp lò xo', 'start')}${g(150, 52, 150, 24, 'nút nhả', 'middle')}${g(248, 76, 248, 110, 'đầu teflon', 'middle')}
         ${chu(130, 136, 'nung chảy mối → áp đầu teflon → bấm nút', 'lk-mo')}`, 'Bơm hút thiếc: ống nhôm, pít-tông xanh một đầu, đầu teflon trắng đầu kia, nút nhả trên thân'),
       kh: '',
-      chan: ['Ấn pít-tông tới khi chốt; nung chảy mối hàn; áp đầu teflon sát mối, bấm nút → lò xo bật, hút thiếc lỏng vào ống.', 'Gỡ chân header / linh kiện nhiều chân nhanh hơn bấc. Mối còn sót thì dùng bấc.'],
+      chan: ['Ấn pít-tông xuống tới khi chốt. Nung chảy mối hàn, áp đầu teflon sát mối rồi bấm nút: lò xo bật lại và hút thiếc lỏng vào ống.', 'Gỡ chân header / linh kiện nhiều chân nhanh hơn bấc. Mối còn sót thì dùng bấc.'],
       gioi_han: 'Đầu teflon mòn dần vì nhiệt: loại có đầu thay được.',
-      bay: 'Lò xo bật giật tay: giữ bơm vuông góc, đừng chọc đầu bơm vào mũi hàn. Thiếc trong ống đổ ra khi mở — đổ vào hộp, không đổ xuống sàn.', bai: ['0.3'] },
+      bay: 'Lò xo bật làm giật tay, nên giữ bơm vuông góc và đừng chọc đầu bơm vào mũi hàn. Mở ống ra thì thiếc bên trong rơi ra: đổ vào hộp, không đổ xuống sàn.', bai: ['0.3'] },
 
     { id: 'de-kep-bo', nhom: 'nen', ten: 'Đế kẹp bo mạch (PCB holder)', tim: 'đế kẹp bo', mua: 'nên có',
       anh: anh(`<rect x="30" y="118" width="200" height="16" rx="3" fill="#3B4652"/>
@@ -730,11 +728,11 @@
         <rect x="56" y="64" width="148" height="10" fill="#8A949E"/>
         <rect x="60" y="44" width="140" height="20" fill="#1F5AA8" ${vien}/>
         ${[76, 92, 108, 124, 140, 156, 172, 188].map(x => `<circle cx="${x}" cy="54" r="2.4" fill="#C9A640"/>`).join('')}
-        ${g(48, 60, 20, 30, 'hàm kẹp 2 cạnh bo', 'end')}${g(130, 44, 180, 20, 'bo nằm phẳng, lật được')}${g(212, 126, 244, 146, 'đế nặng')}`, 'Đế kẹp bo mạch: hai trụ kẹp hai cạnh của bo, bo nằm ngang, có thể lật'),
+        ${g(48, 58, 20, 26, 'hàm kẹp', 'middle')}${g(130, 44, 150, 22, 'bo nằm phẳng, lật được', 'middle')}${g(220, 124, 244, 108, 'đế nặng', 'middle')}`, 'Đế kẹp bo mạch: hai trụ kẹp hai cạnh của bo, bo nằm ngang, có thể lật'),
       kh: '',
       chan: ['Kẹp 2 cạnh bo cho nằm phẳng; lật mặt dưới lên để hàn, không phải giữ bằng tay.', '"Bàn tay thứ ba" kẹp được dây/module nhỏ; đế kẹp giữ bo to vững hơn và không trượt khi ấn mỏ hàn.'],
       gioi_han: '',
-      bay: 'Kẹp quá chặt bo mỏng (module) → cong bo, nứt mối hàn SMD bên dưới.', bai: [] },
+      bay: 'Kẹp quá chặt bo mỏng (module) làm cong bo, nứt mối hàn SMD bên dưới.', bai: [] },
 
     { id: 'co-nhiet', nhom: 'nen', ten: 'Ống co nhiệt + băng keo điện', tim: 'ống co nhiệt', mua: 'nên có',
       anh: anh(`<line x1="10" y1="60" x2="250" y2="60" stroke="#D8322A" stroke-width="5"/>
@@ -742,7 +740,7 @@
         ${g(130, 52, 130, 24, 'co nhiệt ~2:1 bọc kín mối hàn', 'middle')}
         <circle cx="210" cy="112" r="24" fill="#23303D"/><circle cx="210" cy="112" r="10" style="fill:var(--panel)"/>
         <path d="M230 124 L250 136" stroke="#23303D" stroke-width="8"/>
-        ${g(186, 112, 150, 112, 'băng keo điện PVC', 'end')}${chu(40, 100, 'xỏ ống vào dây', 'lk-canh', 'start')}${chu(40, 114, 'TRƯỚC khi hàn', 'lk-canh', 'start')}`, 'Một đoạn ống co nhiệt đen bọc mối nối dây đỏ, bên cạnh cuộn băng keo điện'),
+        ${g(190, 126, 170, 142, 'băng keo điện PVC', 'end')}${chu(40, 92, 'xỏ ống vào dây', 'lk-canh', 'start')}${chu(40, 106, 'TRƯỚC khi hàn', 'lk-canh', 'start')}`, 'Một đoạn ống co nhiệt đen bọc mối nối dây đỏ, bên cạnh cuộn băng keo điện'),
       kh: '',
       chan: ['Ống co nhiệt: chọn cỡ lớn hơn mối nối một chút, xỏ vào dây trước khi hàn, hàn xong kéo ống trùm mối, hơ nóng cho co lại ôm chặt.', 'Hơ bằng máy khò nhiệt; không có thì dùng thân mỏ hàn lướt qua (không chạm mũi). Băng keo điện dùng tạm khi không có ống.'],
       gioi_han: 'Ống thường co ở ~90–120°C; hơ quá lâu thì cháy, chảy.',
@@ -753,11 +751,11 @@
         ${[0, 1, 2, 3].map(c => [0, 1, 2].map(r => `<rect x="${28 + c * 53}" y="${32 + r * 33}" width="47" height="27" rx="3" fill="none" stroke="#8A949E"/>`).join('')).join('')}
         ${chu(51, 50, '220', 'lk-chu')}${chu(104, 50, '1k', 'lk-chu')}${chu(157, 50, '10k', 'lk-chu')}${chu(210, 50, '100k', 'lk-chu')}
         ${chu(51, 83, 'LED', 'lk-chu')}${chu(104, 83, '104', 'lk-chu')}${chu(157, 83, 'S8050', 'lk-chu')}${chu(210, 83, '4007', 'lk-chu')}
-        ${chu(130, 148, 'dán nhãn giá trị từng ngăn', 'lk-mo')}`, 'Hộp nhựa trong chia 12 ngăn, mỗi ngăn dán nhãn giá trị linh kiện'),
+        ${chu(130, 146, 'dán nhãn giá trị từng ngăn', 'lk-mo')}`, 'Hộp nhựa trong chia 12 ngăn, mỗi ngăn dán nhãn giá trị linh kiện'),
       kh: '',
       chan: ['Mỗi ngăn một giá trị, dán nhãn. Điện trở cùng màu thân rất khó phân biệt lúc đã lẫn: đo Ω rồi mới bỏ vào ngăn.'],
       gioi_han: '',
-      bay: 'Bỏ lẫn 1k với 10k (nâu·đen·đỏ và nâu·đen·cam trông gần giống dưới đèn vàng) → mạch chạy sai mà không biết vì sao.', bai: [] },
+      bay: 'Bỏ lẫn 1k với 10k (nâu·đen·đỏ và nâu·đen·cam trông gần giống nhau dưới đèn vàng) thì mạch chạy sai mà không biết vì sao.', bai: [] },
 
     { id: 'header', nhom: 'nen', ten: 'Hàng rào chân (pin header) 2.54mm', tim: 'header', mua: 'nên có · thường kèm module',
       anh: anh(`<rect x="20" y="40" width="160" height="12" fill="#1E2226"/>
@@ -767,15 +765,15 @@
         ${chu(130, 140, 'bước 2.54mm · bẻ theo số chân cần', 'lk-mo')}`, 'Hàng rào chân đực 8 chân: đầu ngắn phía trên, đầu dài phía dưới; bên cạnh là header cái'),
       kh: '',
       chan: ['Header đực: đầu <b>ngắn</b> hàn vào lỗ module, đầu <b>dài</b> cắm xuống breadboard. Header cái: cắm module / dây đực vào.', 'Mẹo hàn thẳng: cắm header vào breadboard trước, đặt module lên, hàn 2 chân ở 2 đầu, kiểm thẳng rồi hàn nốt.'],
-      gioi_han: 'Bước chân 2.54mm (0.1") — đúng bước lỗ breadboard. Dòng mỗi chân ~1–3A tuỳ hãng.',
-      bay: 'Hàn ngược (đầu dài vào module): chân cắm breadboard quá ngắn, lỏng. Hàn lâu 1 chân → nhựa chảy, chân lệch. Hàn xong đo 2 chân cạnh nhau: kêu bíp là dính cầu thiếc.', bai: ['0.2', '0.4'] },
+      gioi_han: 'Bước chân 2.54mm (0.1"), đúng bằng bước lỗ breadboard. Dòng mỗi chân ~1–3A tuỳ hãng.',
+      bay: 'Hàn ngược (đầu dài vào module) thì phần cắm breadboard quá ngắn, lỏng. Hàn lâu 1 chân làm nhựa chảy, chân lệch. Hàn xong đo 2 chân cạnh nhau: kêu bíp là dính cầu thiếc.', bai: ['0.2', '0.4'] },
 
     { id: 'bo-duc-lo', nhom: 'nen', ten: 'Bo đục lỗ (perfboard) 2.54mm', tim: 'bo đục lỗ', mua: 'nên có',
-      anh: anh(`<rect x="30" y="20" width="200" height="110" rx="3" fill="#2E7D5B" ${vien}/>
-        <g>${Array.from({ length: 12 }, (_, i) => Array.from({ length: 6 }, (_, j) => `<circle cx="${46 + i * 16}" cy="${36 + j * 16}" r="4.2" fill="#C9A640"/><circle cx="${46 + i * 16}" cy="${36 + j * 16}" r="1.6" fill="#0B0F13"/>`).join('')).join('')}</g>
-        ${g(46, 36, 20, 10, 'mỗi lỗ 1 pad riêng', 'end')}${chu(130, 146, 'khác breadboard: các lỗ KHÔNG thông nhau', 'lk-canh')}`, 'Bo đục lỗ xanh, lưới lỗ có pad đồng tròn riêng rẽ'),
+      anh: anh(`<rect x="30" y="30" width="200" height="102" rx="3" fill="#2E7D5B" ${vien}/>
+        <g>${Array.from({ length: 12 }, (_, i) => Array.from({ length: 6 }, (_, j) => `<circle cx="${46 + i * 16}" cy="${42 + j * 16}" r="4.2" fill="#C9A640"/><circle cx="${46 + i * 16}" cy="${42 + j * 16}" r="1.6" fill="#0B0F13"/>`).join('')).join('')}</g>
+        ${g(62, 42, 70, 18, 'mỗi lỗ 1 pad riêng')}${chu(130, 146, 'khác breadboard: các lỗ KHÔNG thông nhau', 'lk-canh')}`, 'Bo đục lỗ xanh, lưới lỗ có pad đồng tròn riêng rẽ'),
       kh: '',
-      chan: ['Mạch đã chạy trên breadboard → chuyển lên bo đục lỗ để hàn cố định (lắp lên robot, không tuột dây).', 'Mỗi lỗ có pad đồng riêng, không lỗ nào thông lỗ nào: tự nối bằng chân linh kiện uốn hoặc dây. Loại "stripboard" thì pad nối theo dải — đọc kỹ lúc mua.'],
+      chan: ['Mạch đã chạy trên breadboard thì chuyển lên bo đục lỗ để hàn cố định, lắp lên robot không lo tuột dây.', 'Mỗi lỗ có pad đồng riêng, không lỗ nào thông lỗ nào, bạn tự nối bằng chân linh kiện uốn hoặc dây. Loại "stripboard" thì pad nối theo dải, nên đọc kỹ lúc mua.'],
       gioi_han: 'Loại sợi thuỷ tinh FR4 (xanh, 2 mặt) chịu nhiệt tốt; loại giấy phíp (nâu) rẻ, dễ bong pad khi hàn lâu.',
       bay: 'Kéo cầu thiếc giữa 2 pad cạnh nhau để nối rồi quên chỗ không được nối: đo thông mạch mọi cặp pad kề nhau trước khi cấp điện.', bai: ['0.1', '0.3', '0.4'] },
 
@@ -787,7 +785,7 @@
       kh: '',
       chan: ['Hai đầu là lỗ: nối thẳng chân đực của module này sang chân đực của module/board kia.'],
       gioi_han: 'Như dây đực–đực: vài trăm mA.',
-      bay: 'Lỗ cái bị giãn sau nhiều lần cắm → tiếp xúc chập chờn. Lắc nhẹ dây khi đo: số nhảy là dây hỏng.', bai: [] },
+      bay: 'Lỗ cái bị giãn sau nhiều lần cắm, tiếp xúc chập chờn. Lắc nhẹ dây khi đo: số nhảy là dây hỏng.', bai: [] },
 
     // ——— Nên có thêm: linh kiện hay gặp trong mạch nhúng / robot ———
     { id: 's8550', nhom: 'nen', ten: 'Transistor S8550 PNP', tim: 'S8550', mua: 'nên có · cặp với S8050',
@@ -795,26 +793,26 @@
         ${chu(130, 58, 'S8550', 'lk-trang')}${chu(130, 72, 'mặt phẳng', 'lk-trang-mo')}
         ${chan(114, 96, 132)}${chan(130, 96, 132)}${chan(146, 96, 132)}
         ${chu(114, 144, '?', 'lk-canh')}${chu(130, 144, '?', 'lk-canh')}${chu(146, 144, '?', 'lk-canh')}
-        ${g(158, 60, 186, 50, 'vỏ giống hệt S8050')}${g(114, 120, 84, 120, 'chân: dò', 'end')}
+        ${g(158, 60, 180, 50, 'vỏ như S8050')}${g(114, 120, 84, 120, 'chân: dò', 'end')}
         ${chu(8, 16, 'PNP: chiều diode ngược với NPN', 'lk-canh', 'start')}`, 'Transistor S8550 vỏ TO-92 đen giống S8050, 3 chân chưa biết thứ tự'),
       kh: kh('<circle cx="64" cy="28" r="22" class="lk-net"/>' + net('8,28 56,28') + net('56,14 56,42') + net('56,22 76,10 76,2') + net('56,34 76,46 76,54')
         + '<polygon points="58,33 68,34 63,40" class="lk-dac"/>' + chu(14, 20, 'B', 'lk-mo') + chu(88, 13, 'E', 'lk-mo') + chu(88, 50, 'C', 'lk-mo'), 'transistor PNP'),
-      chan: ['Dò bằng thang diode như S8050 nhưng <b>đảo que</b>: que <b>đen</b> ở chân B thì B dẫn sang cả E lẫn C (~0.7V). Đó là cách phân biệt PNP với NPN khi chữ in mờ.', 'Mắc "phía trên" tải: E nối +, C → tải → GND. Kéo B <b>xuống</b> (qua điện trở) thì dẫn.'],
+      chan: ['Dò bằng thang diode như S8050 nhưng <b>đảo que</b>: que <b>đen</b> ở chân B thì B dẫn sang cả E lẫn C (~0.7V). Đó là cách phân biệt PNP với NPN khi chữ in mờ.', 'Mắc "phía trên" tải: E nối +, C → tải → GND. Kéo B <b>xuống</b> (qua điện trở) thì transistor dẫn.'],
       gioi_han: 'Ic ≤ ~0.5A, Vce ≤ 25V (tuỳ datasheet lô). Luôn có điện trở ở chân B.',
-      bay: 'Tải cấp 5V, E ở 5V mà chân B nối GPIO 3.3V: GPIO lên mức 1 (3.3V) vẫn thấp hơn E 1.7V → transistor <b>không tắt</b>. PNP phía trên chỉ tắt được khi B kéo lên tới áp của E.', bai: ['5.6'] },
+      bay: 'Tải cấp 5V (E ở 5V) mà chân B nối GPIO 3.3V: lúc GPIO ở mức 1, B vẫn thấp hơn E 1.7V nên transistor <b>không tắt</b>. PNP phía trên chỉ tắt khi B được kéo lên bằng áp của E.', bai: ['5.6'] },
 
     { id: 'irlz44n', nhom: 'nen', ten: 'MOSFET kênh N IRLZ44N (logic-level)', tim: 'IRLZ44N', mua: 'nên có · thay S8050 cho tải > 0.5A',
       anh: anh(`<rect x="100" y="14" width="60" height="24" fill="#B8BEC4" ${vien}/><circle cx="130" cy="26" r="7" style="fill:var(--panel)" ${vien}/>
         <rect x="98" y="38" width="64" height="54" rx="2" fill="#1E2226"/>${chu(130, 62, 'IRLZ44N', 'lk-trang')}
         ${chan(112, 92, 136)}${chan(130, 92, 136)}${chan(148, 92, 136)}
-        ${chu(112, 148, 'G', 'lk-chu')}${chu(130, 148, 'D', 'lk-chu')}${chu(148, 148, 'S', 'lk-chu')}
-        ${g(160, 22, 190, 14, 'tai tản nhiệt = D')}${g(112, 118, 80, 118, 'nhìn mặt chữ', 'end')}
+        ${chu(112, 146, 'G', 'lk-chu')}${chu(130, 146, 'D', 'lk-chu')}${chu(148, 146, 'S', 'lk-chu')}
+        ${g(160, 22, 172, 12, 'tai kim loại = D')}${g(112, 118, 80, 118, 'nhìn mặt chữ', 'end')}
         ${chu(8, 108, 'vỏ TO-220', 'lk-mo', 'start')}`, 'MOSFET IRLZ44N vỏ TO-220: thân đen có chữ, tai kim loại có lỗ, 3 chân G D S'),
       kh: kh(net('8,40 40,40') + net('40,16 40,40') + net('46,12 46,20') + net('46,24 46,32') + net('46,36 46,44') + net('46,16 80,16 80,4') + net('46,40 80,40 80,54') + net('46,28 80,28 80,40')
         + '<polygon points="48,28 56,24 56,32" class="lk-dac"/>' + chu(14, 34, 'G', 'lk-mo') + chu(92, 12, 'D', 'lk-mo') + chu(92, 52, 'S', 'lk-mo'), 'MOSFET kênh N'),
-      chan: ['Nhìn mặt có chữ, chân chúc xuống: <b>G · D · S</b> (theo datasheet Infineon/IR). Tai kim loại nối với D.', 'Mắc "phía dưới" tải như S8050: S → GND, D → tải → +. G ← GPIO qua ~100–220Ω, thêm 10k từ G xuống S.', 'Khác transistor: G gần như không ăn dòng — điều khiển bằng <b>áp</b>, không bằng dòng.'],
-      gioi_han: 'Vds ≤ 55V, Vgs ≤ ±16V. Datasheet bảo đảm Rds(on) ≤ 0.035Ω ở Vgs = 4V. Ở 3.3V (GPIO ESP32) <b>không</b> được bảo đảm: motor nhỏ (&lt; 1A) thường ổn — đo áp D–S khi chạy, phải ≲ 0.1V.',
-      bay: 'Chân G thả nổi (chưa nối GPIO, ESP32 đang reset): MOSFET tự bật nửa chừng, nóng — vì thế có 10k kéo G xuống S. Tĩnh điện từ tay có thể thủng lớp G. Motor vẫn cần diode 1N4007 ngược song song (diode trong thân MOSFET không thay được).', bai: ['13.4'] },
+      chan: ['Nhìn mặt có chữ, chân chúc xuống: <b>G · D · S</b> (theo datasheet Infineon/IR). Tai kim loại nối với D.', 'Mắc "phía dưới" tải như S8050: S → GND, D → tải → +. Chân G nối GPIO qua ~100–220Ω, thêm 10k từ G xuống S.', 'Khác transistor, chân G gần như không ăn dòng: MOSFET được điều khiển bằng <b>áp</b>, không bằng dòng.'],
+      gioi_han: 'Vds ≤ 55V, Vgs ≤ ±16V. Datasheet bảo đảm Rds(on) ≤ 0.035Ω ở Vgs = 4V. Ở 3.3V (mức GPIO ESP32) thì <b>không</b> được bảo đảm. Motor nhỏ (&lt; 1A) thường vẫn ổn, nhưng phải đo áp D–S khi chạy, cần ≲ 0.1V.',
+      bay: 'Chân G thả nổi (chưa nối GPIO, hoặc ESP32 đang reset) thì MOSFET tự bật nửa chừng và nóng, vì vậy mới có con 10k kéo G xuống S. Tĩnh điện từ tay có thể đánh thủng lớp G. Motor vẫn cần diode 1N4007 mắc ngược song song; diode có sẵn trong thân MOSFET không thay được.', bai: ['13.4'] },
 
     { id: 'zener', nhom: 'nen', ten: 'Diode zener 3.3V (1N4728A)', tim: 'zener', mua: 'nên có',
       anh: anh(`<line x1="18" y1="70" x2="242" y2="70" class="lk-chan"/>
@@ -825,7 +823,7 @@
       kh: kh(net('8,28 44,28') + '<polygon points="44,14 44,42 68,28" class="lk-net"/>' + net('62,10 68,14 68,42 74,46') + net('68,28 112,28') + chu(12, 18, 'A', 'lk-mo') + chu(106, 18, 'K', 'lk-mo'), 'diode zener'),
       chan: ['Vạch = cathode (K). Mắc <b>ngược</b>: K về phía +, A về phía −, nối tiếp một điện trở. Áp trên nó giữ ≈ 3.3V khi dòng đủ.', 'Mắc thuận thì nó chỉ là diode thường (~0.7V).'],
       gioi_han: '1N4728A: 3.3V, 1W, dòng thử 76mA. Dòng quá nhỏ (vài mA) thì áp chỉ ~2.5–3V: zener áp thấp có "gối" mềm.',
-      bay: 'Không có điện trở nối tiếp = nối tắt nguồn qua zener → nóng, cháy. Dùng làm "ổn áp" cấp cho ESP32: không đủ dòng, phí điện — việc đó của AMS1117. Zener hợp để kẹp bảo vệ chân tín hiệu.', bai: ['4.3'] },
+      bay: 'Không có điện trở nối tiếp là nối tắt nguồn qua zener, nóng rồi cháy. Đừng dùng zener làm "ổn áp" cấp cho ESP32: không đủ dòng, lại phí điện; việc đó để AMS1117 làm. Zener hợp với việc kẹp áp bảo vệ chân tín hiệu.', bai: ['4.3'] },
 
     { id: '1n5819', nhom: 'nen', ten: 'Diode Schottky 1N5819', tim: '1N5819', mua: 'nên có',
       anh: anh(`<line x1="18" y1="70" x2="242" y2="70" class="lk-chan"/>
@@ -836,33 +834,33 @@
       kh: kh(net('8,28 44,28') + '<polygon points="44,14 44,42 68,28" class="lk-net"/>' + net('74,10 74,14 68,14 68,42 62,42 62,46') + net('68,28 112,28') + chu(12, 18, 'A', 'lk-mo') + chu(106, 18, 'K', 'lk-mo'), 'diode Schottky'),
       chan: ['Vạch = cathode (K), giống 1N4007. Đo thang diode ra thấp hơn rõ: ~0.2–0.35V.'],
       gioi_han: '1A, áp ngược 40V. Sụt ≤ 0.6V ở 1A (datasheet), dòng nhỏ chỉ ~0.3V.',
-      bay: 'Làm lại bài 4.2 bằng 1N5819 là mất ít áp hơn — nhưng dòng rò ngược lớn hơn diode thường (cỡ vài chục–trăm µA khi nóng), không hợp mạch đo µA.', bai: [] },
+      bay: 'Làm lại bài 4.2 bằng 1N5819 thì mất ít áp hơn. Nhưng dòng rò ngược của nó lớn hơn diode thường (cỡ vài chục–trăm µA khi nóng), không hợp với mạch đo µA.', bai: [] },
 
     { id: 'led-rgb', nhom: 'nen', ten: 'LED RGB 5mm 4 chân', tim: 'LED RGB', mua: 'nên có',
       anh: anh(`<path d="M100 78 V46 A26 22 0 0 1 152 46 V78 Z" fill="#E9EDF0" fill-opacity=".85" ${vien}/>
         <path d="M94 78 H152 V86 H94 Z" fill="#E9EDF0" ${vien}/>
         ${chan(104, 86, 128)}${chan(118, 86, 146)}${chan(132, 86, 134)}${chan(146, 86, 130)}
         ${chu(104, 140, 'R', 'lk-xau')}${chu(132, 146, 'G', 'lk-chu')}${chu(146, 142, 'B', 'lk-chu')}
-        ${g(118, 140, 70, 118, 'dài nhất = chân chung', 'end')}${g(150, 60, 184, 44, '3 LED trong 1 vỏ')}
-        ${chu(130, 18, 'chung − (cathode) hay chung + (anode): đo mới biết', 'lk-canh')}`, 'LED RGB 5mm vỏ trắng đục, 4 chân, chân thứ hai dài nhất là chân chung'),
+        ${g(118, 140, 90, 118, 'dài nhất = chung', 'end')}${g(150, 60, 172, 44, '3 LED trong 1 vỏ')}
+        ${chu(130, 16, 'chung − hay chung +: đo mới biết', 'lk-canh')}`, 'LED RGB 5mm vỏ trắng đục, 4 chân, chân thứ hai dài nhất là chân chung'),
       kh: '',
-      chan: ['Chân dài nhất là chân chung. Loại <b>chung cathode</b>: chân chung → GND; loại <b>chung anode</b>: chân chung → +.', 'Đo thang diode: que đen ở chân dài, que đỏ lần lượt 3 chân kia, sáng mờ → chung cathode. Không sáng thì đảo que → chung anode. Thứ tự R·G·B thường theo hình, nhưng màu sáng lúc đo mới là chắc.'],
-      gioi_han: 'Mỗi màu ≤ 20mA, <b>mỗi màu một điện trở riêng</b>. Đỏ ~2V, xanh lá/xanh dương ~3V → 3 điện trở khác giá trị nếu muốn sáng đều.',
-      bay: 'Dùng chung 1 điện trở ở chân chung: màu đỏ (áp thấp nhất) giành hết dòng, 2 màu kia gần như tắt.', bai: ['4.4'] },
+      chan: ['Chân dài nhất là chân chung. Loại <b>chung cathode</b>: chân chung → GND; loại <b>chung anode</b>: chân chung → +.', 'Đo thang diode: que đen ở chân dài, que đỏ lần lượt chạm 3 chân kia. Sáng mờ là loại chung cathode. Không sáng thì đảo que, sáng là chung anode. Thứ tự R·G·B thường như hình, nhưng màu sáng lúc đo mới là chắc.'],
+      gioi_han: 'Mỗi màu ≤ 20mA và cần <b>một điện trở riêng</b>. Đỏ sụt ~2V, xanh lá và xanh dương ~3V, nên muốn sáng đều thì 3 điện trở khác giá trị.',
+      bay: 'Dùng chung 1 điện trở ở chân chung thì màu đỏ (áp thấp nhất) giành hết dòng, 2 màu kia gần như tắt.', bai: ['4.4'] },
 
     { id: 'coi-chip', nhom: 'nen', ten: 'Còi chip (buzzer) chủ động / thụ động', tim: 'buzzer', mua: 'nên có',
       anh: anh(`<rect x="50" y="40" width="64" height="44" rx="6" fill="#1E2226" ${vien}/><circle cx="82" cy="62" r="4" fill="#0B0F13"/>
         <rect x="56" y="40" width="52" height="8" fill="#E9EDF0"/>
         ${chan(72, 84, 128)}${chan(92, 84, 116)}
-        ${chu(82, 26, 'chủ động', 'lk-chu')}${g(72, 122, 40, 122, 'dài = +', 'end')}${chu(82, 142, 'đáy kín · có tem', 'lk-mo')}
+        ${chu(82, 26, 'chủ động', 'lk-chu')}${g(72, 122, 40, 122, 'dài = +', 'end')}${chu(72, 142, 'đáy kín · có tem', 'lk-mo')}
         <rect x="150" y="40" width="64" height="44" rx="6" fill="#1E2226" ${vien}/>
         <rect x="160" y="72" width="44" height="12" fill="#2E7D5B"/>
         ${chan(172, 84, 122)}${chan(192, 84, 122)}
-        ${chu(182, 26, 'thụ động', 'lk-chu')}${chu(182, 142, 'đáy hở thấy mạch xanh', 'lk-mo')}`, 'Hai còi chip tròn đen: loại chủ động đáy kín, chân dài là cực dương; loại thụ động đáy hở thấy mạch xanh'),
+        ${chu(182, 26, 'thụ động', 'lk-chu')}${chu(190, 142, 'đáy hở, thấy mạch', 'lk-mo')}`, 'Hai còi chip tròn đen: loại chủ động đáy kín, chân dài là cực dương; loại thụ động đáy hở thấy mạch xanh'),
       kh: kh(net('8,40 44,40 44,30') + net('76,30 76,40 112,40') + '<path d="M40 30 H80 A20 20 0 0 0 40 30 Z" class="lk-net"/>' + chu(34, 22, '+', 'lk-mo'), 'còi'),
-      chan: ['<b>Chủ động</b> (active): có mạch dao động bên trong, cấp DC đúng cực là kêu một tiếng cố định. Chân dài = +.', '<b>Thụ động</b> (passive): chỉ là màng + cuộn dây, phải cấp xung (PWM 2–5kHz) mới kêu; đổi tần số = đổi nốt nhạc.', 'Phân biệt: cấp 3–5V DC thoáng qua — kêu liên tục là chủ động, chỉ "tách" 1 cái là thụ động.'],
-      gioi_han: 'Dòng cỡ 20–40mA ở 5V — sát/quá giới hạn 1 chân GPIO → qua transistor S8050.',
-      bay: 'Còi thụ động loại từ tính: cuộn dây chỉ vài chục Ω, cấp DC đứng yên là dòng lớn, cuộn nóng mà không kêu. Còi cũng là cuộn dây: thêm 1N4148 ngược song song khi đóng/ngắt bằng transistor.', bai: ['11.4'] },
+      chan: ['<b>Chủ động</b> (active): có mạch dao động bên trong, cấp DC đúng cực là kêu một tiếng cố định. Chân dài = +.', '<b>Thụ động</b> (passive): chỉ là màng + cuộn dây, phải cấp xung (PWM 2–5kHz) mới kêu; đổi tần số = đổi nốt nhạc.', 'Cách phân biệt: cấp 3–5V DC thoáng qua. Kêu liên tục là chủ động, chỉ "tách" 1 cái là thụ động.'],
+      gioi_han: 'Dòng cỡ 20–40mA ở 5V, sát hoặc quá giới hạn 1 chân GPIO, nên đóng ngắt qua transistor S8050.',
+      bay: 'Còi thụ động loại từ tính có cuộn dây chỉ vài chục Ω: cấp DC đứng yên thì dòng lớn, cuộn nóng mà không kêu. Còi cũng là cuộn dây, nên thêm 1N4148 mắc ngược song song khi đóng ngắt bằng transistor.', bai: ['11.4'] },
 
     { id: 'relay', nhom: 'nen', ten: 'Module relay 5V 1 kênh', tim: 'relay', mua: 'nên có',
       anh: anh(`<rect x="30" y="34" width="200" height="84" rx="3" fill="#1F5AA8" ${vien}/>
@@ -871,46 +869,46 @@
         ${chu(234, 62, 'NO', 'lk-chu', 'start')}${chu(234, 76, 'COM', 'lk-chu', 'start')}${chu(234, 90, 'NC', 'lk-chu', 'start')}
         ${[['VCC', 52], ['GND', 72], ['IN', 92]].map(([t, y]) => `<rect x="30" y="${y - 4}" width="10" height="8" fill="#C9A640"/>${chu(24, y + 4, t, 'lk-chu', 'end')}`).join('')}
         <circle cx="60" cy="104" r="4" fill="#E5372C"/>
-        ${g(125, 44, 125, 18, 'cuộn dây + tiếp điểm cơ', 'middle')}${chu(130, 140, 'bài ở đây: chỉ đóng/ngắt mạch ≤ 12V — KHÔNG 220V', 'lk-xau')}`, 'Module relay 1 kênh: relay xanh, cọc vít NO COM NC, 3 chân VCC GND IN'),
+        ${g(125, 44, 125, 18, 'cuộn dây + tiếp điểm cơ', 'middle')}${chu(130, 140, 'chỉ đóng/ngắt mạch ≤ 12V — KHÔNG 220V', 'lk-xau')}`, 'Module relay 1 kênh: relay xanh, cọc vít NO COM NC, 3 chân VCC GND IN'),
       kh: kh(net('8,44 24,44') + '<rect x="24" y="36" width="24" height="16" class="lk-net"/>' + net('48,44 56,44') + net('70,22 96,10') + '<circle cx="70" cy="22" r="2.5" class="lk-dac"/><circle cx="100" cy="22" r="2.5" class="lk-dac"/>' + net('36,36 36,16 80,16'), 'relay'),
-      chan: ['Phía điều khiển: VCC 5V, GND, IN. Phía tải: <b>COM</b> (chung), <b>NO</b> (thường hở — nối COM khi relay hút), <b>NC</b> (thường đóng).', 'Nhiều module kích mức <b>thấp</b>: IN = 0 thì relay hút (đèn sáng, nghe "tách"). Có module có jumper H/L — đọc chữ in trên board.'],
-      gioi_han: 'Cuộn relay 5V ăn ~70mA — module đã có transistor + diode nên IN chỉ ăn vài mA. Tiếp điểm in "10A 250VAC" nhưng giáo trình này <b>không đụng 220V</b>.',
-      bay: 'Module kích mức thấp cấp VCC 5V, IN nối GPIO 3.3V: mức 1 (3.3V) có khi vẫn không nhả relay — đo trước. Relay chậm (~10ms) và mòn tiếp điểm: không dùng để PWM motor, việc đó của driver/MOSFET.', bai: [] },
+      chan: ['Phía điều khiển: VCC 5V, GND, IN. Phía tải: <b>COM</b> (chung), <b>NO</b> (thường hở — nối COM khi relay hút), <b>NC</b> (thường đóng).', 'Nhiều module kích mức <b>thấp</b>: IN = 0 thì relay hút (đèn sáng, nghe "tách"). Có module có jumper chọn H/L, đọc chữ in trên board.'],
+      gioi_han: 'Cuộn relay 5V ăn ~70mA. Module đã có sẵn transistor và diode nên chân IN chỉ ăn vài mA. Tiếp điểm in "10A 250VAC", nhưng giáo trình này <b>không đụng 220V</b>.',
+      bay: 'Module kích mức thấp cấp VCC 5V mà IN nối GPIO 3.3V: mức 1 (3.3V) có khi vẫn không nhả được relay, nên đo trước. Relay chậm (~10ms) và mòn tiếp điểm, không dùng để PWM motor; việc đó để driver hoặc MOSFET làm.', bai: [] },
 
     { id: 'cong-tac-gat', nhom: 'nen', ten: 'Công tắc gạt SS12D00 (3 chân)', tim: 'công tắc gạt', mua: 'nên có',
       anh: anh(`<rect x="80" y="54" width="100" height="40" rx="2" fill="#B8BEC4" ${vien}/><rect x="90" y="62" width="80" height="24" fill="#1E2226"/>
         <rect x="100" y="36" width="20" height="34" rx="2" fill="#1E2226"/>
         ${chan(100, 94, 130)}${chan(130, 94, 130)}${chan(160, 94, 130)}
         ${chu(100, 142, '1', 'lk-mo')}${chu(130, 142, 'chung', 'lk-chu')}${chu(160, 142, '3', 'lk-mo')}
-        ${g(110, 40, 80, 22, 'cần gạt', 'end')}${chu(200, 30, 'gạt trái: chung–1', 'lk-mo', 'start')}${chu(200, 44, 'gạt phải: chung–3', 'lk-mo', 'start')}`, 'Công tắc gạt SS12D00 vỏ kim loại, cần gạt đen, 3 chân, chân giữa là chân chung'),
+        ${g(110, 40, 80, 22, 'cần gạt', 'end')}${chu(168, 30, 'gạt trái: chung–1', 'lk-mo', 'start')}${chu(168, 44, 'gạt phải: chung–3', 'lk-mo', 'start')}`, 'Công tắc gạt SS12D00 vỏ kim loại, cần gạt đen, 3 chân, chân giữa là chân chung'),
       kh: kh(net('8,40 40,40') + '<circle cx="42" cy="40" r="2.5" class="lk-dac"/>' + net('42,40 78,24') + '<circle cx="80" cy="22" r="2.5" class="lk-dac"/><circle cx="80" cy="46" r="2.5" class="lk-dac"/>' + net('82,22 112,22') + net('82,46 112,46'), 'công tắc 1 cực 2 ngả'),
       chan: ['Chân giữa là chân chung; gạt về bên nào thì chân giữa nối chân bên đó. Đo thông mạch 2 vị trí để chắc.', 'Làm công tắc bật/tắt: chỉ dùng chân giữa + 1 chân bên.'],
       gioi_han: 'Chỉ 0.5A 50VDC. Chân vừa lỗ breadboard.',
-      bay: 'Dùng làm công tắc nguồn chính cho robot 2 motor: motor khởi động kéo quá 0.5A → tiếp điểm nóng, cháy rỗ. Nguồn chính dùng công tắc bập bênh (rocker) ghi ≥ 3A.', bai: [] },
+      bay: 'Đừng dùng làm công tắc nguồn chính cho robot 2 motor: lúc khởi động motor kéo quá 0.5A, tiếp điểm nóng và cháy rỗ. Nguồn chính dùng công tắc bập bênh (rocker) ghi ≥ 3A.', bai: [] },
 
     { id: 'cau-chi', nhom: 'nen', ten: 'Cầu chì ống 5×20mm + đế nối dây', tim: 'cầu chì', mua: 'nên có · cho pin lithium',
       anh: anh(`<path d="M-10 70 H40" stroke="#D8322A" stroke-width="3"/><path d="M220 70 H270" stroke="#D8322A" stroke-width="3"/>
         <rect x="40" y="56" width="180" height="28" rx="12" fill="#1E2226"/>
         <rect x="90" y="62" width="80" height="16" rx="2" fill="rgba(160,200,240,.45)" stroke="#8A949E"/><rect x="82" y="62" width="10" height="16" fill="#B8BEC4"/><rect x="168" y="62" width="10" height="16" fill="#B8BEC4"/>
         <path d="M92 70 Q110 64 130 70 T168 70" fill="none" stroke="#C9A640" stroke-width="1.5"/>
-        ${g(130, 67, 130, 30, 'dây chì: đứt khi quá dòng', 'middle')}${g(173, 78, 196, 110, 'nắp ghi dòng, vd F2A')}
+        ${g(130, 67, 130, 30, 'dây chì: đứt khi quá dòng', 'middle')}${g(173, 78, 186, 108, 'ghi dòng: F2A…')}
         ${chu(130, 140, 'đặt ngay sau cực + của pin, trước mọi thứ', 'lk-canh')}`, 'Cầu chì ống thuỷ tinh 5x20mm nằm trong đế nối dây màu đen, dây đỏ hai đầu'),
       kh: kh(net('8,28 34,28') + '<rect x="34" y="20" width="52" height="16" class="lk-net"/>' + net('34,28 86,28') + net('86,28 112,28'), 'cầu chì'),
-      chan: ['Không có cực. Mắc nối tiếp ngay sau cực + của pin. Đo thông mạch 2 đầu: kêu = còn tốt, không kêu = đã đứt.', 'Chữ trên nắp: <b>F</b> = đứt nhanh, <b>T</b> = đứt chậm; số = dòng định mức.'],
-      gioi_han: 'Chọn định mức cỡ 1.5–2 lần dòng lớn nhất lúc chạy bình thường (đo trước, bài 1.2). Motor khởi động kéo dòng cao vài chục ms → loại T đỡ đứt oan.',
-      bay: 'Thay cầu chì đứt bằng loại to hơn / sợi dây: mất bảo vệ, lần chập sau là dây và pin chịu. Cầu chì đứt nghĩa là có chỗ chập — tìm ra trước khi thay.', bai: ['16.2', '16.3', '17.1'] },
+      chan: ['Không có cực. Mắc nối tiếp ngay sau cực + của pin. Đo thông mạch 2 đầu: kêu là còn tốt, không kêu là đã đứt.', 'Chữ trên nắp: <b>F</b> là loại đứt nhanh, <b>T</b> là đứt chậm, con số là dòng định mức.'],
+      gioi_han: 'Chọn định mức cỡ 1.5–2 lần dòng lớn nhất lúc chạy bình thường (đo trước, bài 1.2). Motor khởi động kéo dòng cao trong vài chục ms, loại T đỡ bị đứt oan.',
+      bay: 'Thay cầu chì đứt bằng loại to hơn hay bằng sợi dây là mất bảo vệ, lần chập sau dây và pin phải chịu. Cầu chì đứt nghĩa là có chỗ chập, tìm ra chỗ đó trước khi thay.', bai: ['16.2', '16.3', '17.1'] },
 
     { id: 'ne555', nhom: 'nen', ten: 'IC định thời NE555 (DIP-8)', tim: 'NE555', mua: 'tuỳ chọn · đào sâu analog',
       anh: anh(`<rect x="80" y="40" width="100" height="60" rx="3" fill="#1E2226" ${vien}/>
         <path d="M80 62 a8 8 0 0 1 0 16" style="fill:var(--panel)"/><circle cx="94" cy="88" r="3.5" fill="#46525E"/>
         ${chu(134, 74, 'NE555', 'lk-trang')}
         ${[0, 1, 2, 3].map(i => `<rect x="${92 + i * 24}" y="100" width="6" height="16" fill="#B8BEC4"/>${chu(95 + i * 24, 128, String(i + 1), 'lk-chu')}<rect x="${92 + i * 24}" y="24" width="6" height="16" fill="#B8BEC4"/>${chu(95 + i * 24, 18, String(8 - i), 'lk-chu')}`).join('')}
-        ${g(84, 70, 50, 70, 'khuyết', 'end')}${g(94, 88, 50, 104, 'chấm = chân 1', 'end')}
+        ${g(84, 70, 50, 70, 'khuyết', 'end')}${g(94, 88, 66, 106, 'chấm = chân 1', 'end')}
         ${chu(130, 146, '1 GND · 3 OUT · 4 RESET · 8 VCC', 'lk-mo')}`, 'IC NE555 vỏ DIP-8 nhìn từ trên: khuyết bên trái, chấm ở chân 1, đếm ngược chiều kim đồng hồ'),
       kh: '',
       chan: ['Nhìn từ trên, khuyết quay sang trái: chân 1 ở dưới-trái (cạnh chấm), đếm <b>ngược chiều kim đồng hồ</b> tới chân 8 ở trên-trái.', '1 GND · 2 TRIG · 3 OUT · 4 RESET · 5 CTRL · 6 THRES · 7 DISCH · 8 VCC. Chân 4 nối VCC nếu không dùng.', 'Cắm vắt qua rãnh giữa breadboard (4 chân mỗi bên).'],
-      gioi_han: 'NE555: VCC 4.5–16V — hộp 3×AAA (4.5V) chỉ vừa sát, pin yếu là chập chờn. Bản CMOS (TLC555, 7555) chạy từ 2V. Chân OUT ~200mA.',
-      bay: 'Cắm ngược IC (xoay 180°): VCC và GND đảo → IC nóng rất nhanh. Luôn tìm khuyết/chấm trước. Mạch nháy 555 là bản IC của mạch 6.3 — làm 6.3 trước để hiểu bên trong.', bai: [] },
+      gioi_han: 'NE555 chạy VCC 4.5–16V, nên hộp 3×AAA (4.5V) chỉ vừa sát, pin yếu là chập chờn. Bản CMOS (TLC555, 7555) chạy từ 2V. Chân OUT cho ~200mA.',
+      bay: 'Cắm ngược IC (xoay 180°) là đảo VCC với GND, IC nóng rất nhanh. Luôn tìm khuyết hoặc chấm trước. Mạch nháy 555 là bản IC của mạch 6.3, làm 6.3 trước để hiểu bên trong.', bai: [] },
 
     { id: 'lm358', nhom: 'nen', ten: 'Op-amp kép LM358 (DIP-8)', tim: 'LM358', mua: 'tuỳ chọn · đào sâu analog',
       anh: anh(`<rect x="80" y="40" width="100" height="60" rx="3" fill="#1E2226" ${vien}/>
@@ -920,9 +918,9 @@
         ${g(84, 70, 50, 70, 'khuyết', 'end')}${g(94, 88, 50, 104, 'chân 1', 'end')}
         ${chu(130, 146, '4 GND · 8 VCC · 2 op-amp A/B', 'lk-mo')}`, 'IC LM358 vỏ DIP-8, khuyết bên trái, chấm ở chân 1'),
       kh: kh('<polygon points="36,6 36,50 84,28" class="lk-net"/>' + net('8,16 36,16') + net('8,40 36,40') + net('84,28 112,28') + chu(44, 20, '−', 'lk-chu-kh') + chu(44, 44, '+', 'lk-chu-kh'), 'op-amp'),
-      chan: ['Cách đếm chân như NE555. Op-amp A: 1 OUT · 2 IN− · 3 IN+. Op-amp B: 7 OUT · 6 IN− · 5 IN+. 4 = GND, 8 = VCC.', 'Dùng làm <b>bộ so sánh</b>: IN+ > IN− thì OUT lên cao, ngược lại xuống thấp — đúng việc con LM393 trên module FC-51/TCRT5000 đang làm.'],
-      gioi_han: 'VCC 3–32V. Không "rail-to-rail": OUT lên cao nhất ≈ VCC − 1.5V, đầu vào chỉ đúng trong 0 → VCC − 1.5V. Cấp 3.3V thì OUT chỉ lên ~1.8V.',
-      bay: 'Op-amp thứ 2 không dùng mà để chân thả nổi: dao động, nóng, gây nhiễu con kia. Nối IN+ của nó xuống GND, OUT về IN−.', bai: ['6.5'] },
+      chan: ['Cách đếm chân như NE555. Op-amp A: 1 OUT · 2 IN− · 3 IN+. Op-amp B: 7 OUT · 6 IN− · 5 IN+. 4 = GND, 8 = VCC.', 'Dùng làm <b>bộ so sánh</b>: IN+ > IN− thì OUT lên cao, ngược lại thì xuống thấp. Đây cũng là việc con LM393 trên module FC-51/TCRT5000 đang làm.'],
+      gioi_han: 'VCC 3–32V. LM358 không "rail-to-rail": OUT lên cao nhất ≈ VCC − 1.5V, đầu vào chỉ đúng trong khoảng 0 tới VCC − 1.5V. Cấp 3.3V thì OUT chỉ lên được ~1.8V.',
+      bay: 'Op-amp thứ 2 không dùng mà để chân thả nổi thì nó tự dao động, nóng, gây nhiễu con kia. Nối IN+ của nó xuống GND và OUT về IN−.', bai: ['6.5'] },
   ];
 
   const NHOM = {
