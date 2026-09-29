@@ -13,7 +13,7 @@
   };
   const chu = (x, y, t, lop = 'lk-chu', neo = 'middle') => `<text x="${x}" y="${y}" text-anchor="${neo}" class="${lop}">${t}</text>`;
   const chan = (x, y1, y2) => `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" class="lk-chan"/>`;
-  const vien = 'stroke="rgba(0,0,0,.35)"';
+  const vien = 'stroke="rgba(27,37,51,.8)"';
   const net = pts => `<polyline points="${pts}" class="lk-net"/>`;
   const zz = (x1, x2, y) => { const p = [`${x1},${y}`], n = 6, s = (x2 - x1) / n; for (let i = 0; i < n; i++) p.push(`${x1 + s * (i + .5)},${y + (i % 2 ? 8 : -8)}`); p.push(`${x2},${y}`); return p.join(' '); };
   const muiTen = (x1, y1, x2, y2) => {
@@ -123,7 +123,7 @@
         ${chu(130, 132, 'dẫn A → K · sụt ~0.6–0.7V', 'lk-mo')}`, 'Diode 1N4148 thân thuỷ tinh màu cam, vạch đen ở phía cathode'),
       kh: diodeKh('diode'),
       chan: ['Vạch đen = cathode (K, −). Dòng chỉ đi A → K.', 'Đo thang diode: que đỏ ở A ra ~0.6–0.7V, đảo que ra "1".'],
-      gioi_han: 'Dòng ~200mA. Chỉ cho tín hiệu, không cho motor.',
+      gioi_han: 'Dòng trung bình 150mA (Vishay; có hãng ghi 200mA). Chỉ cho tín hiệu, không cho motor.',
       bay: 'Thân thuỷ tinh giòn: bẻ chân sát thân là nứt.',
       bai: ['4.1', '6.2', '11.4'] },
 
@@ -166,15 +166,16 @@
       bai: null },
 
     { id: 'breadboard', nhom: 'dc', ten: 'Breadboard MB-102', tim: 'MB-102',
-      anh: anh(`<rect x="8" y="6" width="244" height="140" rx="6" class="bb-board"/>
-        <rect x="24" y="12" width="220" height="12" rx="3" class="lk-to-ngang"/>
-        <line x1="24" y1="10" x2="244" y2="10" class="bb-vach-pos"/><line x1="24" y1="38" x2="244" y2="38" class="bb-vach-neg"/>
-        ${chu(16, 20, '+', 'bb-cuc-pos')}${chu(16, 37, '−', 'bb-cuc-neg')}
-        <rect x="40" y="46" width="12" height="64" rx="3" class="bb-dai"/>
-        <rect x="8" y="114" width="244" height="8" class="bb-ranh"/>
-        <g class="bb-lo">${Array.from({ length: 13 }, (_, i) => 30 + i * 16).map(x => [18, 30, 52, 64, 76, 88, 100, 130, 142].map(y => `<circle cx="${x}" cy="${y}" r="2.6"/>`).join('')).join('')}</g>
-        ${chu(60, 80, 'cột: 5 lỗ a–e thông nhau', 'lk-chu', 'start')}${chu(130, 48, 'thanh +/−: thông theo hàng ngang', 'lk-chu')}
-        ${chu(130, 121, 'rãnh giữa: 2 nửa không thông', 'lk-chu')}`, 'Một góc breadboard: thanh nguồn thông theo hàng ngang, mỗi cột 5 lỗ thông nhau, rãnh giữa ngăn đôi'),
+      anh: anh(`<rect x="16" y="26" width="228" height="130" rx="6" class="bb-board"/>
+        <rect x="30" y="31" width="206" height="10" rx="3" class="lk-to-ngang"/>
+        <line x1="30" y1="29" x2="236" y2="29" class="bb-vach-pos"/><line x1="30" y1="55" x2="236" y2="55" class="bb-vach-neg"/>
+        ${chu(23, 39, '+', 'bb-cuc-pos')}${chu(23, 54, '−', 'bb-cuc-neg')}
+        <rect x="64" y="60" width="12" height="60" rx="3" class="bb-dai"/>
+        <rect x="16" y="123" width="228" height="8" class="bb-ranh"/>
+        <g class="bb-lo">${Array.from({ length: 13 }, (_, i) => 38 + i * 16).map(x => [36, 48, 66, 78, 90, 102, 114, 140, 152].map(y => `<circle cx="${x}" cy="${y}" r="2.6"/>`).join('')).join('')}</g>
+        ${chu(8, 69, 'a', 'lk-mo')}${chu(8, 117, 'e', 'lk-mo')}${chu(8, 143, 'f', 'lk-mo')}
+        ${g(150, 31, 150, 18, 'thanh +/−: thông theo hàng ngang', 'middle')}
+        ${g(70, 120, 66, 170, 'cột: 5 lỗ a–e thông nhau', 'start')}${g(228, 127, 240, 186, 'rãnh giữa: 2 nửa không thông', 'end')}`, 'Một góc breadboard: thanh nguồn thông theo hàng ngang, mỗi cột 5 lỗ thông nhau, rãnh giữa ngăn đôi', 196),
       kh: '',
       chan: ['Mỗi cột có 2 nhóm 5 lỗ (a–e, f–j) thông nhau; rãnh giữa ngăn 2 nhóm.', 'Thanh nguồn +/− chạy dọc mép, thông theo hàng ngang. Có loại MB-102 đứt thanh nguồn ở giữa — đo thông mạch 2 đầu thanh cho chắc.'],
       gioi_han: 'Tiếp điểm chịu ~1A. Không cắm chân quá to (chân diode 1N4007 vừa khít).',
@@ -457,7 +458,7 @@
         ${chu(130, 136, 'chân: đọc chữ in (VIN · GND · VOUT)', 'lk-canh')}${chu(130, 20, 'áp vào phải ≳ 4.4V mới ra đủ 3.3V', 'lk-mo')}`, 'Module ổn áp AMS1117 xanh, 3 chân'),
       kh: kh('<rect x="40" y="10" width="40" height="26" class="lk-net"/>' + net('8,20 40,20') + net('80,20 112,20') + net('60,36 60,52') + chu(60, 27, 'REG', 'lk-mo') + chu(16, 14, 'IN', 'lk-mo') + chu(104, 14, 'OUT', 'lk-mo'), 'ổn áp'),
       chan: ['3 chân VIN, GND, VOUT (3.3V). Thứ tự chân đổi theo loại module, nên đọc chữ in.'],
-      gioi_han: 'Áp vào phải cao hơn áp ra khoảng 1.1V. Vào 5V ra 3.3V là ổn, vào 4.5V thì sát ngưỡng. Phần áp dư biến thành nhiệt.',
+      gioi_han: 'Áp vào phải cao hơn áp ra khoảng 1.1V, tải nặng thì tới 1.3V (datasheet). Vào 5V ra 3.3V là ổn, vào 4.5V thì sát ngưỡng, tải nặng có thể tụt dưới 3.3V. Phần áp dư biến thành nhiệt.',
       bay: 'Nối ngược VIN/VOUT hoặc cấp quá áp → nóng, hỏng.', bai: ['8.2'] },
 
     { id: 'driver-motor', nhom: 'sau', ten: 'Module driver motor (cầu H)', tim: 'driver motor', mua: 'đợt 3 · chọn lúc tới nơi',
@@ -538,7 +539,7 @@
 
     { id: 'sg90', nhom: 'robot', ten: 'Servo SG90', tim: 'SG90', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="60" y="50" width="100" height="56" rx="3" fill="#2F58B8" ${vien}/><rect x="44" y="60" width="132" height="10" rx="2" fill="#2F58B8" ${vien}/>
-        <circle cx="90" cy="44" r="12" fill="#E8EEF2" stroke="#9AA3AD"/><path d="M90 44 L 150 30" stroke="#E8EEF2" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="90" cy="44" r="12" fill="#E8EEF2" stroke="#9AA3AD"/><path d="M90 44 L 150 30" stroke="#5F6A76" stroke-width="10" stroke-linecap="round"/><path d="M90 44 L 150 30" stroke="#E8EEF2" stroke-width="8" stroke-linecap="round"/>
         <path d="M160 92 C 176 92, 170 112, 186 112" stroke="#E07020" stroke-width="3" fill="none"/><path d="M160 97 C 172 97, 168 125, 186 125" stroke="#C8322B" stroke-width="3" fill="none"/><path d="M160 102 C 168 102, 166 138, 186 138" stroke="#6D4C41" stroke-width="3" fill="none"/>
         ${chu(190, 116, 'cam: tín hiệu', 'lk-chu', 'start')}${chu(190, 129, 'đỏ: + 4.8–6V', 'lk-chu', 'start')}${chu(190, 142, 'nâu: −', 'lk-chu', 'start')}
         ${g(150, 30, 190, 20, 'tay quay')}${chu(110, 86, 'SG90', 'lk-trang')}`, 'Servo SG90: hộp xanh dương, tay quay trắng phía trên, 3 dây cam đỏ nâu'),
@@ -822,7 +823,7 @@
         ${chu(130, 124, 'dùng NGƯỢC: K về phía +, luôn có R nối tiếp', 'lk-canh')}${chu(130, 140, 'bản 0.5W: thân thuỷ tinh cam như 1N4148', 'lk-mo')}`, 'Diode zener 1N4728A thân đen vạch bạc, giống 1N4007'),
       kh: kh(net('8,28 44,28') + '<polygon points="44,14 44,42 68,28" class="lk-net"/>' + net('62,10 68,14 68,42 74,46') + net('68,28 112,28') + chu(12, 18, 'A', 'lk-mo') + chu(106, 18, 'K', 'lk-mo'), 'diode zener'),
       chan: ['Vạch = cathode (K). Mắc <b>ngược</b>: K về phía +, A về phía −, nối tiếp một điện trở. Áp trên nó giữ ≈ 3.3V khi dòng đủ.', 'Mắc thuận thì nó chỉ là diode thường (~0.7V).'],
-      gioi_han: '1N4728A: 3.3V, 1W, dòng thử 76mA. Dòng quá nhỏ (vài mA) thì áp chỉ ~2.5–3V: zener áp thấp có "gối" mềm.',
+      gioi_han: '1N4728A: 3.3V, 1W (Vishay ghi 1.3W), đúng 3.3V ở dòng thử 76mA. Ở 1mA, trở động của nó lên tới 400Ω nên áp thấp hơn 3.3V rõ rệt, vì zener áp thấp có "gối" mềm. Đo mới biết áp thật ở dòng mạch bạn dùng.',
       bay: 'Không có điện trở nối tiếp là nối tắt nguồn qua zener, nóng rồi cháy. Đừng dùng zener làm "ổn áp" cấp cho ESP32: không đủ dòng, lại phí điện; việc đó để AMS1117 làm. Zener hợp với việc kẹp áp bảo vệ chân tín hiệu.', bai: ['4.3'] },
 
     { id: '1n5819', nhom: 'nen', ten: 'Diode Schottky 1N5819', tim: '1N5819', mua: 'nên có',
@@ -834,7 +835,7 @@
       kh: kh(net('8,28 44,28') + '<polygon points="44,14 44,42 68,28" class="lk-net"/>' + net('74,10 74,14 68,14 68,42 62,42 62,46') + net('68,28 112,28') + chu(12, 18, 'A', 'lk-mo') + chu(106, 18, 'K', 'lk-mo'), 'diode Schottky'),
       chan: ['Vạch = cathode (K), giống 1N4007. Đo thang diode ra thấp hơn rõ: ~0.2–0.35V.'],
       gioi_han: '1A, áp ngược 40V. Sụt ≤ 0.6V ở 1A (datasheet), dòng nhỏ chỉ ~0.3V.',
-      bay: 'Làm lại bài 4.2 bằng 1N5819 thì mất ít áp hơn. Nhưng dòng rò ngược của nó lớn hơn diode thường (cỡ vài chục–trăm µA khi nóng), không hợp với mạch đo µA.', bai: [] },
+      bay: 'Làm lại bài 4.2 bằng 1N5819 thì mất ít áp hơn. Nhưng dòng rò ngược của nó lớn hơn diode thường nhiều: datasheet cho tới 1mA ở 25°C và 10mA ở 100°C (khi đặt đủ 40V ngược), nên không hợp với mạch đo µA.', bai: [] },
 
     { id: 'led-rgb', nhom: 'nen', ten: 'LED RGB 5mm 4 chân', tim: 'LED RGB', mua: 'nên có',
       anh: anh(`<path d="M100 78 V46 A26 22 0 0 1 152 46 V78 Z" fill="#E9EDF0" fill-opacity=".85" ${vien}/>
@@ -919,7 +920,7 @@
         ${chu(130, 146, '4 GND · 8 VCC · 2 op-amp A/B', 'lk-mo')}`, 'IC LM358 vỏ DIP-8, khuyết bên trái, chấm ở chân 1'),
       kh: kh('<polygon points="36,6 36,50 84,28" class="lk-net"/>' + net('8,16 36,16') + net('8,40 36,40') + net('84,28 112,28') + chu(44, 20, '−', 'lk-chu-kh') + chu(44, 44, '+', 'lk-chu-kh'), 'op-amp'),
       chan: ['Cách đếm chân như NE555. Op-amp A: 1 OUT · 2 IN− · 3 IN+. Op-amp B: 7 OUT · 6 IN− · 5 IN+. 4 = GND, 8 = VCC.', 'Dùng làm <b>bộ so sánh</b>: IN+ > IN− thì OUT lên cao, ngược lại thì xuống thấp. Đây cũng là việc con LM393 trên module FC-51/TCRT5000 đang làm.'],
-      gioi_han: 'VCC 3–32V. LM358 không "rail-to-rail": OUT lên cao nhất ≈ VCC − 1.5V, đầu vào chỉ đúng trong khoảng 0 tới VCC − 1.5V. Cấp 3.3V thì OUT chỉ lên được ~1.8V.',
+      gioi_han: 'VCC 3–30V (TI; hãng khác có bản ghi 32V). LM358 không "rail-to-rail": OUT lên cao nhất ≈ VCC − 1.5V, đầu vào chỉ đúng trong khoảng 0 tới VCC − 1.5V. Cấp 3.3V thì OUT chỉ lên được ~1.8V.',
       bay: 'Op-amp thứ 2 không dùng mà để chân thả nổi thì nó tự dao động, nóng, gây nhiễu con kia. Nối IN+ của nó xuống GND và OUT về IN−.', bai: ['6.5'] },
   ];
 

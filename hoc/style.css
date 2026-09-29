@@ -170,8 +170,11 @@ code{font-family:var(--mono);font-size:.86em;background:var(--accent-bg);padding
 /* thư viện linh kiện: hình vẽ màu thật, nét chú thích theo màu mực của trang */
 svg.lk-anh{display:block;width:100%;height:auto;color:var(--ink)}
 svg.lk-kh{display:block;width:100%;max-width:200px;height:auto;margin:auto;color:var(--ink)}
-.lk-chan{stroke:#9AA3AD;stroke-width:2.5;fill:none;stroke-linecap:round}
-.lk-dan{stroke:var(--muted);stroke-width:1}
+.lk-chan{stroke:#6B7682;stroke-width:2.5;fill:none;stroke-linecap:round}
+.lk-dan{stroke:var(--ink);stroke-opacity:.75;stroke-width:1.2}
+/* Mảng màu sáng (kim loại, nhựa trắng, thân điện trở…) trên giấy trắng: thêm viền cho khỏi chìm vào nền */
+svg.lk-anh :is([fill="#B8BEC4"],[fill="#C8CDD2"],[fill="#C9CED3"],[fill="#DDE3E8"],[fill="#E8EEF2"],[fill="#E9EDF0"],[fill="#F2F2F2"],[fill="#F3F1EA"],[fill="#D9B98A"],[fill="#E9A96A"],[fill="#A9B8D0"],[fill="#E8C24A"]){stroke:rgba(27,37,51,.7);stroke-width:1}
+svg.lk-anh .bb-lo circle{fill:#5F6A76}
 .lk-cham{fill:var(--ink)}
 .lk-chu,.lk-mo,.lk-canh,.lk-xau{font:10.5px var(--mono);paint-order:stroke;stroke:var(--panel);stroke-width:3px;stroke-linejoin:round}
 .lk-chu{fill:var(--ink)} .lk-mo{fill:var(--muted)} .lk-canh{fill:var(--warn);font-weight:600} .lk-xau{fill:var(--bad);font-weight:600}
@@ -190,7 +193,7 @@ svg.lk-kh{display:block;width:100%;max-width:200px;height:auto;margin:auto;color
 .lk-the h3{margin:0;font-size:16px;flex:1 1 12em}
 .lk-hinh{display:grid;grid-template-columns:1.7fr 1fr;border-bottom:1px solid var(--line-dam)}
 .lk-hinh.mot{grid-template-columns:1fr}
-.lk-hinh.mot svg.lk-anh{max-width:340px;margin:0 auto}
+.lk-hinh.mot svg.lk-anh{max-width:560px;margin:0 auto}
 .lk-hinh figure{display:flex;flex-direction:column;justify-content:center;padding:10px 12px 0}
 .lk-hinh figure+figure{border-left:1px solid var(--line)}
 .lk-hinh figcaption{font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:6px 0 8px;margin-top:auto}
