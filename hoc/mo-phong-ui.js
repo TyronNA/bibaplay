@@ -45,7 +45,12 @@
       cu: 'day', tham: { tro: '220', led: 'do', day: 'vang', diode: '4148', tu: '100µF' },
       cho: [], que: null, hover: null, loi: '', daDoOm: false, hoiPin: false, dem: 0, nguon: '',
     };
-    const nap = v => { if (!v) return; S.items = v.items || []; if (v.dh) S.dh = { ...S.dh, ...v.dh }; S.cot = Math.max(30, v.cot || 30); S.nguon = v.nguon || ''; };
+    // Mạch từ link chia sẻ (và localStorage, nơi link đó được lưu lại) là dữ liệu người lạ: board.js ghép thẳng nhiều
+    // trường (sang, mau, r…) vào thuộc tính SVG rồi innerHTML. Bỏ < > " khỏi mọi chuỗi để không chuỗi nào thoát khỏi thuộc tính/thẻ.
+    const sach = x => typeof x === 'string' ? x.replace(/[<>"]/g, '')
+      : Array.isArray(x) ? x.map(sach)
+      : x && typeof x === 'object' ? Object.fromEntries(Object.entries(x).map(([k, y]) => [sach(k), sach(y)])) : x;
+    const nap = v => { if (!v) return; v = sach(v); S.items = v.items || []; if (v.dh) S.dh = { ...S.dh, ...v.dh }; S.cot = Math.max(30, v.cot || 30); S.nguon = v.nguon || ''; };
     nap(vao || luu);
     const idMoi = k => { let id; do id = k + (++S.dem); while (S.items.some(i => i.id === id)); return id; };
     const pinIt = () => S.items.find(i => i.loai === 'pin');

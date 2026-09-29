@@ -92,7 +92,10 @@ def allowed(request: web.Request) -> bool:
     """OTA phát token cho ai gọi tới, nên token không chặn được người lạ: chặn bằng Device-Id (MAC chip) ở
     ARES_DEVICES. Gọi từ chính máy này (fake_device.py, mac_device.py) thì luôn cho qua."""
     dev = (request.headers.get("Device-Id") or "").strip().lower()
-    return dev in request.app["devices"] or request.remote in ("127.0.0.1", "::1")
+    # Tunnel/reverse proxy (cloudflared…) chạy trên cùng máy cũng tới từ 127.0.0.1: mang header proxy thì là
+    # người ngoài Internet, không phải script local.
+    proxied = any(h in request.headers for h in ("X-Forwarded-For", "CF-Connecting-IP", "Forwarded", "X-Real-IP"))
+    return dev in request.app["devices"] or (request.remote in ("127.0.0.1", "::1") and not proxied)
 
 
 def refuse(request: web.Request):
