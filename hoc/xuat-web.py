@@ -61,6 +61,9 @@ KHONG_QUANG_CAO = {"do", "mo-phong", "gioi-thieu", "chinh-sach-rieng-tu"}
 # chất lượng cả site xuống (AdSense từng từ chối vì "giá trị thấp"). Vẫn phát trang cho người bấm từ bài, nhưng noindex,
 # không quảng cáo, không vào sitemap. Món nào viết dày lên thì chuyển nhóm hoặc bỏ khỏi đây.
 NHOM_KHONG_INDEX = {"cam-tay"}
+# Cùng lý do, đo theo từng món thay vì theo nhóm: trang linh kiện có phần nhận chân + giới hạn + bẫy (<dl class="lk-tt">,
+# trừ dòng "Dùng ở bài") dưới ngưỡng này thì noindex như trên. Viết dày lên quá ngưỡng là tự vào lại sitemap.
+CHU_TOI_THIEU_LK = 50
 
 # Chỉ chèn khi cau-hinh-web.json có ung_ho.link hoặc ung_ho.qr.
 GHI_UNG_HO = """<p class="ung-ho"><b>Ủng hộ.</b> {chu}{link}</p>{qr}"""
@@ -148,7 +151,7 @@ def main(ra):
     web = web.replace("</main>", "</main>\n" + ghi, 1)
     (ra / "index.html").write_text(web)
 
-    trang = render_tinh(ra, web, routes(ra), qc)
+    trang, ni = render_tinh(ra, web, routes(ra), qc)
     files += trang
     # 404.html: Workers Static Assets trả trang này (mã 404) cho đường dẫn lạ — xem not_found_handling trong wrangler.jsonc.
     (ra / "404.html").write_text(re.sub(r'<main id="app">.*</main>', '<main id="app"><section class="dau"><h1>Không có trang này</h1>'
@@ -158,7 +161,7 @@ def main(ra):
     files.append("404.html")
     ngay = date.today().isoformat()
     (ra / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        + "".join(f"<url><loc>{WEB}/{r + '/' if r else ''}</loc><lastmod>{ngay}</lastmod></url>\n" for r in trang_sitemap(trang))
+        + "".join(f"<url><loc>{WEB}/{r + '/' if r else ''}</loc><lastmod>{ngay}</lastmod></url>\n" for r in trang_sitemap(trang, ni))
         + "</urlset>\n")
     (ra / "robots.txt").write_text(f"User-agent: *\nDisallow: /api/\nDisallow: /mua/\nSitemap: {WEB}/sitemap.xml\n")
     files += ["sitemap.xml", "robots.txt"]
@@ -190,9 +193,18 @@ def khong_index():
     return {f"linh-kien/{i}" for i in ids}
 
 
-def trang_sitemap(trang):
+def so_chu_lk(main):
+    """Số chữ phần riêng của trang linh kiện (xem CHU_TOI_THIEU_LK). Không phải trang một món → None."""
+    dl = re.search(r'<dl class="lk-tt">(.*?)</dl>', main, re.S)
+    if not dl:
+        return None
+    dl = re.sub(r"<div><dt>Dùng ở bài</dt>.*?</div>", "", dl[1], flags=re.S)
+    return len(html.unescape(re.sub(r"<[^>]+>", " ", dl)).split())
+
+
+def trang_sitemap(trang, ni):
     # "do" là danh sách tick của từng người (localStorage) — trang tĩnh chỉ là bảng trống, không đưa vào sitemap.
-    bo = {"do", *khong_index()}
+    bo = {"do", *ni}
     return [r for r in (t[:-len("/index.html")] if t != "index.html" else "" for t in trang) if r not in bo]
 
 
@@ -256,6 +268,9 @@ def render_tinh(ra, web, ds, qc=""):
         t = re.sub(r'<main id="app">.*</main>', lambda _: main[0], t, count=1, flags=re.S)
         # trang không có dữ liệu có cấu trúc: bỏ thẻ ld+json rỗng (Search Console báo lỗi parse)
         t = t.replace('<script type="application/ld+json" id="ld"></script>\n', "", 1)
+        n = so_chu_lk(main[0]) if route.startswith("linh-kien/") else None
+        if n is not None and n < CHU_TOI_THIEU_LK:
+            ni.add(route)
         if route in ni:
             t = t.replace("</head>", '<meta name="robots" content="noindex, follow">\n</head>', 1)
         elif qc and route.split("/")[0] not in KHONG_QUANG_CAO:
@@ -264,7 +279,7 @@ def render_tinh(ra, web, ds, qc=""):
         (ra / f).parent.mkdir(parents=True, exist_ok=True)
         (ra / f).write_text(t)
         ket.append(str(f))
-    return ket
+    return ket, ni
 
 
 if __name__ == "__main__":
