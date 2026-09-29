@@ -26,7 +26,7 @@
     tieuDe: 'Robot AI tự build: ESP32-S3 + Gemini Live, server riêng · Bàn Ráp',
     moTa: 'Trợ lý giọng nói xiaozhi ráp trên breadboard: tự build firmware ESP32-S3 có mặt robot trên OLED, server riêng nối Gemini Live bằng key miễn phí, chạy trên máy trong nhà. Cách build, lấy key, chọn chỗ host.',
     html: (R, url) => `
-      <section class="dau"><p class="eyebrow">Dự án · đích đến của Phần 2</p>
+      <section class="dau"><p class="eyebrow">Dự án · đích đến của Phần 2 và 3</p>
       <h1>Robot AI tự build</h1>
       <p class="lede">ESP32-S3 + mic + loa + OLED trên breadboard, nói chuyện tiếng Việt bằng Gemini Live. Firmware tự build từ source <a href="https://github.com/78/xiaozhi-esp32" target="_blank" rel="noopener">xiaozhi-esp32 ↗</a>, server tự chạy trong nhà thay cho server của xiaozhi: không dùng firmware dựng sẵn, không cần tài khoản xiaozhi.me.</p>
       <p class="xz-tt"><span class="pill ok">đã chạy</span> server + Gemini Live, nói chuyện qua mic/loa máy Mac giả làm chip
@@ -40,15 +40,9 @@
         <p class="mo">Cùng một file C chạy ở 2 nơi: trong firmware, và trong cửa sổ giả lập trên máy tính (SDL) để chỉnh mặt khi chưa có board — ${gh('sandbox/robot-face')}.</p>
       </section>
 
-      <section><h2>Sensor panel · bài tập LVGL</h2>
-        <figure class="xz-hinh to"><img src="${url('sandbox/sensor-panel/shot.png')}" width="800" height="480" loading="lazy" alt="Màn hình 800×480 hiện nhiệt độ, tải CPU, GPU, RAM, ổ đĩa, quạt, mạng, đồng hồ, có hình robot ở giữa">
-        <figcaption>Màn 800×480 hiện thông số máy tính (CPU, GPU, RAM, ổ đĩa, quạt, mạng), robot vẽ bằng đa giác, quạt quay. Ảnh này chụp từ bản giả lập chạy trên Mac, số là cảm biến thật của máy (đọc SMC, không cần sudo); <code>--demo</code> dùng số giả.</figcaption></figure>
-        <p class="mo">Code UI viết để chạy được trên ESP32-S3 (chỉ phần tạo màn hình/cảm ứng khác), <b>chưa thử trên chip</b>. Trên máy thật, PC phải gửi số sang ESP32 qua USB/Wi-Fi — phần đó chưa làm. Mục đích là tập LVGL cho màn LCD của xiaozhi — ${gh('sandbox/sensor-panel')}.</p>
-      </section>
-
       <section><h2>Chạy thế nào</h2>
         <figure class="xz-hinh xz-hinh-so to"><div class="cuon">${SO_DO}</div>
-        <figcaption>Chip không nói chuyện thẳng với Google: key Gemini chỉ nằm trên server. Lúc khởi động chip gọi <code>POST /xiaozhi/ota/</code>, server trả địa chỉ WebSocket + token; từ đó chip gửi tiếng nói từng khung 60 ms (Opus), server chuyển thành PCM đẩy lên Gemini, nhận tiếng trả lời 24 kHz nén lại gửi xuống loa. Trễ đo được lúc test: ~2,6 s từ lúc ngừng nói tới lúc có tiếng trả lời.</figcaption></figure>
+        <figcaption>Chip không nói chuyện thẳng với Google: key Gemini chỉ nằm trên server. Lúc khởi động chip gọi <code>POST /xiaozhi/ota/</code>, server trả địa chỉ WebSocket + token; từ đó chip gửi tiếng nói từng khung 60 ms (Opus), server chuyển thành PCM đẩy lên Gemini, nhận tiếng trả lời 24 kHz nén lại gửi xuống loa. Trễ đo được lúc test: ~2.6s từ lúc ngừng nói tới lúc có tiếng trả lời.</figcaption></figure>
       </section>
 
       <section><h2>1 · Phần cứng</h2>
@@ -57,7 +51,7 @@
       </section>
 
       <section><h2>2 · Firmware</h2>
-        <div class="khung to"><p>Cần <b>ESP-IDF v6.0.1 trở lên</b> (khuyên v6.1; bản 5.x không build được xiaozhi bản hiện tại). Board riêng <code>ares-bread</code> = <code>bread-compact-wifi</code> 128×64 + mặt robot + địa chỉ server riêng; có tên board riêng để cơ chế OTA của xiaozhi không bao giờ đè bằng firmware gốc.</p></div>
+        <div class="khung to"><p>Cần <b>ESP-IDF v6.0.1 trở lên</b> (khuyên v6.1; bản 5.x không build được xiaozhi bản hiện tại). Board riêng <code>ares-bread</code> = <code>bread-compact-wifi</code> 128×64 + mặt robot + tool bánh xe + địa chỉ server riêng; có tên board riêng để cơ chế OTA của xiaozhi không bao giờ đè bằng firmware gốc.</p></div>
         ${LENH(`git clone https://github.com/TyronNA/bibaplay && cd bibaplay
 git clone https://github.com/78/xiaozhi-esp32        # nằm trong bibaplay/, đã gitignore
 # sửa SERVER_IP trong firmware/boards/ares-bread/config.json = IP LAN của máy chạy server
@@ -79,7 +73,7 @@ GEMINI_API_KEY=… ARES_DEVICES=aa:bb:cc:dd:ee:ff .venv/bin/python app.py   # MA
 .venv/bin/python fake_device.py                       # tự kiểm, không cần mic
 .venv/bin/pip install -r requirements-mac.txt && .venv/bin/python mac_device.py   # mic + loa máy Mac`)}
         <p class="mo"><code>ARES_DEVICES</code> là MAC các chip được phép (cách nhau dấu phẩy). Chưa biết MAC: cứ cắm chip vào, server từ chối và in MAC của nó ra log — chép vào đây rồi chạy lại. Kết nối từ chính máy chạy server (chip giả ở trên) luôn được nhận.</p>
-        <p class="mo">Tuỳ chọn: <code>ARES_PROMPT</code> đổi tính cách, <code>GEMINI_VOICE</code> đổi giọng, file <code>~/.config/ares/mcp.json</code> nối thêm tool MCP (lịch, mail, Jira…) cho robot gọi. <code>mac_device.py</code> chỉ nửa song công (tắt mic lúc robot nói) vì máy tính không khử vọng như chip.</p>
+        <p class="mo">Tuỳ chọn: <code>ARES_PROMPT</code> đổi tính cách, <code>GEMINI_VOICE</code> đổi giọng, file <code>~/.config/ares/mcp.json</code> nối thêm tool MCP (lịch, mail, ghi chú…) cho robot gọi. <code>mac_device.py</code> chỉ nửa song công (tắt mic lúc robot nói) vì máy tính không khử vọng như chip.</p>
       </section>
 
       <section><h2>4 · Host ở đâu</h2>
@@ -92,9 +86,19 @@ GEMINI_API_KEY=… ARES_DEVICES=aa:bb:cc:dd:ee:ff .venv/bin/python app.py   # MA
         <p class="mo">Chi phí: key miễn phí + máy sẵn có = 0đ. Hết hạn mức miễn phí hoặc cần giữ dữ liệu riêng tư thì bật tính phí trong Google AI Studio; server có ghi số phút audio + token từng lượt vào SQLite để ước tiền (<code>trace_report.py</code>).</p>
       </section>
 
+      <section><h2>5 · Cho robot chạy bằng giọng</h2>
+        <p class="mo">Firmware <code>ares-bread</code> đăng ký thêm 2 tool trên chip: <code>self.robot.move</code> (hướng, tốc độ, thời gian) và <code>self.robot.stop</code>. Lúc chip kết nối, server hỏi chip có tool gì rồi đưa cho Gemini. Nói "tiến lên một giây" là Gemini gọi tool, chip chạy 2 motor qua DRV8833 rồi tự dừng. Tốc độ tối đa 70% và mỗi lệnh tối đa 3 giây, 2 giới hạn này nằm trong firmware nên AI nghe nhầm cũng không vượt được. Ráp motor và chạy thử khi bánh còn nhấc khỏi bàn: <a href="${R('bai/17.2')}">bài 17.2</a>. <b>Chưa thử trên chip thật.</b></p>
+      </section>
+
+      <section><h2>Sensor panel · bài tập LVGL</h2>
+        <figure class="xz-hinh to"><img src="${url('sandbox/sensor-panel/shot.png')}" width="800" height="480" loading="lazy" alt="Màn hình 800×480 hiện nhiệt độ, tải CPU, GPU, RAM, ổ đĩa, quạt, mạng, đồng hồ, có hình robot ở giữa">
+        <figcaption>Màn 800×480 hiện thông số máy tính (CPU, GPU, RAM, ổ đĩa, quạt, mạng), robot vẽ bằng đa giác, quạt quay. Ảnh này chụp từ bản giả lập chạy trên Mac, số là cảm biến thật của máy (đọc SMC, không cần sudo); <code>--demo</code> dùng số giả.</figcaption></figure>
+        <p class="mo">Code UI viết để chạy được trên ESP32-S3 (chỉ phần tạo màn hình/cảm ứng khác), <b>chưa thử trên chip</b>. Trên máy thật, PC phải gửi số sang ESP32 qua USB/Wi-Fi — phần đó chưa làm. Mục đích là tập LVGL cho màn LCD của xiaozhi — ${gh('sandbox/sensor-panel')}.</p>
+      </section>
+
       <section class="bay to"><h2>Bẫy</h2><ul>
         <li><b>Đừng mở cổng server ra Internet.</b> Token WebSocket được phát qua <code>/xiaozhi/ota/</code> (firmware xiaozhi cần thế để tự kết nối) nên không chặn được người lạ; thứ chặn là danh sách MAC <code>ARES_DEVICES</code>, mà MAC thì giả được. Kết nối chip ↔ server là <code>ws://</code>, không mã hoá. Chỉ chạy trong mạng nhà, không port-forward.</li>
-        <li><b>Key miễn phí: Google được dùng dữ liệu</b> để cải thiện sản phẩm. Đừng nối mail/Jira/Slack công ty qua MCP khi đang dùng key miễn phí.</li>
+        <li><b>Key miễn phí: Google được dùng dữ liệu</b> để cải thiện sản phẩm. Đừng nối mail hay tài khoản công việc qua MCP khi đang dùng key miễn phí.</li>
         <li><b>IP server đổi</b> (router cấp IP mới) → chip không tìm thấy server. Đặt IP tĩnh cho máy chạy server, hoặc build lại firmware.</li>
         <li><b>Mặt robot bị âm bản</b> khi tự viết màn hình: thư viện màn hình của ESP-IDF bật điểm OLED khi màu <i>tối</i>, nên firmware vẽ mắt màu đen trên nền trắng. Xem trước đúng như trên chip bằng bản giả lập với <code>--device</code>.</li>
         <li><b>Cáp USB chỉ sạc</b>: cắm vào mà máy không thấy cổng serial → đổi cáp có truyền data.</li>

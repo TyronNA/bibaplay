@@ -43,7 +43,7 @@
  "params": {"name": "self.robot.move", "arguments": {"huong": "tien", "thoi_gian_ms": 1000}}}</pre>
       <p>Chip trả: <code>{"jsonrpc": "2.0", "id": 7, "result": {"content": [{"type": "text", "text": "true"}], "isError": false}}</code>. <code>id</code> để server ghép câu trả lời với câu hỏi — nhiều lời gọi có thể đang chờ cùng lúc.</p>
       <h3>Vì sao giới hạn phải nằm ở chip</h3>
-      <p>Mô hình ngôn ngữ đôi khi hiểu sai hoặc gọi tool với tham số lạ. Chỗ duy nhất chắc chắn áp được giới hạn là code chạy ngay cạnh motor: kiểm tham số (0–70%, 100–3000ms), từ chối hướng lạ, tự tắt bằng timer. Server và prompt chỉ là lớp nhắc thêm. Cùng tư duy với cầu chì: an toàn không được phụ thuộc vào việc phần mềm phía trên "ngoan".</p>
+      <p>Mô hình ngôn ngữ đôi khi hiểu sai hoặc gọi tool với tham số lạ. Chỗ duy nhất chắc chắn áp được giới hạn là code chạy ngay cạnh motor: kiểm tham số (0–70%, 100–3000ms), từ chối hướng lạ, tự tắt bằng timer. Server và prompt chỉ là lớp nhắc thêm.</p>
       <h3>Độ trễ</h3>
       <p>Từ lúc bạn ngừng nói tới lúc bánh quay ≈ thời gian Gemini nghe hết câu + quyết định (~1–3s) + một vòng WebSocket (vài chục ms). Không đủ nhanh để lái né vật cản — việc đó vẫn là vòng lặp cảm biến trên chip (17.1). Giọng nói hợp cho lệnh mức cao: "đi tới bàn", "quay lại", "dừng".</p>`,
     hoi: [
@@ -64,7 +64,7 @@
         K.camUsb('Cắm USB, nạp firmware có tool bánh xe', ['Build firmware board riêng có tool <code>self.robot.move</code> theo trang Robot AI tự build, nạp lên chip. Server riêng đang chạy (bản có chuyển tool của chip cho Gemini).', 'Hộp pin vẫn rỗng. Đợi OLED báo sẵn sàng; xem log server.'], {},
           { thay: 'Log server có dòng "chip có … tool" liệt kê self.robot.move và self.robot.stop.', neu_khong: 'Không có dòng đó: firmware cũ (chưa có tool) hoặc server cũ. Có "không lấy được tool của chip": chip không trả lời MCP — kiểm log chip.' }),
         K.lapPin('Rồi lắp pin (bánh trên không)', ['Nhấn nút nói (hoặc gọi wake word) và nói: "Tiến lên một giây". Rồi "quay trái nửa giây", "lùi lại", "dừng lại".'], {},
-          { thay: 'Robot trả lời bằng giọng; 2 bánh quay đúng hướng rồi tự dừng; log server in "tool chip chip__self_robot_move …".', neu_khong: 'Robot nói nhưng bánh không quay: kiểm SLP lên 3V3, dây GPIO 9/10/14/21. Quay sai hướng: đảo 2 dây của motor đó. Bánh quay mãi: báo lỗi — timer không tắt; tháo pin ngay.' }),
+          { thay: 'Robot trả lời bằng giọng; 2 bánh quay đúng hướng rồi tự dừng; log server in "tool chip chip__self_robot_move …".', neu_khong: 'Robot nói nhưng bánh không quay: kiểm SLP lên 3V3, dây GPIO 9/10/14/21. Quay sai hướng: đảo 2 dây của motor đó. Bánh quay mãi không dừng: tháo pin ngay — firmware không tắt được motor, kiểm lại bản vừa nạp.' }),
         { ten: 'Tháo pin trước, rút USB sau', lam: ['Tháo pin. Rồi rút USB.'], board: { sua: { pin: { trang_thai: 'rong' }, esp: { usb: false } } } },
       ],
     }],

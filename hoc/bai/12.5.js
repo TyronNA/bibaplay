@@ -33,7 +33,7 @@
       <h3>Độ trễ đi đâu</h3>
       <p>Server riêng đo được ~2.6s từ lúc ngừng nói tới lúc có tiếng trả lời. Phần của mạch rất nhỏ: I2S đệm vài chục ms, mã hoá Opus ~20–60ms mỗi khung. Phần lớn là mạng + chờ phát hiện hết câu + mô hình nghĩ và nói. Muốn nhanh hơn phải sửa phía server, không phải phía dây.</p>
       <h3>Ghép từng khối</h3>
-      <p>Ráp từng module, đo Ω sau mỗi module là cách chia đôi lỗi: hỏng ở bước nào thì chỉ nghi phần vừa thêm. Cùng tư duy với tìm bug bằng bisect.</p>`,
+      <p>Ráp từng module, đo Ω sau mỗi module là cách chia đôi lỗi: hỏng ở bước nào thì chỉ nghi phần vừa thêm.</p>`,
     hoi: [
       ['Board reset đúng lúc xiaozhi nói to. Nghi gì đầu tiên?', 'Nguồn 5V sụt vì ampli kéo đỉnh dòng (cổng USB không đủ) → brownout.'],
       ['Vì sao OLED và mic ăn 3V3 còn ampli ăn 5V?', 'OLED và mic là chip logic 3.3V (mic tối đa ~3.6V); ampli cần công suất lớn cho loa, lấy trực tiếp từ 5V.'],
@@ -76,6 +76,6 @@
     ],
     bang_do: [{ ten: 'Ω 3V3–GND sau mỗi module', cot: ['Ω'], hang: [{ ten: 'Mốc 8.1', du_doan: [''] }, { ten: '+ OLED', du_doan: ['≤ mốc'] }, { ten: '+ mic', du_doan: ['≤ trên'] }, { ten: '+ ampli', du_doan: ['≤ trên'] }, { ten: '+ nút (nhấn từng nút)', du_doan: ['như trên'] }] }],
     bay: ['5V cắm vào thanh + (đang là 3V3): 2 nguồn đấu nhau, OLED/mic nhận 5V.', 'Cắm module đảo chiều (VCC ↔ GND): đo Ω sau từng module để bắt ngay.', 'Nút nối vào thanh + thay vì GND: nhấn là cấp 3.3V vào chân đang bật pull-up — không hỏng nhưng nút không ăn.'],
-    robot: ['Bước tiếp theo: gắn board này lên robot, thêm tool MCP để xiaozhi điều khiển motor (tài liệu MCP trong repo xiaozhi-esp32).'],
+    robot: ['Bước tiếp theo: <a href="bai/17.2/">bài 17.2</a> thêm driver + 2 motor, xiaozhi nhận lệnh bằng giọng rồi chạy bánh xe.'],
   });
 })();
