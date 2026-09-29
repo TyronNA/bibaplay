@@ -6,7 +6,7 @@
 Khác bản local: dùng luu-web.js (số đo, tiến độ, đồ đang có nằm trong localStorage của người xem),
 danh sách bài lấy từ bai/ds.json sinh ở đây. Không chép hoc/ket-qua/ — đó là số đo của riêng mình.
 Mỗi route được Chrome headless render sẵn thành <route>/index.html (Google đọc được nội dung, không phải
-trang "Đang tải…"), kèm sitemap.xml + robots.txt. Link donate / mã analytics / xác minh Search Console: cau-hinh-web.json.
+trang "Đang tải…"), kèm sitemap.xml + robots.txt. Link donate / mã analytics / xác minh Search Console / AdSense: cau-hinh-web.json.
 Deploy: hoc/deploy-web.sh.
 """
 import html
@@ -50,6 +50,12 @@ HOI_PDF = """<dialog id="hoi-pdf" class="hoi to" aria-labelledby="hoi-pdf-ten"><
 <p class="mo">Đọc trên web không cần tải: mỗi bài đã có đủ hình.</p>
 <p class="do-nut"><button value="tai" class="chinh">Tải PDF</button> <button value="" autofocus>Thôi</button></p>
 </form></dialog>"""
+
+# Chỉ chèn khi cau-hinh-web.json có adsense. Chính sách AdSense bắt buộc trang phải nói rõ bên thứ ba đặt cookie quảng cáo.
+GHI_QUANG_CAO = '''<p>Trang có <b>quảng cáo của Google</b>. Google và đối tác có thể dùng cookie để chọn quảng cáo theo các trang bạn đã xem. Tắt quảng cáo cá nhân hoá ở <a href="https://adssettings.google.com" target="_blank" rel="noopener">adssettings.google.com ↗</a>.</p>'''
+# Route không gắn script quảng cáo: "do" là bảng tick trống (dữ liệu nằm ở localStorage), "mo-phong" là công cụ gần như
+# không có chữ. AdSense từ chối "quảng cáo trên màn hình không có nội dung" đúng vì những trang kiểu này. 404.html cũng không gắn.
+KHONG_QUANG_CAO = {"do", "mo-phong"}
 
 # Chỉ chèn khi cau-hinh-web.json có ung_ho.link hoặc ung_ho.qr.
 GHI_UNG_HO = """<p class="ung-ho"><b>Ủng hộ.</b> {chu}{link}</p>{qr}"""
@@ -101,11 +107,29 @@ def main(ra):
     if cfg.get("cf_beacon"):
         them_dau += ("<script defer src=\"https://static.cloudflareinsights.com/beacon.min.js\" "
                      f"data-cf-beacon='{{\"token\": \"{html.escape(cfg['cf_beacon'])}\"}}'></script>\n")
+    # Meta xác minh gắn mọi trang; script quảng cáo chỉ gắn lúc ghi từng route (render_tinh). Không để script trong khung
+    # `web`: Chrome chụp trang sẽ tải quảng cáo và quảng cáo Google chèn vào sẽ lọt vào <main> đã chụp.
+    qc = ""
+    if cfg.get("adsense"):
+        pub = re.fullmatch(r"(?:ca-)?(pub-\d{16})", cfg["adsense"].strip())
+        if not pub:
+            raise SystemExit(f"cau-hinh-web.json: adsense phải dạng ca-pub-<16 số>, đang là {cfg['adsense']!r}")
+        pub = pub[1]
+        them_dau += f'<meta name="google-adsense-account" content="ca-{pub}">\n'
+        qc = (f'<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-{pub}" '
+              'crossorigin="anonymous"></script>\n')
+        # f08c47fec0942fa0: mã TAG-ID cố định của Google trong ads.txt
+        # subdomain=: crawler chỉ đọc ads.txt của domain gốc; subdomain có ads.txt riêng (game cũ) phải được trỏ tới từ đây
+        (ra / "ads.txt").write_text(f"google.com, {pub}, DIRECT, f08c47fec0942fa0\n"
+                                    + "".join(f"subdomain={d}\n" for d in cfg.get("adsense_subdomain") or []))
+        files.append("ads.txt")
     web = web.replace("</head>", them_dau + "</head>", 1)
     assert "</main>" in web
     ghi = GHI_AI
     if mua:
         ghi = ghi.replace("</footer>", GHI_AFFILIATE + "\n</footer>")
+    if qc:
+        ghi = ghi.replace("</footer>", GHI_QUANG_CAO + "\n</footer>")
     uh = cfg.get("ung_ho") or {}
     if uh.get("link") or uh.get("qr"):
         if uh.get("qr"):
@@ -119,7 +143,7 @@ def main(ra):
     web = web.replace("</main>", "</main>\n" + ghi, 1)
     (ra / "index.html").write_text(web)
 
-    trang = render_tinh(ra, web, routes(ra))
+    trang = render_tinh(ra, web, routes(ra), qc)
     files += trang
     # 404.html: Workers Static Assets trả trang này (mã 404) cho đường dẫn lạ — xem not_found_handling trong wrangler.jsonc.
     (ra / "404.html").write_text(re.sub(r'<main id="app">.*</main>', '<main id="app"><section class="dau"><h1>Không có trang này</h1>'
@@ -194,7 +218,7 @@ def chup(goc, tam, i_route):
         pr.wait()
 
 
-def render_tinh(ra, web, ds):
+def render_tinh(ra, web, ds, qc=""):
     """Mỗi route một file <route>/index.html: nội dung <main> + khối meta do app.js vẽ, ráp vào khung index.html.
     Chỉ lấy 2 khúc đó từ DOM chụp được: phần còn lại (script bai/*.js app.js tự chèn vào <head>, số lượt xem) phải giữ như khung gốc."""
     srv = ThreadingHTTPServer(("127.0.0.1", 0), partial(DuongDan, directory=str(ra)))
@@ -202,7 +226,8 @@ def render_tinh(ra, web, ds):
     goc = f"http://127.0.0.1:{srv.server_address[1]}"
     ket = []
     with tempfile.TemporaryDirectory() as tam:
-        with ThreadPoolExecutor(6) as ex:
+        # mỗi Chrome headless ~15 tiến trình: 6 luồng từng đẩy load máy lên ~200 và swap đầy → mặc định 2
+        with ThreadPoolExecutor(max(1, int(os.environ.get("XUAT_WEB_JOBS", "2")))) as ex:
             doms = list(ex.map(partial(chup, goc, tam), enumerate(ds)))
     srv.shutdown()
     for route, dom in zip(ds, doms):
@@ -213,6 +238,8 @@ def render_tinh(ra, web, ds):
         # thay bằng hàm chứ không bằng chuỗi: nội dung có \\ (công thức, code) mà re.sub sẽ hiểu là escape
         t = re.sub(r"<!--meta:.*?<!--/meta-->", lambda _: meta[0], web, count=1, flags=re.S)
         t = re.sub(r'<main id="app">.*</main>', lambda _: main[0], t, count=1, flags=re.S)
+        if qc and route.split("/")[0] not in KHONG_QUANG_CAO:
+            t = t.replace("</head>", qc + "</head>", 1)
         f = Path(route) / "index.html"
         (ra / f).parent.mkdir(parents=True, exist_ok=True)
         (ra / f).write_text(t)

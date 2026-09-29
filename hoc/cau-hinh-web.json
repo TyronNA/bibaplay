@@ -1,6 +1,8 @@
 {
-  "_ghi_chu": "Để trống = không hiện. Sửa xong chạy lại deploy-web.sh. ung_ho.qr = tên file ảnh đặt trong hoc/. cf_beacon = token Cloudflare Web Analytics. gsc = mã meta google-site-verification.",
+  "_ghi_chu": "Để trống = không hiện. Sửa xong chạy lại deploy-web.sh. ung_ho.qr = tên file ảnh đặt trong hoc/. cf_beacon = token Cloudflare Web Analytics. gsc = mã meta google-site-verification. adsense = ca-pub-<16 số> (sinh ads.txt + meta xác minh + Auto ads trừ /do/, /mo-phong/, 404). adsense_subdomain = subdomain có ads.txt riêng, ghi thêm dòng subdomain= vào ads.txt.",
   "ung_ho": { "chu": "", "nhan": "", "link": "", "qr": "" },
   "cf_beacon": "",
-  "gsc": ""
+  "gsc": "",
+  "adsense": "ca-pub-4948429111315299",
+  "adsense_subdomain": ["ascension-war.bibaplay.com"]
 }
