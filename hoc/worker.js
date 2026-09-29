@@ -14,11 +14,17 @@ const BAO_MAT = {
   'strict-transport-security': 'max-age=31536000',
 };
 
-// Lượt xem: một dòng đếm trong D1 (bảng dem, tạo tay một lần — xem wrangler.jsonc).
+// Lượt xem: một dòng đếm tổng trong D1 (bảng dem) + một dòng mỗi ngày (bảng xem_ngay) — cả hai tạo tay một lần, xem wrangler.jsonc.
 // POST cộng 1 (app.js chỉ gửi 1 lần mỗi phiên trình duyệt), GET chỉ đọc.
-async function luotXem(request, env) {
+async function luotXem(request, env, ctx) {
   const cong = request.method === 'POST';
   if (!cong && request.method !== 'GET') return new Response('Method Not Allowed', { status: 405, headers: { allow: 'GET, POST' } });
+  if (cong) {
+    // số theo ngày chỉ để xem xu hướng: ghi sau, lỗi (chưa tạo bảng…) không được làm hỏng số tổng trả cho trang
+    const ngay = new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
+    ctx.waitUntil(env.DB.prepare('INSERT INTO xem_ngay (ngay, n) VALUES (?1, 1) ON CONFLICT (ngay) DO UPDATE SET n = n + 1')
+      .bind(ngay).run().catch(e => console.error('dem xem ngay', e)));
+  }
   const row = cong
     ? await env.DB.prepare("UPDATE dem SET n = n + 1 WHERE k = 'xem' RETURNING n").first()
     : await env.DB.prepare("SELECT n FROM dem WHERE k = 'xem'").first();
@@ -64,7 +70,7 @@ async function xuLy(request, env, ctx) {
     url.hostname = CHINH; url.protocol = 'https:'; url.port = '';
     return Response.redirect(url.toString(), 301);
   }
-  if (url.pathname === '/api/xem') return luotXem(request, env);
+  if (url.pathname === '/api/xem') return luotXem(request, env, ctx);
   const m = /^\/mua\/([\w-]+)\/?$/.exec(url.pathname);
   if (m) return mua(request, env, ctx, m[1]);
   // Link chia sẻ mạch (/mo-phong/m/<mã>/) và "thử trên mô phỏng" (/mo-phong/bai/…) không có file tĩnh:

@@ -13,6 +13,7 @@
   "r2_buckets": [{ "binding": "PDF", "bucket_name": "ban-rap-hoc" }],
   // Bảng đếm tạo một lần: wrangler d1 execute ban-rap-hoc --remote --command
   //   "CREATE TABLE IF NOT EXISTS dem (k TEXT PRIMARY KEY, n INTEGER NOT NULL); INSERT OR IGNORE INTO dem VALUES ('xem', 0)"
+  //   "CREATE TABLE IF NOT EXISTS xem_ngay (ngay TEXT PRIMARY KEY, n INTEGER NOT NULL)"
   "d1_databases": [{ "binding": "DB", "database_name": "ban-rap-hoc", "database_id": "5fd04316-979f-405c-9363-8e1a4920abea" }],
   "routes": [
     { "pattern": "bibaplay.com", "custom_domain": true },

@@ -46,7 +46,7 @@
           <p>Xoá dữ liệu trang web này trong cài đặt trình duyệt là xoá hết. Link chia sẻ mạch mô phỏng chứa cả mạch trong đường dẫn: ai có link là mở được mạch đó.</p>
         </div></section>
         <section><h2>Đếm trên server</h2><div class="khung to">
-          <ul><li><b>Lượt xem</b>: một con số tổng, mỗi phiên trình duyệt cộng 1 (đánh dấu bằng sessionStorage). Không lưu IP, không lưu bạn là ai.</li>
+          <ul><li><b>Lượt xem</b>: một con số tổng và một con số mỗi ngày, mỗi phiên trình duyệt cộng 1 (đánh dấu bằng sessionStorage). Không lưu IP, không lưu bạn là ai.</li>
           <li><b>Click nút mua</b>: lưu ngày, món được bấm và trang bấm, để biết bài nào có ích. Không lưu IP hay thông tin cá nhân.</li></ul>
           <p><b>Cloudflare Web Analytics</b> đếm lượt xem từng trang, nguồn truy cập, loại thiết bị và tốc độ tải. Theo ${ra('https://blog.cloudflare.com/privacy-first-web-analytics/', 'Cloudflare')}, công cụ này không dùng cookie hay localStorage, không nhận dạng bạn qua IP hay trình duyệt, và không theo dấu bạn qua các site khác.</p>
           <p>Site chạy trên Cloudflare. Như mọi nhà cung cấp hạ tầng, Cloudflare xử lý địa chỉ IP và thông tin trình duyệt để phát trang và chống tấn công: ${ra('https://www.cloudflare.com/privacypolicy/', 'chính sách của Cloudflare')}.</p>
