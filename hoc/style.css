@@ -34,7 +34,8 @@
   --warn:#F5BD66; --warn-bg:#3A3018; --bad:#FF9185; --bad-bg:#4A1F24; --ok:#79DBA5; --ok-bg:#133B35;
 }
 *{box-sizing:border-box}
-html{background:var(--bg)}
+/* scroll-padding: header dính (.top) che mất đầu mục khi nhảy tới #neo hoặc scrollIntoView */
+html{background:var(--bg);scroll-padding-top:72px}
 body{margin:0;color:var(--ink);font:16px/1.6 "Be Vietnam Pro",system-ui,sans-serif;padding:0 16px;
   background-color:var(--bg);
   background-image:
@@ -59,8 +60,8 @@ b,strong{font-weight:600}
     linear-gradient(var(--c),var(--c)) 0 calc(100% - 6px)/13px 1px no-repeat,linear-gradient(var(--c),var(--c)) 6px 100%/1px 13px no-repeat,
     linear-gradient(var(--c),var(--c)) 100% calc(100% - 6px)/13px 1px no-repeat,linear-gradient(var(--c),var(--c)) calc(100% - 6px) 100%/1px 13px no-repeat}
 
-/* đầu trang = dải khung tên */
-.top{max-width:1100px;margin:22px auto 0;display:grid;grid-template-columns:auto 1fr auto;align-items:stretch}
+/* đầu trang = dải khung tên, dính đầu màn khi cuộn (đứng sau .to trong file để position:sticky thắng position:relative) */
+.top{max-width:1100px;margin:22px auto 0;display:grid;grid-template-columns:auto 1fr auto;align-items:stretch;position:sticky;top:0;z-index:20}
 .top>*{padding:10px 16px;display:flex;align-items:center}
 .top>*+*{border-left:1px solid var(--line-dam)}
 .logo{font:700 15px/1 var(--mono);letter-spacing:.14em;color:var(--ink);text-decoration:none;gap:10px}
@@ -88,6 +89,11 @@ b,strong{font-weight:600}
 #nut-menu{display:none}
 #nut-menu .dau-x,#nut-menu[aria-expanded="true"] .ba-gach{display:none}
 #nut-menu[aria-expanded="true"] .dau-x{display:inline}
+/* nút lên đầu trang (dau-trang.js tạo): chỉ hiện khi đã cuộn xa */
+.len-dau{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom));z-index:20;width:44px;height:44px;margin:0;background:var(--panel);border-color:var(--line-dam);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s}
+.len-dau.hien{opacity:1;visibility:visible;transform:none}
+.len-dau:hover{background:var(--ink);color:var(--panel)}
+@media (prefers-reduced-motion:reduce){.len-dau{transition:none}}
 /* Tải PDF (chỉ bản web): tách khỏi các mục điều hướng, bấm vào có hộp hỏi lại (dau-trang.js) */
 .top nav .nav-pdf{color:var(--muted);border-left-style:dashed}
 .top nav .nav-pdf::before{content:"↓";margin-right:6px}
@@ -95,7 +101,7 @@ b,strong{font-weight:600}
 /* màn hẹp: một hàng logo + nút, dính đầu màn khi cuộn; nav gập sau nút ☰, mở ra thành danh sách dọc.
    1040px: logo + nav (có Tải PDF) + cụm phải cần ~1018px — hẹp hơn là nav bị ép xuống dòng */
 @media (max-width:1040px){
-  .top{grid-template-columns:1fr auto;margin-top:12px;position:sticky;top:0;z-index:20}
+  .top{grid-template-columns:1fr auto;margin-top:12px}
   .top>.top-phu{gap:6px;padding:6px 8px}
   .top-phu .luot-xem{margin-right:6px}
   #nut-menu{display:grid}
@@ -499,7 +505,8 @@ line.mp-thong{stroke:var(--accent);stroke-width:12;stroke-opacity:.18;stroke-lin
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   html,body{background:#fff}
   body{background-image:none;padding:0;font-size:13px}
-  .top{margin:0 0 10px}
+  .top{margin:0 0 10px;position:static}
+  .len-dau{display:none}
   .top nav,.dh-bai,.do-nut,.tien-do,.can-chu .pill,.lk-the header .pill,p:has(>#luu),.mp-mo,.top-phu,.mua{display:none}
   main{max-width:none;padding-block:0;gap:22px}
   .lede{font-size:14px}

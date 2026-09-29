@@ -40,6 +40,23 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && top.classList.contains('mo-menu')) { dong(); nutMenu.focus(); } });
   }
 
+  // Nút lên đầu trang: hiện khi đã cuộn quá ~1,5 màn hình. Tạo bằng JS để 404.html và mọi route đều có mà không sửa khung.
+  const len = document.createElement('button');
+  len.type = 'button';
+  len.className = 'nut-dau len-dau';
+  len.setAttribute('aria-label', 'Lên đầu trang');
+  len.title = 'Lên đầu trang';
+  len.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+  len.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    top.querySelector('.logo')?.focus({ preventScroll: true });
+  });
+  document.body.appendChild(len);
+  let cho = false;
+  const xemCuon = () => { cho = false; len.classList.toggle('hien', scrollY > innerHeight * 1.5); };
+  addEventListener('scroll', () => { if (!cho) { cho = true; requestAnimationFrame(xemCuon); } }, { passive: true });
+  xemCuon();
+
   // PDF ~57 MB: bấm nhầm trên 4G là mất cả chục phút và dung lượng → hỏi lại. capture để chạy trước bộ định tuyến của app.js.
   // Tìm hộp lúc bấm: xuat-web.py chèn nó sau các thẻ <script>, lúc file này chạy nó chưa có trong DOM.
   document.addEventListener('click', e => {
