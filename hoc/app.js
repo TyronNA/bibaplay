@@ -8,7 +8,7 @@
   // LUU.goc: '/' trên web, '/hoc/' khi chạy local (server.py); <base href> trong index.html khớp với nó.
   const R = r => LUU.goc + (r ? r.replace(/\/?$/, '/') : '');
   const routeCua = pathname => decodeURIComponent(pathname.startsWith(LUU.goc) ? pathname.slice(LUU.goc.length) : pathname.replace(/^\//, '')).replace(/\/+$/, '');
-  const LA_ROUTE = /^(|do|bai\/\d+\.\d+|linh-kien(\/[\w-]+)?|mo-phong(\/.*)?|xiaozhi|gioi-thieu|chinh-sach-rieng-tu)$/;
+  const LA_ROUTE = /^(|do|bai\/\d+\.\d+|linh-kien(\/[\w-]+)?|mo-phong(\/.*)?|(en\/)?xiaozhi|gioi-thieu|chinh-sach-rieng-tu)$/;
 
   // title + description + canonical + og: xuat-web.py chụp DOM sau khi render → mỗi trang tĩnh mang meta riêng.
   const bo = s => String(s).replace(/<[^>]*>/g, '').replace(/[*`]/g, '').replace(/\s+/g, ' ').trim();
@@ -349,9 +349,9 @@
   }
 
   // Nội dung ở xiaozhi.js; url() cho file (ảnh trong sandbox/), R() cho route.
-  function trangXiaozhi() {
-    datMeta(XIAOZHI.tieuDe, XIAOZHI.moTa);
-    app.innerHTML = XIAOZHI.html(R, LUU.url);
+  function trangXiaozhi(t = XIAOZHI) {
+    datMeta(t.tieuDe, t.moTa);
+    app.innerHTML = t.html(R, LUU.url);
   }
 
   // Giới thiệu, chính sách riêng tư (trang-phu.js)
@@ -367,6 +367,7 @@
     const h = S.route = routeCua(location.pathname);
     window.scrollTo(0, 0);
     const muc = h.split('/')[0];
+    document.documentElement.lang = muc === 'en' ? 'en' : 'vi';
     document.querySelectorAll('.top nav a').forEach(a => a.toggleAttribute('aria-current', a.dataset.r === (['do', 'linh-kien', 'mo-phong', 'xiaozhi'].includes(muc) ? muc : muc === '' || muc === 'bai' ? '' : null)));
     try {
       if (!S.gt) await taiChung();
@@ -376,6 +377,7 @@
       else if (muc === 'linh-kien') trangLinhKien(h.split('/')[1]);
       else if (muc === 'mo-phong') await trangMoPhong(h);
       else if (h === 'xiaozhi') trangXiaozhi();
+      else if (h === 'en/xiaozhi') trangXiaozhi(XIAOZHI_EN);
       else if (window.TRANG_PHU && Object.hasOwn(TRANG_PHU, h)) trangPhu(h);
       else trangChu();
     } catch (e) {

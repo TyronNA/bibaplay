@@ -26,7 +26,7 @@
     tieuDe: 'Robot AI tự build: ESP32-S3 + Gemini Live, server riêng · Bàn Ráp',
     moTa: 'Trợ lý giọng nói xiaozhi ráp trên breadboard: tự build firmware ESP32-S3 có mặt robot trên OLED, server riêng nối Gemini Live bằng key miễn phí, chạy trên máy trong nhà. Cách build, lấy key, chọn chỗ host.',
     html: (R, url) => `
-      <section class="dau"><p class="eyebrow">Dự án · đích đến của Phần 2 và 3</p>
+      <section class="dau"><p class="eyebrow">Dự án · đích đến của Phần 2 và 3 · <a href="${R('en/xiaozhi')}" hreflang="en" lang="en">English</a></p>
       <h1>Robot AI tự build</h1>
       <p class="lede">ESP32-S3 cùng mic, loa và màn OLED ráp trên breadboard, nói chuyện tiếng Việt nhờ Gemini Live. Firmware (chương trình nạp vào chip) tự build từ mã nguồn <a href="https://github.com/78/xiaozhi-esp32" target="_blank" rel="noopener">xiaozhi-esp32 ↗</a>. Server cũng tự chạy trong nhà, thay cho server của xiaozhi, nên không cần firmware dựng sẵn hay tài khoản xiaozhi.me.</p>
       <p class="xz-tt"><span class="pill ok">đã chạy</span> server nói chuyện được với Gemini Live, dùng mic và loa của máy Mac giả làm chip

@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 HOC = ROOT / "hoc"
 WEB = "https://bibaplay.com"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mua.js", "mo-phong.js", "mo-phong-ui.js", "xiaozhi.js", "trang-phu.js", "video.js", "luu-web.js", "dau-trang.js", "tim-nhanh.js", "app.js"]
+JS = ["md.js", "board.js", "linhkien.js", "bai-chung.js", "mua.js", "mo-phong.js", "mo-phong-ui.js", "xiaozhi.js", "xiaozhi-en.js", "trang-phu.js", "video.js", "luu-web.js", "dau-trang.js", "tim-nhanh.js", "app.js"]
 NOTES = ["notes/giao-trinh-dien.md", "notes/do-dang-co.md"]
 # Ảnh trang /xiaozhi/ (xiaozhi.js), giữ nguyên đường dẫn trong repo như NOTES.
 ANH = ["sandbox/robot-face/sheet.png", "sandbox/sensor-panel/shot.png"]
@@ -159,9 +159,10 @@ def main(ra):
         web, count=1, flags=re.S).replace('<script src="app.js"></script>', '')
         .replace('<script type="application/ld+json" id="ld"></script>\n', '', 1))
     files.append("404.html")
-    ngay = date.today().isoformat()
+    ngay, nb = date.today().isoformat(), ngay_bai()
     (ra / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        + "".join(f"<url><loc>{WEB}/{r + '/' if r else ''}</loc><lastmod>{ngay}</lastmod></url>\n" for r in trang_sitemap(trang, ni))
+        + "".join(f"<url><loc>{WEB}/{r + '/' if r else ''}</loc><lastmod>{nb.get(r[4:], (0, ngay))[1] if r.startswith('bai/') else ngay}</lastmod></url>\n"
+                   for r in trang_sitemap(trang, ni))
         + "</urlset>\n")
     (ra / "robots.txt").write_text(f"User-agent: *\nDisallow: /api/\nDisallow: /mua/\nSitemap: {WEB}/sitemap.xml\n")
     files += ["sitemap.xml", "robots.txt"]
@@ -181,7 +182,7 @@ def routes(ra):
     gt = (ra / "notes/giao-trinh-dien.md").read_text()
     bai = re.findall(r"^\|\s*(\d+\.\d+)[^|]*\|", gt, re.M)
     lk = re.findall(r"\{ id: '([\w-]+)', nhom:", (HOC / "linhkien.js").read_text())
-    return ["", "do", "linh-kien", "mo-phong", "xiaozhi", "gioi-thieu", "chinh-sach-rieng-tu",
+    return ["", "do", "linh-kien", "mo-phong", "xiaozhi", "en/xiaozhi", "gioi-thieu", "chinh-sach-rieng-tu",
             *(f"bai/{b}" for b in bai), *(f"linh-kien/{x}" for x in lk)]
 
 
@@ -200,6 +201,48 @@ def so_chu_lk(main):
         return None
     dl = re.sub(r"<div><dt>Dùng ở bài</dt>.*?</div>", "", dl[1], flags=re.S)
     return len(html.unescape(re.sub(r"<[^>]+>", " ", dl)).split())
+
+
+def ngay_bai():
+    """{id: (ngày tạo, ngày sửa cuối)} của hoc/bai/<id>.js theo git log. File chưa commit thì không có trong đây."""
+    out = subprocess.run(["git", "log", "--format=@%cs", "--name-only", "--", "hoc/bai/"], cwd=ROOT,
+                         capture_output=True, text=True, check=True).stdout
+    kq, d = {}, None
+    for dong in out.splitlines():  # log mới → cũ: lần gặp đầu là ngày sửa, lần cuối là ngày tạo
+        if dong.startswith("@"):
+            d = dong[1:]
+        elif dong.startswith("hoc/bai/") and dong.endswith(".js"):
+            b = dong[len("hoc/bai/"):-3]
+            kq[b] = (d, kq[b][1] if b in kq else d)
+    return kq
+
+
+def them_article(t, route, nb):
+    """Trang bài có hướng dẫn: thêm Article (ngày tạo/sửa theo git) vào @graph app.js đã ghi. Bài chưa soạn thì thôi."""
+    d = nb.get(route[len("bai/"):])
+    m = re.search(r'<script type="application/ld\+json" id="ld">(.+?)</script>', t, re.S)
+    if not d or not m:
+        return t
+    g = json.loads(m[1])
+    ten = html.unescape(re.search(r"<title>(.*?)</title>", t, re.S)[1]).removesuffix(" · Bàn Ráp")
+    mo = html.unescape(re.search(r'<meta name="description" content="([^"]*)"', t)[1])
+    ban_rap = {"@type": "Organization", "name": "Bàn Ráp", "url": WEB + "/"}
+    g["@graph"].append({"@type": "Article", "headline": ten[:110], "description": mo, "inLanguage": "vi",
+                        "datePublished": d[0], "dateModified": d[1], "author": ban_rap, "publisher": ban_rap,
+                        "image": WEB + "/og.png", "mainEntityOfPage": f"{WEB}/{route}/"})
+    moi = json.dumps(g, ensure_ascii=False).replace("<", "\\u003c")
+    return t[:m.start(1)] + moi + t[m.end(1):]
+
+
+def ngon_ngu(t, route):
+    """/xiaozhi/ có bản /en/xiaozhi/: hreflang 2 chiều, trang EN đổi lang + og:locale (khung index.html mặc định vi)."""
+    if route not in ("xiaozhi", "en/xiaozhi"):
+        return t
+    if route == "en/xiaozhi":
+        t = t.replace('<html lang="vi">', '<html lang="en">', 1).replace('content="vi_VN"', 'content="en_US"', 1)
+    alt = (f'<link rel="alternate" hreflang="vi" href="{WEB}/xiaozhi/">\n<link rel="alternate" hreflang="en" href="{WEB}/en/xiaozhi/">\n'
+           f'<link rel="alternate" hreflang="x-default" href="{WEB}/xiaozhi/">\n')
+    return t.replace("</head>", alt + "</head>", 1)
 
 
 def trang_sitemap(trang, ni):
@@ -252,7 +295,7 @@ def render_tinh(ra, web, ds, qc=""):
     srv = ThreadingHTTPServer(("127.0.0.1", 0), partial(DuongDan, directory=str(ra)))
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     goc = f"http://127.0.0.1:{srv.server_address[1]}"
-    ket, ni = [], khong_index()
+    ket, ni, nb = [], khong_index(), ngay_bai()
     with tempfile.TemporaryDirectory() as tam:
         # mỗi Chrome headless ~15 tiến trình: 6 luồng từng đẩy load máy lên ~200 và swap đầy → mặc định 2
         with ThreadPoolExecutor(max(1, int(os.environ.get("XUAT_WEB_JOBS", "2")))) as ex:
@@ -271,6 +314,9 @@ def render_tinh(ra, web, ds, qc=""):
         n = so_chu_lk(main[0]) if route.startswith("linh-kien/") else None
         if n is not None and n < CHU_TOI_THIEU_LK:
             ni.add(route)
+        if route.startswith("bai/"):
+            t = them_article(t, route, nb)
+        t = ngon_ngu(t, route)
         if route in ni:
             t = t.replace("</head>", '<meta name="robots" content="noindex, follow">\n</head>', 1)
         elif qc and route.split("/")[0] not in KHONG_QUANG_CAO:
