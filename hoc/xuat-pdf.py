@@ -24,7 +24,8 @@ from pathlib import Path
 
 from pypdf import PdfReader, PdfWriter
 from pypdf.annotations import Link
-from pypdf.generic import ArrayObject, DecodedStreamObject, DictionaryObject, NameObject, TextStringObject
+from pypdf.generic import (ArrayObject, DecodedStreamObject, DictionaryObject, FloatObject, NameObject, NullObject,
+                           TextStringObject)
 
 WEB = "https://bibaplay.com"  # trùng WEB trong xuat-web.py
 
@@ -108,14 +109,24 @@ def chan_trang(w, trang_cua):
         w.add_annotation(i, Link(rect=(x0, y - 2, x0 + rong, y + co), url=url))
 
 
-def doi_link(w, goc):
-    """Chrome in từ server tạm nên mọi link tương đối trong trang thành {goc}/… → đổi về web thật (route bản tĩnh
-    trùng route trên bibaplay.com)."""
+def doi_link(w, goc, trang_dau):
+    """Chrome in từ server tạm nên mọi link tương đối trong trang thành {goc}/…. Route có trong PDF → nhảy tới trang
+    đầu của nó ngay trong file (đọc offline, khỏi mở web); còn lại (linh kiện lẻ, chính sách…) → web thật, route bản
+    tĩnh trùng route trên bibaplay.com."""
     for p in w.pages:
         for a in p.get("/Annots") or []:
-            act = a.get_object().get("/A")
+            a = a.get_object()
+            act = a.get("/A")
             u = act.get_object().get("/URI") if act else None
-            if isinstance(u, str) and u.startswith(goc):
+            if not (isinstance(u, str) and u.startswith(goc)):
+                continue
+            route = re.split(r"[?#]", u[len(goc):])[0].strip("/").removesuffix("index.html").strip("/")
+            if route in trang_dau:
+                del a[NameObject("/A")]
+                dich = w.pages[trang_dau[route]]  # /XYZ top, zoom null: về đầu trang, giữ mức zoom người đọc
+                a[NameObject("/Dest")] = ArrayObject([dich.indirect_reference, NameObject("/XYZ"), NullObject(),
+                                                      FloatObject(dich.mediabox.top), NullObject()])
+            else:
                 act.get_object()[NameObject("/URI")] = TextStringObject(WEB + u[len(goc):])
 
 
@@ -130,12 +141,12 @@ def main(web, ra):
         with ThreadPoolExecutor(2) as ex:
             pdf = dict(zip(trang, ex.map(partial(in_trang, goc, tam), enumerate(trang))))
         srv.shutdown()
-        w, cha, trang_cua = PdfWriter(), None, []
+        w, cha, trang_cua, trang_dau = PdfWriter(), None, [], {}
         for ten, route, cap in ds:
             if route is None:  # tiêu đề chương: bookmark trỏ vào bài đầu tiên của chương
                 cha = ("cho", ten)
                 continue
-            dau = len(w.pages)
+            dau = trang_dau[route] = len(w.pages)
             for p in PdfReader(pdf[route]).pages:
                 w.add_page(p)
                 trang_cua.append(route)
@@ -144,7 +155,7 @@ def main(web, ra):
             w.add_outline_item(ten, dau, parent=cha if cap else None)
             if not cap:
                 cha = None
-        doi_link(w, goc)
+        doi_link(w, goc, trang_dau)
         chan_trang(w, trang_cua)
         w.add_metadata({"/Title": "Bàn Ráp · giáo trình điện trên breadboard", "/Author": "Soạn bởi AI (Claude)"})
         # 58 file Chrome in riêng mang font/hình trùng nhau → gộp lại, bớt ~25%
