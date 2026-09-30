@@ -24,7 +24,7 @@ from pathlib import Path
 
 from pypdf import PdfReader, PdfWriter
 from pypdf.annotations import Link
-from pypdf.generic import ArrayObject, DecodedStreamObject, DictionaryObject, NameObject
+from pypdf.generic import ArrayObject, DecodedStreamObject, DictionaryObject, NameObject, TextStringObject
 
 WEB = "https://bibaplay.com"  # trùng WEB trong xuat-web.py
 
@@ -108,6 +108,17 @@ def chan_trang(w, trang_cua):
         w.add_annotation(i, Link(rect=(x0, y - 2, x0 + rong, y + co), url=url))
 
 
+def doi_link(w, goc):
+    """Chrome in từ server tạm nên mọi link tương đối trong trang thành {goc}/… → đổi về web thật (route bản tĩnh
+    trùng route trên bibaplay.com)."""
+    for p in w.pages:
+        for a in p.get("/Annots") or []:
+            act = a.get_object().get("/A")
+            u = act.get_object().get("/URI") if act else None
+            if isinstance(u, str) and u.startswith(goc):
+                act.get_object()[NameObject("/URI")] = TextStringObject(WEB + u[len(goc):])
+
+
 def main(web, ra):
     gt = (web / "notes/giao-trinh-dien.md").read_text()
     ds = muc_luc(gt)
@@ -133,6 +144,7 @@ def main(web, ra):
             w.add_outline_item(ten, dau, parent=cha if cap else None)
             if not cap:
                 cha = None
+        doi_link(w, goc)
         chan_trang(w, trang_cua)
         w.add_metadata({"/Title": "Bàn Ráp · giáo trình điện trên breadboard", "/Author": "Soạn bởi AI (Claude)"})
         # 58 file Chrome in riêng mang font/hình trùng nhau → gộp lại, bớt ~25%
