@@ -62,5 +62,61 @@ menu "Bai hoc"
             bool "16.3 Do pin 2S GPIO1 (x3) + LED trang thai GPIO13"
         config BAI_17_1
             bool "17.1 Robot tranh vat"
+        config BAI_18_1
+            bool "18.1 So lieu qua WiFi len tram"
+        config BAI_18_2
+            bool "18.2 Vong dieu khien dung nhip (vTaskDelay / DelayUntil / printf)"
+        config BAI_18_3
+            bool "18.3 May trang thai ne vat"
+        config BAI_18_4
+            bool "18.4 Lai tu may tinh + dung khi mat ket noi"
+        config BAI_19_1
+            bool "19.1 Encoder 2 banh (GPIO11, 13)"
+        config BAI_19_2
+            bool "19.2 Di thang: vong ho / PI / PI + bu lech"
+        config BAI_19_3
+            bool "19.3 Odometry x, y, goc"
+        config BAI_19_4
+            bool "19.4 Tron gyro GY-521 vao goc"
+        config BAI_19_5
+            bool "19.5 Di toi diem, hinh vuong"
+        config BAI_20_1
+            bool "20.1 Bam vach 2 TCRT5000 (GPIO4, 5)"
+        config BAI_20_2
+            bool "20.2 Radar sieu am tren servo (GPIO15)"
+        config BAI_20_3
+            bool "20.3 Ve ban do: lai + quet radar"
+        config BAI_20_4
+            bool "20.4 Di phu kin kieu robot hut bui"
+        config BAI_21
+            bool "21.x Cau noi ROS 2 + LiDAR LD19 (GPIO16)"
     endchoice
+endmenu
+
+menu "Robot (Phan 4)"
+    config ROBOT_WIFI_SSID
+        string "WiFi SSID"
+        default ""
+        help
+            Ten mang WiFi (2.4GHz) robot vao. Luu trong sdkconfig (khong dua len git).
+    config ROBOT_WIFI_PASS
+        string "WiFi mat khau"
+        default ""
+    config ROBOT_UM_MOI_XUNG
+        int "Quang duong moi xung encoder (micromet)"
+        default 5100
+        help
+            Banh 65mm, dia 20 lo dem 2 canh: 204mm / 40 = 5.1mm. Sua theo so do bai 19.1.
+    config ROBOT_KHOANG_BANH_MM
+        int "Khoang cach 2 banh (mm)"
+        default 135
+        help
+            Do tu giua banh trai toi giua banh phai. Hieu chuan lai o bai 19.3.
+    config ROBOT_TRON_GYRO_PHAN_NGHIN
+        int "He so tron gyro x1000 (0 = chi encoder, 1000 = chi gyro)"
+        range 0 1000
+        default 998
+    config ROBOT_SERVO_DAO
+        bool "Dao chieu servo radar (goc duong phai la ben trai robot)"
+        default n
 endmenu

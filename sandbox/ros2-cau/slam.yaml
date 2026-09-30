@@ -1,0 +1,18 @@
+# slam_toolbox, chế độ vẽ bản đồ trực tuyến. Khung toạ độ khớp cau_robot.py: map → odom → base_link → laser.
+slam_toolbox:
+  ros__parameters:
+    mode: mapping
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_link
+    scan_topic: /scan
+    resolution: 0.05
+    max_laser_range: 8.0            # LD19 đo tới 12m, nhưng ở xa sai số lớn và hay dính kính/gương
+    minimum_time_interval: 0.3
+    transform_publish_period: 0.05
+    map_update_interval: 2.0
+    minimum_travel_distance: 0.15   # robot nhỏ, đi chậm: ghép scan thưa hơn thì khớp kém
+    minimum_travel_heading: 0.15
+    use_scan_matching: true
+    do_loop_closing: true
+    throttle_scans: 1

@@ -59,6 +59,19 @@ Số liệu và nguồn từng món: `datasheet-robot.md`. Chưa kiểm giá/sho
 | Module hạ áp LM2596 × 1 | Loại có biến trở chỉnh (ADJ) | 16.3 |
 | Điện trở 20k (nếu kit thiếu) | | Cầu đo pin 2S (16.3) |
 
+## Đợt 5 — Phần 4 robotics (chương 18–21)
+Chưa kiểm giá/shop. Robot của 17.1 dùng lại hết; chương 18 không cần mua gì.
+
+| Món | Chọn loại nào | Vì sao |
+|---|---|---|
+| Băng keo giấy + thước dây 3–5m | | Đánh dấu sàn, đo quãng/lệch (19.x) |
+| Băng keo điện đen 18mm | Loại mờ, không bóng | Vạch bám (20.1) |
+| TCRT5000 thứ 2 | Nếu đợt 4 chỉ mua 1 | 20.1 cần 2 mắt |
+| Tụ hoá 100µF 16V | Đã có trong kit | Nguồn 5V servo/LiDAR (20.2, 21.2) |
+| LiDAR **LDROBOT LD19** × 1 | Kèm dây ZH1.5 → chân 2.54mm (hoặc mua dây riêng); LD06 cùng giao thức cũng được, kiểm lại tài liệu | 21.2–21.4. Số liệu: `datasheet-robot.md` |
+| Cột đồng M3 + tấm mica/nhựa | Làm tầng trên cho LiDAR | LiDAR phải nhìn thoáng 360° |
+| Máy Linux chạy Docker | Mini PC / Raspberry Pi 5 / laptop Ubuntu 24.04, cùng mạng WiFi với robot | ROS 2 Jazzy trong Docker (`sandbox/ros2-cau`) |
+
 ## Nên có thêm (chưa bài nào bắt buộc)
 Có hình + cách dùng + bẫy trong thư viện linh kiện (`hoc/linhkien.js`, nhóm `nen`).
 

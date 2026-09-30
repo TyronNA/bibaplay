@@ -6,6 +6,7 @@ void bai_10_1(void); void bai_10_2(void); void bai_10_3(void); void bai_11_1(voi
 void bai_12_1(void); void bai_12_2(void); void bai_12_3(void); void bai_13_1(void); void bai_13_2(void); void bai_13_3(void);
 void bai_14_2(void); void bai_14_3(void); void bai_14_4(void); void bai_15_1(void); void bai_15_2(void); void bai_15_3(void);
 void bai_16_3(void); void bai_17_1(void); void bai_9_7(void); void bai_9_8(void); void bai_11_4(void); void bai_15_4(void);
+void bai_18_1(void); void bai_18_2(void); void bai_18_3(void); void bai_18_4(void); void bai_19_1(void); void bai_19_2(void); void bai_19_3(void); void bai_19_4(void); void bai_19_5(void); void bai_20_1(void); void bai_20_2(void); void bai_20_3(void); void bai_20_4(void); void bai_21(void);
 
 void app_main(void)
 {
@@ -69,5 +70,33 @@ void app_main(void)
     bai_11_4();
 #elif CONFIG_BAI_15_4
     bai_15_4();
+#elif CONFIG_BAI_18_1
+    bai_18_1();
+#elif CONFIG_BAI_18_2
+    bai_18_2();
+#elif CONFIG_BAI_18_3
+    bai_18_3();
+#elif CONFIG_BAI_18_4
+    bai_18_4();
+#elif CONFIG_BAI_19_1
+    bai_19_1();
+#elif CONFIG_BAI_19_2
+    bai_19_2();
+#elif CONFIG_BAI_19_3
+    bai_19_3();
+#elif CONFIG_BAI_19_4
+    bai_19_4();
+#elif CONFIG_BAI_19_5
+    bai_19_5();
+#elif CONFIG_BAI_20_1
+    bai_20_1();
+#elif CONFIG_BAI_20_2
+    bai_20_2();
+#elif CONFIG_BAI_20_3
+    bai_20_3();
+#elif CONFIG_BAI_20_4
+    bai_20_4();
+#elif CONFIG_BAI_21
+    bai_21();
 #endif
 }

@@ -1,6 +1,6 @@
-# Số liệu linh kiện Phần 3 (robot) — đã đối chiếu nguồn gốc 2026-09-28
+# Số liệu linh kiện Phần 3–4 (robot) — đã đối chiếu nguồn gốc 2026-09-28 (LD19: 2026-09-30)
 
-Số trong `hoc/bai/14.*–17.*` và `hoc/linhkien.js` lấy từ đây. Nguồn gốc (datasheet hãng) thắng bài viết/shop.
+Số trong `hoc/bai/14.*–21.*` và `hoc/linhkien.js` lấy từ đây. Nguồn gốc (datasheet hãng) thắng bài viết/shop.
 Module rời (FC-51, TCRT5000, GY-521, khe quang…) không có datasheet hãng: số lấy theo sơ đồ mạch đã đọc, còn lại **đo mới biết**.
 
 | Linh kiện | Số đã kiểm | Nguồn |
@@ -18,6 +18,7 @@ Module rời (FC-51, TCRT5000, GY-521, khe quang…) không có datasheet hãng:
 | DW01A (bảo vệ trên module TP4056 6 chân) | ngắt sạc 4.30V ±0.05, mở lại 4.10V; ngắt xả **2.50V ±0.1**, mở lại 2.90V; quá dòng 150mV ±20mV trên MOSFET; bản clone khác hãng lệch vài chục mV | [DW01A Fortune](https://components101.com/sites/default/files/component_datasheet/DW01A-Datasheet.pdf) |
 | Cell 18650 (ví dụ Samsung 25R) | danh nghĩa 3.6V, sạc 4.2V, cắt xả 2.5V, sạc chuẩn 1.25A, xả liên tục 20A; **cell không rõ hãng: dung lượng/dòng ghi trên vỏ thường sai** | [Samsung INR18650-25R](https://www.dnkpower.com/wp-content/uploads/2018/04/Samsung-INR18650-25R-Datasheet.pdf) |
 | LM2596 | vào 4.5–40V (tuyệt đối 45V); 3A; 150kHz; bản chỉnh được: tham chiếu 1.23V; sụt trên công tắc 1.16–1.4V @3A → áp vào phải cao hơn áp ra ≳ 1.5V; bản 5V: hiệu suất 80% @12V→5V 3A | [TI SNVS124G](https://www.ti.com/lit/ds/symlink/lm2596.pdf) |
+| LDROBOT LD19 (LiDAR, Phần 4) | P5V 4.5–5.5V, ~180mA (0.9W); Tx 0–3.3V typ, tối đa 3.5V; UART 230400 8N1 một chiều; **PWM nối GND khi không điều tốc ngoài** (tự giữ 10±0.1 vòng/s); 4500 điểm/s, 0.02–12m; gói 47 byte: 54 2C, tốc độ (°/s), góc đầu/cuối (0.01°), 12 × (mm u16, cường độ u8), mốc ms, CRC-8 đa thức 0x4D; góc tăng theo chiều kim đồng hồ; laser Class 1 (FDA). Gói mẫu mục 3.3: bảng giải thích ghi điểm 12 = B0H nhưng chuỗi byte là C0 00 (192mm), tin chuỗi byte | [LD19 Development Manual V2.3 (Elecrow)](https://www.elecrow.com/download/product/SLD06360F/LD19_Development%20Manual_V2.3.pdf), [Waveshare wiki](https://www.waveshare.com/wiki/DTOF_LIDAR_LD19) |
 | ESP32-S3-DevKitC-1 | 3 cách cấp nguồn **loại trừ nhau**: USB / chân 5V+G / chân 3V3+G — không cấp 2 đường cùng lúc | [Espressif user guide v1.1](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s3/esp32-s3-devkitc-1/user_guide_v1.1.html) |
 
 Không lấy được datasheet gốc: MP1584 (link MPS hỏng) → giáo trình dùng LM2596. Module khe quang (FC-03 / HC-020K):

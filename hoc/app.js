@@ -300,6 +300,7 @@
           <ol class="cac-buoc">${p.buoc.map((b, k) => veBuoc(b, tt[k], k + 1, pi, id)).join('')}</ol></section>`;
       }).join(''); })()}
       ${bai.code ? `<section><h2>Code</h2><p class="mo">Code chạy trên ESP32 cho bài này (<code>${bai.code.split('/').pop()}</code>).</p><div class="cuon"><pre class="code" id="code">đang tải…</pre></div></section>` : ''}
+      ${bai.code_may ? `<section><h2>Code chạy trên máy tính</h2><p class="mo">${bai.code_may_ghi || 'Chạy bằng Python 3 trên máy tính cùng mạng WiFi với robot'} (<code>${bai.code_may.split('/').pop()}</code>).</p><div class="cuon"><pre class="code" id="code-may">đang tải…</pre></div></section>` : ''}
       ${bai.bang_do ? `<section><h2>Ghi số đo</h2><p class="mo">${LUU.noiLuu(id)} <span id="luu"></span></p>${bangDo(bai, kq)}</section>` : ''}
       ${bai.sau ? `<section><h2>Đào sâu</h2><div class="khung to sau">${bai.sau}</div></section>` : ''}
       ${bai.hoi ? `<section><h2>Tự kiểm</h2><ol class="hoi to">${bai.hoi.map(([q, d]) => `<li><p>${q}</p><details><summary>Xem đáp án</summary><div>${d}</div></details></li>`).join('')}</ol></section>` : ''}
@@ -324,6 +325,8 @@
     }));
     if (bai.code) fetch(LUU.url(bai.code)).then(r => (r.ok ? r.text() : Promise.reject(new Error(r.status)))).then(t => { document.getElementById('code').textContent = t; })
       .catch(e => { document.getElementById('code').textContent = `Không tải được ${bai.code} (${e.message}).`; });
+    if (bai.code_may) fetch(LUU.url(bai.code_may)).then(r => (r.ok ? r.text() : Promise.reject(new Error(r.status)))).then(t => { document.getElementById('code-may').textContent = t; })
+      .catch(e => { document.getElementById('code-may').textContent = `Không tải được ${bai.code_may} (${e.message}).`; });
     let hen;
     app.querySelectorAll('.bang-do input').forEach(inp => inp.addEventListener('input', () => {
       kq[inp.dataset.k] = inp.value;

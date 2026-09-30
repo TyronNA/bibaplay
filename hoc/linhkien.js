@@ -101,7 +101,7 @@
       chan: ['Có cực. Chân dài = +. Bên có vạch in dấu − là chân −.', 'Số in trên thân: điện dung (µF) và áp tối đa (16V).'],
       gioi_han: 'Áp ≤ 16V. Các bài dùng 4.5V nên còn dư nhiều, sau này lên nguồn 5V vẫn an toàn.',
       bay: 'Cắm ngược cực thì tụ nóng, phồng, có thể nổ. Tụ đã nạp vẫn giữ điện sau khi rút pin: nối 2 chân qua một điện trở để xả.',
-      bai: ['3.1', '3.2', '3.3', '6.3'] },
+      bai: ['3.1', '3.2', '3.3', '6.3', '20.2', '21.2'] },
 
     { id: 'tu-gom', nhom: 'lk', ten: 'Tụ gốm 104 = 100nF', tim: 'Tụ gốm',
       anh: anh(`<ellipse cx="130" cy="50" rx="26" ry="24" fill="#D98A3A" ${vien}/>
@@ -497,7 +497,7 @@
       kh: kh(net('8,40 44,40') + '<circle cx="46" cy="40" r="2.5" class="lk-dac"/>' + net('48,39 86,22') + '<circle cx="90" cy="20" r="2.5" class="lk-dac"/><circle cx="90" cy="46" r="2.5" class="lk-dac"/>' + net('92,20 112,20') + net('92,46 112,46') + chu(18, 32, 'COM', 'lk-mo') + chu(104, 14, 'NC', 'lk-mo') + chu(76, 53, 'NO', 'lk-mo'), 'công tắc 1 cực 2 ngả'),
       chan: ['3 chân: <b>COM</b> (chung), <b>NO</b> (thường hở — chỉ thông COM khi nhấn), <b>NC</b> (thường đóng — thông COM khi nhả).', 'Thân thường in C/NO/NC. Không có chữ thì <b>đo mới biết</b>: dùng thang thông mạch, cặp kêu khi nhả là COM–NC, còn cặp kêu khi nhấn giữ là COM–NO.'],
       gioi_han: 'Tiếp điểm chịu 5A 250VAC, thừa xa cho tín hiệu 3.3V vài µA.',
-      bay: 'Dùng nhầm NC thay NO thì logic đảo ngược (nhả ra 0). Nối COM vào 3V3 và NO vào GND thì mỗi lần nhấn là nối tắt nguồn.', bai: ['14.1', '17.1'] },
+      bay: 'Dùng nhầm NC thay NO thì logic đảo ngược (nhả ra 0). Nối COM vào 3V3 và NO vào GND thì mỗi lần nhấn là nối tắt nguồn.', bai: ['14.1', '17.1', '18.3', '18.4', '19.2'] },
 
     { id: 'fc51', nhom: 'robot', ten: 'Module hồng ngoại tránh vật FC-51', tim: 'FC-51', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="60" y="40" width="170" height="60" rx="3" fill="#1F5AA8" ${vien}/>
@@ -510,7 +510,7 @@
       kh: '',
       chan: ['3 chân VCC, GND, OUT. Thứ tự tuỳ shop, <b>đọc chữ in</b>.', 'Bóng trong = LED phát hồng ngoại (mắt không thấy, camera điện thoại thấy tím), bóng đen = thu.', 'OUT xuống thấp (≈0V) khi có vật, lên cao khi trống. Đèn nhỏ trên board sáng khi có vật.'],
       gioi_han: 'OUT được kéo lên <b>VCC</b> qua 10k, nên cấp 5V thì OUT lên 5V, quá sức chân GPIO. Dùng với ESP32 thì cấp <b>3V3</b>. Tầm quảng cáo 2–30cm, thực tế tuỳ màu vật.',
-      bay: 'Vật màu đen hoặc nắng chiếu thẳng làm module không thấy vật hay báo sai. Vặn biến trở quá tay thì nó luôn báo có vật.', bai: ['14.2', '17.1'] },
+      bay: 'Vật màu đen hoặc nắng chiếu thẳng làm module không thấy vật hay báo sai. Vặn biến trở quá tay thì nó luôn báo có vật.', bai: ['14.2', '17.1', '18.1', '18.3', '18.4'] },
 
     { id: 'hc-sr04', nhom: 'robot', ten: 'Cảm biến siêu âm HC-SR04', tim: 'HC-SR04', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="30" y="36" width="200" height="64" rx="3" fill="#1F5AA8" ${vien}/>
@@ -523,7 +523,7 @@
       kh: '',
       chan: ['4 chân theo thứ tự in trên board: <b>VCC · Trig · Echo · GND</b> (bản gốc Elecfreaks). Bản clone vẫn đọc chữ in.', 'Muốn đo, GPIO đưa chân Trig lên mức cao ≥ 10µs. Module trả về ở chân Echo 1 xung cao, dài bằng thời gian sóng đi và về.'],
       gioi_han: 'Nguồn 5V, 15mA. Chân Echo ra mức 5V nên phải qua cầu 10k/20k (bài 9.5) rồi mới vào GPIO. Đo được 2–400cm trong góc ~15°, mỗi lần đo cách nhau ≥ 60ms. Đổi ra khoảng cách: <code>cm = µs / 58</code>.',
-      bay: 'Nối Echo thẳng vào GPIO là đưa 5V vào chân 3.3V. Vật mềm (vải, rèm) hoặc mặt xiên làm sóng không dội về, số đo ra rất xa hoặc không ra.', bai: ['14.3', '17.1'] },
+      bay: 'Nối Echo thẳng vào GPIO là đưa 5V vào chân 3.3V. Vật mềm (vải, rèm) hoặc mặt xiên làm sóng không dội về, số đo ra rất xa hoặc không ra.', bai: ['14.3', '17.1', '18.1', '18.3', '18.4', '20.2', '20.3'] },
 
     { id: 'tcrt5000', nhom: 'robot', ten: 'Module TCRT5000 (dò vạch / chống rơi)', tim: 'TCRT5000', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="50" y="40" width="180" height="56" rx="3" fill="#1F5AA8" ${vien}/>
@@ -535,7 +535,7 @@
       kh: kh(net('10,12 10,44') + '<polygon points="4,24 16,24 10,34" class="lk-net"/>' + net('4,34 16,34') + net('20,24 30,18') + net('20,30 30,24') + net('60,14 60,44') + net('60,24 76,14') + net('60,34 76,44') + net('76,14 76,4') + net('76,44 76,54') + net('40,22 52,26') + net('40,28 52,32') + chu(24, 54, 'LED IR', 'lk-mo') + chu(92, 30, 'thu', 'lk-mo'), 'LED hồng ngoại + phototransistor'),
       chan: ['4 chân VCC, GND, DO (số), AO (tương tự). Đọc chữ in.', 'DO xuống thấp khi thấy mặt phản xạ (bàn sáng màu), giống FC-51. AO là áp đổi liên tục theo lượng hồng ngoại dội về.'],
       gioi_han: 'Mắt TCRT5000 nhạy nhất ở ~2.5mm, dùng được 0.2–15mm (theo Vishay), nên phải gắn sát mặt sàn. Dùng với ESP32 thì cấp <b>3V3</b>, vì DO/AO lên tới VCC.',
-      bay: 'Gắn cao quá 1.5cm thì gần như luôn báo "không thấy sàn". Sàn đen hay thảm tối cũng bị coi là mép vực.', bai: ['14.4'] },
+      bay: 'Gắn cao quá 1.5cm thì gần như luôn báo "không thấy sàn". Sàn đen hay thảm tối cũng bị coi là mép vực.', bai: ['14.4', '20.1'] },
 
     { id: 'sg90', nhom: 'robot', ten: 'Servo SG90', tim: 'SG90', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="60" y="50" width="100" height="56" rx="3" fill="#2F58B8" ${vien}/><rect x="44" y="60" width="132" height="10" rx="2" fill="#2F58B8" ${vien}/>
@@ -546,7 +546,7 @@
       kh: '',
       chan: ['3 dây: <b>cam</b> = tín hiệu PWM, <b>đỏ</b> = nguồn +, <b>nâu</b> = GND (TowerPro). Bản clone có thể vàng/đỏ/đen: vàng = tín hiệu, đen = GND.'],
       gioi_han: 'Nguồn 4.8–6V. Điều khiển bằng xung 1–2ms lặp lại mỗi 20ms (50Hz): xung 1ms quay về một đầu, 1.5ms ra giữa, 2ms sang đầu kia (~180°). Datasheet không ghi dòng lúc kẹt, <b>đo mới biết</b>, nên đừng lấy nguồn từ chân 5V/3V3 của board.',
-      bay: 'Lấy nguồn servo từ board thì lúc khởi động servo kéo dòng mạnh, board sụt áp và reset. Quên nối GND chung thì servo giật lung tung. Bẻ tay quay bằng tay khi đang cấp điện dễ hỏng bánh răng.', bai: ['15.1'] },
+      bay: 'Lấy nguồn servo từ board thì lúc khởi động servo kéo dòng mạnh, board sụt áp và reset. Quên nối GND chung thì servo giật lung tung. Bẻ tay quay bằng tay khi đang cấp điện dễ hỏng bánh răng.', bai: ['15.1', '20.2', '20.3'] },
 
     { id: 'motor-tt', nhom: 'robot', ten: 'Motor giảm tốc TT 1:48 + bánh', tim: 'motor TT', mua: 'đợt 4 · trong khung 2WD',
       anh: anh(`<rect x="40" y="46" width="130" height="44" rx="4" fill="#E8C24A" ${vien}/><rect x="170" y="54" width="40" height="28" rx="12" fill="#B8BEC4" ${vien}/>
@@ -556,7 +556,7 @@
       kh: kh('<circle cx="60" cy="28" r="16" class="lk-net"/>' + net('8,28 44,28') + net('76,28 112,28') + chu(60, 33, 'M', 'lk-chu-kh'), 'motor'),
       chan: ['2 cực, không phân cực: đảo 2 dây thì motor quay ngược lại.', 'Trục ra 2 phía hộp số: một bên gắn bánh, bên kia gắn đĩa encoder (bài 15.2).'],
       gioi_han: 'Theo số của bản Adafruit: chạy 3–6V, không tải ăn 150mA, quay 185 vòng/phút ở 4.5V. Khi bị kẹt, dòng lên <b>1.2A ở 4.5V và 1.5A ở 6V</b>. Motor mua shop khác thì đo dòng mới biết (bài 7.4). Dòng kẹt lớn hơn sức S8050, nên cần driver.',
-      bay: 'Cấp thẳng pack 2S (8.4V) liên tục là vượt định mức 6V. Vì vậy bài 17.1 giới hạn duty PWM ≤ 70%.', bai: ['15.2', '15.4', '17.1', '17.2'] },
+      bay: 'Cấp thẳng pack 2S (8.4V) liên tục là vượt định mức 6V. Vì vậy bài 17.1 giới hạn duty PWM ≤ 70%.', bai: ['15.2', '15.4', '17.1', '17.2', '18.3', '18.4', '19.2', '19.3', '19.5', '20.1', '20.4', '21.1'] },
 
     { id: 'khe-quang', nhom: 'robot', ten: 'Cảm biến tốc độ khe quang + đĩa 20 lỗ', tim: 'khe quang', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="110" y="70" width="120" height="44" rx="3" fill="#1F5AA8" ${vien}/>
@@ -568,7 +568,7 @@
       kh: '',
       chan: ['3 chân VCC, GND, OUT (có loại 4 chân thêm AO). Đọc chữ in.', 'Mỗi lần một lỗ đĩa đi qua khe, OUT đổi mức 1 lần. Đĩa 20 lỗ cho 20 xung mỗi vòng.'],
       gioi_han: 'Mỗi shop ghi một kiểu: có loại chỉ chạy <b>5V và ra 5V</b> (HC-020K), có loại chạy 3.3–5V (LM393, FC-03). <b>Đo chân OUT bằng đồng hồ trước khi nối GPIO.</b> Nếu ra 5V thì cho qua cầu 10k/20k (bài 9.5).',
-      bay: 'Đĩa cọ vào khe thì kêu và đếm sai. Ánh sáng mạnh chiếu vào khe làm đếm nhiễu.', bai: ['15.2', '15.4'] },
+      bay: 'Đĩa cọ vào khe thì kêu và đếm sai. Ánh sáng mạnh chiếu vào khe làm đếm nhiễu.', bai: ['15.2', '15.4', '19.1', '19.2', '19.3', '19.5', '21.1'] },
 
     { id: 'gy521', nhom: 'robot', ten: 'Module GY-521 (IMU MPU-6050)', tim: 'GY-521', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="70" y="26" width="120" height="80" rx="3" fill="#1F5AA8" ${vien}/><rect x="112" y="60" width="30" height="30" fill="#1E2226"/>
@@ -579,7 +579,7 @@
       kh: '',
       chan: ['8 chân: VCC, GND, SCL, SDA, XDA, XCL, AD0, INT. Các bài chỉ dùng 4 chân đầu.', 'AD0 để hở thì board kéo nó xuống qua 4.7k, địa chỉ là <code>0x68</code>. Nối AD0 lên 3V3 thì địa chỉ thành <code>0x69</code>.', 'Mũi tên X/Y in trên board là chiều hai trục. Trục Z vuông góc với mặt board, nên xoay board trên mặt bàn là quay quanh Z.'],
       gioi_han: 'Chip MPU-6050 chạy 2.375–3.46V. Board có ổn áp 3.3V nên chân VCC nhận được 3.3–5V, nhưng vẫn nên cấp <b>3V3</b> để SDA/SCL không bị kéo lên 5V. Ở thang gyro ±250°/s, 131 đơn vị đọc được bằng 1°/s.',
-      bay: 'Quên đánh thức chip: lúc bật nguồn nó đang ngủ (thanh ghi 0x6B = 0x40) nên đọc ra toàn 0. Góc tính bằng cách cộng dồn gyro sẽ trôi dần: phải trừ sai lệch đo lúc đứng yên, mà vẫn trôi theo thời gian.', bai: ['15.3'] },
+      bay: 'Quên đánh thức chip: lúc bật nguồn nó đang ngủ (thanh ghi 0x6B = 0x40) nên đọc ra toàn 0. Góc tính bằng cách cộng dồn gyro sẽ trôi dần: phải trừ sai lệch đo lúc đứng yên, mà vẫn trôi theo thời gian.', bai: ['15.3', '19.4', '19.5', '20.3', '20.4', '21.1'] },
 
     { id: 'drv8833', nhom: 'robot', ten: 'Module driver motor DRV8833', tim: 'DRV8833', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="70" y="30" width="120" height="86" rx="3" fill="#A3302A" ${vien}/><rect x="112" y="56" width="36" height="30" fill="#1E2226"/>
@@ -591,7 +591,7 @@
       kh: '',
       chan: ['IN1/IN2 điều khiển motor A, IN3/IN4 điều khiển motor B (datasheet gọi là AIN1/AIN2/BIN1/BIN2). OUT1/OUT2 nối motor A, OUT3/OUT4 nối motor B. Nguồn motor vào VM và GND.', 'Chân ngủ <b>nSLEEP</b> (module in EEP/SLP/STBY) bị chip kéo xuống bên trong, nên <b>phải nối lên 3V3</b> thì chip mới chạy. Có module đã kéo lên sẵn, đo mới biết.', 'Bảng chân lý (TI): IN1=1, IN2=0 là tiến; 0/1 lùi; 0/0 thả trôi; 1/1 phanh. Muốn chỉnh tốc độ thì đưa PWM vào một chân, chân kia giữ 0.'],
       gioi_han: 'VM 2.7–10.8V (tuyệt đối 11.8V), pack 2S 8.4V nằm trong khoảng này. Dòng liên tục mỗi kênh: <b>1.5A nếu vỏ HTSSOP có miếng tản nhiệt dưới, chỉ 0.5A nếu vỏ TSSOP</b>. Chip tự ngắt khi quá dòng (≥ 2A) hoặc quá nhiệt. Mức logic 1 chỉ cần ≥ 2V nên GPIO 3.3V là đủ.',
-      bay: 'Quên kéo nSLEEP lên thì motor không chạy dù code đúng. Motor TT lúc kẹt kéo 1.2–1.5A, chip vỏ TSSOP sẽ tự ngắt liên tục.', bai: ['15.2', '15.4', '17.1', '17.2'] },
+      bay: 'Quên kéo nSLEEP lên thì motor không chạy dù code đúng. Motor TT lúc kẹt kéo 1.2–1.5A, chip vỏ TSSOP sẽ tự ngắt liên tục.', bai: ['15.2', '15.4', '17.1', '17.2', '18.3', '18.4', '19.2', '19.3', '19.5', '21.1'] },
 
     { id: 'cell-18650', nhom: 'pin', ten: 'Cell lithium 18650', tim: '18650', mua: 'đợt 4 · hàng hãng',
       anh: anh(`<rect x="40" y="46" width="170" height="48" rx="8" fill="#2E7D5B" ${vien}/><rect x="210" y="58" width="10" height="24" rx="2" fill="#B8BEC4"/><rect x="34" y="50" width="6" height="40" fill="#B8BEC4"/>
@@ -642,7 +642,7 @@
       kh: '',
       chan: ['IN+ / IN− nối pin, OUT+ / OUT− nối tải. Chiều in sẵn trên board, không đảo được; đảo IN là hỏng module.', 'Vít đồng trên biến trở xanh chỉnh áp ra, phải vặn nhiều vòng mới thấy đổi rõ.'],
       gioi_han: 'Vào 4.5–40V, ra tới 3A. Module hạ áp kiểu <b>xung</b> (bật/tắt 150kHz qua cuộn cảm) nên ít nóng hơn AMS1117. Áp vào phải cao hơn áp ra ≳ 1.5V, tức muốn ra 5V thì vào ≳ 6.5V.',
-      bay: '<b>Module mới mua có thể đang chỉnh ra áp bất kỳ</b> (thường gần bằng áp vào). Chỉnh ra 5.0V khi <b>chưa nối tải</b>, đo lại, rồi mới nối board. Đừng cấp board qua chân 5V trong khi vẫn cắm USB: 2 nguồn sẽ đấu vào nhau (Espressif ghi các cách cấp nguồn là loại trừ nhau).', bai: ['16.3', '17.1'] },
+      bay: '<b>Module mới mua có thể đang chỉnh ra áp bất kỳ</b> (thường gần bằng áp vào). Chỉnh ra 5.0V khi <b>chưa nối tải</b>, đo lại, rồi mới nối board. Đừng cấp board qua chân 5V trong khi vẫn cắm USB: 2 nguồn sẽ đấu vào nhau (Espressif ghi các cách cấp nguồn là loại trừ nhau).', bai: ['16.3', '17.1', '20.2', '21.2'] },
 
     { id: 'khung-2wd', nhom: 'robot', ten: 'Khung robot 2WD', tim: 'khung 2WD', mua: 'đợt 4 · can-mua.md',
       anh: anh(`<rect x="60" y="30" width="140" height="90" rx="14" fill="none" stroke="#C9A640" stroke-width="3"/>
@@ -652,7 +652,21 @@
       kh: '',
       chan: ['2 motor TT (mỗi bánh 1 motor) và 1 bánh mắt trâu. Robot rẽ bằng cách cho 2 bánh quay khác tốc độ, và quay tại chỗ khi 2 bánh quay ngược chiều.'],
       gioi_han: 'Khung mica/nhôm mỏng: không chịu va mạnh. Bộ thường kèm 2 đĩa encoder 20 lỗ.',
-      bay: 'Chạy thử lần đầu khi bánh đang chạm bàn là robot lao xuống đất. Luôn kê khung cho bánh quay trên không trước.', bai: ['17.1'] },
+      bay: 'Chạy thử lần đầu khi bánh đang chạm bàn là robot lao xuống đất. Luôn kê khung cho bánh quay trên không trước.', bai: ['17.1', '18.1', '18.2', '18.3', '18.4', '19.1', '19.2', '19.3', '19.4', '19.5', '20.1', '20.2', '20.3', '20.4', '21.1', '21.2', '21.3', '21.4'] },
+
+    { id: 'ld19', nhom: 'robot', ten: 'LiDAR LDROBOT LD19 (quét laser 360°)', tim: 'LD19', mua: 'Phần 4 · chương 21 · can-mua.md',
+      anh: anh(`<rect x="70" y="70" width="120" height="60" rx="6" fill="#2A2F36" ${vien}/>
+        <ellipse cx="130" cy="62" rx="52" ry="14" fill="#1E2226" ${vien}/><rect x="78" y="34" width="104" height="28" fill="#1E2226"/><ellipse cx="130" cy="34" rx="52" ry="14" fill="#3A414A" ${vien}/>
+        <path d="M124 30 L130 22 L136 30 Z" fill="#E8EEF2"/>
+        <rect x="150" y="100" width="30" height="12" rx="2" fill="#F2F2F2" stroke="#9AA3AD"/>
+        ${[155, 162, 169, 176].map(x => `<rect x="${x - 1.5}" y="103" width="3" height="6" fill="#C9A640"/>`).join('')}
+        ${g(130, 26, 60, 12, '▵ = hướng 0°', 'end')}${g(165, 106, 222, 128, 'ZH 1.5mm 4 chân', 'start')}${g(90, 48, 30, 60, 'đầu đo quay 10 vòng/s', 'end')}
+        ${chu(130, 146, '1 Tx · 2 PWM · 3 GND · 4 P5V (đọc tài liệu kèm)', 'lk-mo')}`, 'LiDAR LD19: hộp vuông đen, đầu đo tròn quay phía trên có mũi tên, đầu cắm 4 chân nhỏ bên hông'),
+      kh: '',
+      chan: ['4 chân (đầu cắm ZH 1.5mm, cần dây chuyển sang chân 2.54mm): <b>1 Tx</b> (ra số liệu), <b>2 PWM</b> (điều tốc ngoài), <b>3 GND</b>, <b>4 P5V</b>. Màu dây tuỳ shop: <b>đọc thứ tự trên vỏ / tài liệu</b>, đừng đoán theo màu.', 'Mũi tên ▵ trên nắp quay là hướng 0°. Góc tăng theo chiều kim đồng hồ nhìn từ trên.', 'Không dùng điều tốc ngoài thì chân PWM <b>nối GND</b> (tài liệu hãng).'],
+      gioi_han: 'Nguồn 4.5–5.5V, ~180mA. Tx mức 0–3.3V (tối đa 3.5V), UART 230400 baud 8N1, chỉ phát không nhận. 4500 điểm/s, 10 vòng/s, tầm 0.02–12m. Laser Class 1. Gói 47 byte, đầu 0x54 0x2C, CRC-8.',
+      bay: 'Cắm nhầm P5V vào Tx là hỏng. Gắn thấp hoặc để cột, dây che tầm quét thì mọi vòng quét có "bóng" cố định. Gương, kính, mặt đen bóng làm laser dội đi, bản đồ bị thủng.', bai: ['21.2', '21.3', '21.4'] },
+
 
     // ——— Nên có thêm: đồ nghề cho bàn làm việc (chưa bài nào bắt buộc) ———
     { id: 'que-kep-moc', nhom: 'nen', ten: 'Que đo đầu kẹp móc (test hook)', tim: 'kẹp móc', mua: 'nên có',
@@ -941,7 +955,7 @@
     ['ban-dan', 'Diode, LED, transistor, MOSFET', ['led', 'led-rgb', '1n4148', '1n4007', '1n5819', 'zener', 's8050', 's8550', 'irlz44n']],
     ['ic', 'IC rời', ['ne555', 'lm358']],
     ['cong-tac', 'Nút, công tắc, relay, cầu chì', ['nut-nhan', 'cong-tac-gat', 'cong-tac-ht', 'relay', 'cau-chi']],
-    ['cam-bien', 'Cảm biến', ['fc51', 'hc-sr04', 'tcrt5000', 'khe-quang', 'gy521']],
+    ['cam-bien', 'Cảm biến', ['fc51', 'hc-sr04', 'tcrt5000', 'khe-quang', 'gy521', 'ld19']],
     ['mcu', 'Vi điều khiển, âm thanh, màn hình', ['esp32-s3', 'cap-usbc', 'inmp441', 'max98357a', 'loa', 'coi-chip', 'oled']],
     ['motor', 'Motor, driver, khung robot', ['motor-dc', 'motor-tt', 'sg90', 'driver-motor', 'drv8833', 'khung-2wd', 'nam-cham', 'dinh-kep']],
     ['nguon', 'Pin & nguồn', ['hop-pin', 'pin-li', 'cell-18650', 'de-18650', 'tp4056', 'bms-2s', 'lm2596', 'ams1117']],
@@ -969,7 +983,7 @@
     'motor-dc': 'động cơ', 'motor-tt': 'gear motor động cơ giảm tốc bánh xe', sg90: 'servo', 'driver-motor': 'h-bridge L298N', drv8833: 'motor driver cầu H',
     'khung-2wd': 'chassis robot car', 'nam-cham': 'magnet', 'dinh-kep': 'đinh kẹp giấy giấy nhám', 'hop-pin': 'battery holder AAA', 'pin-li': 'lithium li-ion',
     'cell-18650': 'pin lithium li-ion', 'de-18650': 'battery holder hộp pin', tp4056: 'mạch sạc charger', 'bms-2s': 'battery protection board', lm2596: 'buck converter hạ áp step down',
-    ams1117: 'LDO ổn áp 3.3V regulator',
+    ams1117: 'LDO ổn áp 3.3V regulator', ld19: 'lidar laser quét 360 ld06 ldrobot slam',
   };
   LK.forEach(l => { l.khac = KHAC[l.id] || ''; });
   const timLK = t => { const k = String(t || '').toLowerCase(); return LK.find(l => l.tim.toLowerCase() === k); };

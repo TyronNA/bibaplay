@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trạm robot</title>
+<style>
+  :root { --nen: #f6f5f1; --the: #fff; --chu: #1d1d1b; --mo: #6b6a64; --vien: #d9d6cc; --duong: #1565c0; --robot: #c62828; --radar: #ef6c00; --luoi: #e8e5dc; }
+  @media (prefers-color-scheme: dark) { :root { --nen: #161614; --the: #1f1f1c; --chu: #eceae3; --mo: #9a988f; --vien: #34332e; --duong: #64b5f6; --robot: #ef5350; --radar: #ffa726; --luoi: #2a2925; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.4 system-ui, sans-serif; background: var(--nen); color: var(--chu); }
+  header { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--vien); }
+  header b { margin-right: 8px; }
+  #tt { color: var(--mo); margin-right: auto; }
+  button, input { font: inherit; color: inherit; background: var(--the); border: 1px solid var(--vien); border-radius: 6px; padding: 4px 9px; }
+  button:hover { border-color: var(--mo); cursor: pointer; }
+  main { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 12px; padding: 12px 16px; }
+  @media (max-width: 800px) { main { grid-template-columns: 1fr; } }
+  section { background: var(--the); border: 1px solid var(--vien); border-radius: 8px; padding: 10px; min-width: 0; }
+  h2 { font-size: 13px; margin: 0 0 8px; color: var(--mo); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+  canvas { width: 100%; display: block; }
+  #ban-do { aspect-ratio: 4 / 3; border-radius: 6px; background: var(--nen); touch-action: none; }
+  .hang { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; align-items: center; }
+  .do-thi { margin-bottom: 8px; }
+  .do-thi label { display: flex; justify-content: space-between; font-size: 12px; color: var(--mo); }
+  .do-thi label b { color: var(--chu); font-variant-numeric: tabular-nums; }
+  .do-thi canvas { height: 46px; }
+  #nhat-ky { height: 190px; overflow: auto; font: 12px/1.5 ui-monospace, monospace; white-space: pre-wrap; }
+  .lai { font-size: 12px; color: var(--mo); }
+  kbd { border: 1px solid var(--vien); border-radius: 3px; padding: 0 4px; }
+</style>
+</head>
+<body>
+<header>
+  <b>Trạm robot</b><span id="tt">chưa thấy robot</span>
+  <input id="lenh" placeholder="lệnh, vd: D 500 0" size="16" autocomplete="off"><button id="gui">Gửi</button>
+  <button data-l="X" title="dừng">X dừng</button>
+</header>
+<main>
+  <section>
+    <h2>Bản đồ · đường đi · radar</h2>
+    <canvas id="ban-do" width="1200" height="900"></canvas>
+    <div class="hang">
+      <button id="to">+</button><button id="nho">−</button><button id="giua">về robot</button>
+      <label><input type="checkbox" id="xem-luoi" checked> lưới chiếm chỗ</label>
+      <label><input type="checkbox" id="xem-phu"> vệt phủ (rộng <input id="rong" value="140" size="3"> mm)</label>
+      <button id="xoa">xoá đường + bản đồ</button>
+    </div>
+    <p class="lai">Lái (bài 18.4, 20.3): giữ <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> hoặc phím mũi tên · tốc độ <input id="toc" type="range" min="20" max="70" value="40"> <span id="toc-so">40</span>% · nhả phím = dừng.</p>
+    <div class="hang" id="nut-bai"></div>
+  </section>
+  <section>
+    <h2>Số liệu (dòng T)</h2>
+    <div id="do-thi"></div>
+    <h2>Sự kiện (dòng S)</h2>
+    <div id="nhat-ky"></div>
+  </section>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+const gui = l => fetch('/lenh', { method: 'POST', body: l });
+// Nút theo bài: [nhãn, lệnh]
+const NUT = [['CHAY', 'CHAY'], ['Z đặt lại', 'Z'], ['BT', 'BT'], ['BP', 'BP'], ['M 0', 'M 0'], ['M 1', 'M 1'], ['M 2', 'M 2'], ['F 1000', 'F 1000'],
+  ['Q 5', 'Q 5'], ['A 0', 'A 0'], ['A 998', 'A 998'], ['A 1000', 'A 1000'], ['VUONG 500', 'VUONG 500'], ['HC', 'HC'], ['QUET', 'QUET'], ['PHU 1500 1000', 'PHU 1500 1000']];
+$('#nut-bai').innerHTML = NUT.map(([n, l]) => `<button data-l="${l}">${n}</button>`).join('');
+document.addEventListener('click', e => { const l = e.target.dataset && e.target.dataset.l; if (l) gui(l); });
+$('#gui').onclick = () => { if ($('#lenh').value.trim()) gui($('#lenh').value.trim()); };
+$('#lenh').addEventListener('keydown', e => { if (e.key === 'Enter') $('#gui').click(); e.stopPropagation(); });
+
+// ── Lái bằng phím: gửi lại mỗi 100ms khi còn giữ phím (robot 18.4 dừng nếu 500ms không có lệnh) ──
+const giu = new Set(), PHIM = { w: 'len', arrowup: 'len', s: 'xuong', arrowdown: 'xuong', a: 'trai', arrowleft: 'trai', d: 'phai', arrowright: 'phai' };
+$('#toc').oninput = () => { $('#toc-so').textContent = $('#toc').value; };
+addEventListener('keydown', e => { const k = PHIM[e.key.toLowerCase()]; if (k) { giu.add(k); e.preventDefault(); } });
+addEventListener('keyup', e => { const k = PHIM[e.key.toLowerCase()]; if (k) { giu.delete(k); if (!giu.size) gui('B 0 0'); } });
+addEventListener('blur', () => { if (giu.size) { giu.clear(); gui('X'); } });
+setInterval(() => {
+  if (!giu.size) return;
+  const v = +$('#toc').value, tien = (giu.has('len') - giu.has('xuong')) * v, quay = (giu.has('trai') - giu.has('phai')) * v * 0.6;
+  gui(`B ${Math.round(tien - quay)} ${Math.round(tien + quay)}`);
+}, 100);
+
+// ── Số liệu ──
+const ds = {}, CUA = 30;   // giây hiển thị
+function nhanT(kv, t) {
+  for (const [k, v] of Object.entries(kv)) {
+    if (!isFinite(v)) continue;
+    if (!ds[k]) {
+      const d = document.createElement('div'); d.className = 'do-thi';
+      d.innerHTML = `<label><span>${k}</span><b></b></label><canvas width="600" height="92"></canvas>`;
+      $('#do-thi').append(d); ds[k] = { d, diem: [] };
+    }
+    ds[k].diem.push([t, v]);
+    while (ds[k].diem.length && ds[k].diem[0][0] < t - CUA) ds[k].diem.shift();
+    ds[k].d.querySelector('b').textContent = v;
+  }
+}
+function veDoThi() {
+  const mau = getComputedStyle(document.body).getPropertyValue('--duong'), luoi = getComputedStyle(document.body).getPropertyValue('--luoi');
+  const bay = performance.now() / 1000;
+  for (const { d, diem } of Object.values(ds)) {
+    const c = d.querySelector('canvas'), g = c.getContext('2d'), W = c.width, H = c.height;
+    g.clearRect(0, 0, W, H);
+    if (diem.length < 2) continue;
+    let lo = Math.min(...diem.map(p => p[1])), hi = Math.max(...diem.map(p => p[1]));
+    if (hi - lo < 1e-6) { lo -= 1; hi += 1; }
+    g.strokeStyle = luoi; g.lineWidth = 1;
+    if (lo < 0 && hi > 0) { const y0 = H - 6 - (0 - lo) / (hi - lo) * (H - 12); g.beginPath(); g.moveTo(0, y0); g.lineTo(W, y0); g.stroke(); }
+    g.strokeStyle = mau; g.lineWidth = 2.5; g.beginPath();
+    diem.forEach(([t, v], i) => { const x = W - (bay - t) / CUA * W, y = H - 6 - (v - lo) / (hi - lo) * (H - 12); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+    g.stroke();
+    g.fillStyle = getComputedStyle(document.body).getPropertyValue('--mo'); g.font = '18px system-ui';
+    g.fillText(+hi.toPrecision(4), 4, 18); g.fillText(+lo.toPrecision(4), 4, H - 4);
+  }
+}
+
+// ── Bản đồ: mm, x sang phải, y lên trên; robot gửi góc bằng độ ──
+const O = 50, LUOI = new Map();   // ô 50mm → log-odds
+let duong = [], radar = [], pose = null, ti = 0.15, tam = [0, 0];
+const oKey = (x, y) => `${Math.floor(x / O)},${Math.floor(y / O)}`;
+function capNhatLuoi(x0, y0, goc, cm) {
+  // tia siêu âm: các ô trên đường đi là trống, ô ở cuối (nếu có tiếng vọng) là có vật
+  const xa = cm > 0 && cm < 300 ? cm * 10 : 1000, co = cm > 0 && cm < 300;
+  for (let s = 0; s < xa - O; s += O / 2) { const k = oKey(x0 + s * Math.cos(goc), y0 + s * Math.sin(goc)); LUOI.set(k, Math.max(-4, (LUOI.get(k) || 0) - 0.3)); }
+  if (co) { const k = oKey(x0 + xa * Math.cos(goc), y0 + xa * Math.sin(goc)); LUOI.set(k, Math.min(4, (LUOI.get(k) || 0) + 1.2)); }
+}
+function nhanR(kv) {
+  const th = kv.th * Math.PI / 180, lech = 60;   // HC-SR04 gắn trước tâm robot ~6cm
+  const x0 = kv.x + lech * Math.cos(th), y0 = kv.y + lech * Math.sin(th), goc = th + kv.goc * Math.PI / 180;
+  capNhatLuoi(x0, y0, goc, kv.cm);
+  if (kv.cm > 0 && kv.cm < 300) radar.push([x0 + kv.cm * 10 * Math.cos(goc), y0 + kv.cm * 10 * Math.sin(goc)]);
+  if (radar.length > 5000) radar.shift();
+}
+const c = $('#ban-do'), g = c.getContext('2d');
+const ra = (x, y) => [c.width / 2 + (x - tam[0]) * ti, c.height / 2 - (y - tam[1]) * ti];
+function veBanDo() {
+  const st = getComputedStyle(document.body), m = k => st.getPropertyValue(k);
+  g.clearRect(0, 0, c.width, c.height);
+  g.strokeStyle = m('--luoi'); g.lineWidth = 1;
+  const buoc = 500, x0 = tam[0] - c.width / 2 / ti, x1 = tam[0] + c.width / 2 / ti, y0 = tam[1] - c.height / 2 / ti, y1 = tam[1] + c.height / 2 / ti;
+  for (let x = Math.floor(x0 / buoc) * buoc; x < x1; x += buoc) { const [a] = ra(x, 0); g.beginPath(); g.moveTo(a, 0); g.lineTo(a, c.height); g.stroke(); }
+  for (let y = Math.floor(y0 / buoc) * buoc; y < y1; y += buoc) { const [, b] = ra(0, y); g.beginPath(); g.moveTo(0, b); g.lineTo(c.width, b); g.stroke(); }
+  if ($('#xem-luoi').checked) for (const [k, v] of LUOI) {
+    const [i, j] = k.split(',').map(Number), [a, b] = ra(i * O, (j + 1) * O);
+    g.fillStyle = v > 0 ? `rgba(120,120,120,${Math.min(1, v / 3)})` : `rgba(76,175,80,${Math.min(0.35, -v / 8)})`;
+    g.fillRect(a, b, O * ti + 0.5, O * ti + 0.5);
+  }
+  if ($('#xem-phu').checked && duong.length > 1) {
+    g.strokeStyle = 'rgba(21,101,192,.25)'; g.lineWidth = (+$('#rong').value || 140) * ti; g.lineCap = 'round'; g.lineJoin = 'round';
+    g.beginPath(); duong.forEach(([x, y], i) => { const [a, b] = ra(x, y); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.stroke();
+  }
+  g.fillStyle = m('--radar'); radar.forEach(([x, y]) => { const [a, b] = ra(x, y); g.fillRect(a - 2, b - 2, 4, 4); });
+  g.strokeStyle = m('--duong'); g.lineWidth = 2; g.lineCap = 'round';
+  g.beginPath(); duong.forEach(([x, y], i) => { const [a, b] = ra(x, y); i ? g.lineTo(a, b) : g.moveTo(a, b); }); g.stroke();
+  if (pose) {
+    const [a, b] = ra(pose[0], pose[1]), t = pose[2], L = Math.max(10, 90 * ti);
+    g.fillStyle = m('--robot'); g.beginPath();
+    g.moveTo(a + L * Math.cos(t), b - L * Math.sin(t));
+    g.lineTo(a + L * 0.6 * Math.cos(t + 2.5), b - L * 0.6 * Math.sin(t + 2.5));
+    g.lineTo(a + L * 0.6 * Math.cos(t - 2.5), b - L * 0.6 * Math.sin(t - 2.5)); g.fill();
+  }
+  g.fillStyle = m('--mo'); g.font = '22px system-ui'; g.fillText(`ô lưới 0.5m${pose ? ` · robot (${pose[0].toFixed(0)}, ${pose[1].toFixed(0)}) mm, ${(pose[2] * 180 / Math.PI).toFixed(1)}°` : ''}`, 12, c.height - 14);
+}
+$('#to').onclick = () => { ti *= 1.4; }; $('#nho').onclick = () => { ti /= 1.4; };
+$('#giua').onclick = () => { if (pose) tam = [pose[0], pose[1]]; };
+$('#xoa').onclick = () => { duong = []; radar = []; LUOI.clear(); };
+let keo = null;
+c.addEventListener('pointerdown', e => { keo = [e.clientX, e.clientY]; c.setPointerCapture(e.pointerId); });
+c.addEventListener('pointermove', e => { if (!keo) return; const k = c.width / c.clientWidth; tam[0] -= (e.clientX - keo[0]) * k / ti; tam[1] += (e.clientY - keo[1]) * k / ti; keo = [e.clientX, e.clientY]; });
+c.addEventListener('pointerup', () => { keo = null; });
+
+// ── Nhận dòng từ trạm ──
+const kv = s => Object.fromEntries(s.split(/\s+/).filter(x => x.includes('=')).map(x => { const [k, v] = x.split('='); return [k, +v]; }));
+const nk = $('#nhat-ky');
+new EventSource('/su-kien').onmessage = e => {
+  const d = e.data, t = performance.now() / 1000;
+  if (d[0] === 'T') {
+    const o = kv(d.slice(2)); nhanT(o, t);
+    if ('x' in o && 'y' in o) {
+      pose = [o.x, o.y, (o.th || 0) * Math.PI / 180];
+      const cuoi = duong[duong.length - 1];
+      if (!cuoi || Math.hypot(cuoi[0] - o.x, cuoi[1] - o.y) > 5) duong.push([o.x, o.y]);
+      if (duong.length > 20000) duong.shift();
+    }
+  } else if (d[0] === 'R') nhanR(kv(d.slice(2)));
+  else if (d[0] === 'S') {
+    nk.textContent += new Date().toLocaleTimeString() + '  ' + d.slice(2) + '\n';
+    if (nk.textContent.length > 20000) nk.textContent = nk.textContent.slice(-15000);
+    nk.scrollTop = nk.scrollHeight;
+  }
+};
+setInterval(async () => {
+  try { const j = await (await fetch('/trang-thai')).json(); $('#tt').textContent = j.robot ? `robot ${j.robot} · ${j.im_s}s trước` : 'chưa thấy robot (robot phải cùng mạng WiFi)'; } catch { $('#tt').textContent = 'mất trạm'; }
+}, 1000);
+(function lap() { veBanDo(); veDoThi(); requestAnimationFrame(lap); })();
+</script>
+</body>
+</html>

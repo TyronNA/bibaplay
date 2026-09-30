@@ -93,8 +93,8 @@ def main(ra):
     (ra / "bai" / "ds.json").write_text(json.dumps(bai))
     files.append("bai/ds.json")
 
-    # Code các bài Phần 2 mà trang bài tải về hiển thị (trường `code:` trong bai/*.js).
-    code = sorted({m for b in bai for m in re.findall(r"code: *'([^']+)'", (HOC / "bai" / f"{b}.js").read_text())})
+    # Code mà trang bài tải về hiển thị (trường `code:` / `code_may:` trong bai/*.js).
+    code = sorted({m for b in bai for m in re.findall(r"code(?:_may)?: *'([^']+)'", (HOC / "bai" / f"{b}.js").read_text())})
     for f in NOTES + ANH + code:
         (ra / f).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(ROOT / f, ra / f)

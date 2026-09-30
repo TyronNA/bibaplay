@@ -11,3 +11,6 @@ hoc/ket-qua/
 # ghi chú riêng cho Claude + tiến độ của mình: chỉ ở máy, repo này công khai
 CLAUDE.md
 notes/progress.md
+# trạm Phần 4 ghi log số liệu robot; bản đồ lưu từ ROS 2
+sandbox/robot-may/tram-*.log
+sandbox/ros2-cau/ban-do/

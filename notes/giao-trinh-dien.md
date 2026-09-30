@@ -219,6 +219,57 @@ Từ chương 16 có **pin lithium**: nối tắt = hàng chục ampe, cháy th�
 
 Mua thêm (đợt 4): đồ của Phần 3 — mục Đồ cần của từng bài liệt kê đủ.
 
+## Phần 4 — Robotics: robot tự biết mình ở đâu (sau Phần 3)
+
+Robot của bài 17.1 là nền, không tháo gì của nó. Mỗi bài chỉ **thêm** vào: encoder 2 bánh, GY-521, 2 TCRT5000, servo quay siêu âm, LiDAR. Chân mới: khe quang trái 11, phải 13, I2C 41/42, TCRT 4/5, servo 15, LiDAR 16. Mấy chân này vốn của mic/ampli/OLED xiaozhi, nên robot Phần 4 chạy code bài học chứ không chạy xiaozhi.
+Từ chương 18, robot gửi số liệu lên máy tính qua WiFi và nhận lệnh từ đó. Board chạy bằng pack 2S, không cắm USB, nên phải xem số liệu qua WiFi. Muốn nạp code thì làm như 17.1: rút P+ → cắm USB → nạp → rút USB → cắm lại P+.
+Lần đầu chạy bài nào cũng kê cho **bánh quay trên không**. Robot biết đi tới điểm là biết lao vào chân bàn, nên chỉ chạy trên sàn trống, xa cầu thang, tay luôn sẵn sàng nhấc robot lên rút P+.
+Sách đọc kèm cho phần này: *Probabilistic Robotics* (Thrun, Burgard, Fox) cho định vị và bản đồ; tài liệu chính thức của ROS 2 và Nav2 cho chương 21.
+
+## 18. Nền phần mềm của robot
+
+| # | Bài | Làm gì | Đo / thấy gì |
+|---|---|---|---|
+| 18.1 | Số liệu qua WiFi | Robot 17.1 đứng yên, gửi áp pin, siêu âm, hồng ngoại, cản va 10 lần/giây bằng UDP; trạm trên máy tính vẽ thành đồ thị. Chạy bằng USB rồi bằng pack | Rút USB mà đồ thị vẫn chạy: từ giờ thấy được bên trong robot đang chạy trên sàn. Gói UDP có thể mất, nhưng không bao giờ chặn vòng lặp |
+| 18.2 | Vòng điều khiển đúng nhịp | Một vòng 50Hz làm việc 12ms mỗi lần, chạy 3 cách: `vTaskDelay`, `vTaskDelayUntil`, và DelayUntil kèm `printf` dài | vTaskDelay: nhịp ≈ 30ms, trễ cộng dồn. DelayUntil: đúng 20ms. printf ~300 ký tự ở 115200 baud mất ~26ms nên kéo dài cả nhịp. In ít, in ngoài vòng điều khiển |
+| 18.3 | Máy trạng thái | Viết lại hành vi né vật của 17.1 thành các trạng thái CHỜ, ĐI, DỪNG, LÙI, QUAY, PIN YẾU; mỗi lần đổi trạng thái báo lên trạm | Không còn chờ cứng: đang lùi vẫn đọc cảm biến. Nhật ký trên trạm cho biết robot vì sao làm việc đó |
+| 18.4 | Lái từ máy tính + dừng khi mất kết nối | Giữ phím W A S D trên trạm để lái; tắt WiFi hoặc đóng trạm giữa chừng | 0.5s không có lệnh là robot tự dừng. Có vật trước mặt thì chỉ chặn phần đi tới, vẫn cho lùi và quay |
+
+## 19. Định vị bằng encoder + gyro (odometry)
+
+Cần thêm: cảm biến khe quang thứ 2 + đĩa encoder (khung 2WD có sẵn 2 đĩa), băng keo giấy, thước dây.
+
+| # | Bài | Làm gì | Đo / thấy gì |
+|---|---|---|---|
+| 19.1 | Encoder 2 bánh | Gắn 2 khe quang vào 2 đĩa (trái → GPIO11, phải → GPIO13), đo OUT trước; đẩy tay robot đúng 1m dọc thước | Mỗi bánh ≈ 196 xung/m (bánh 65mm, 40 xung/vòng). mm/xung = 1000 ÷ số xung đo được, lấy số này thay số đoán |
+| 19.2 | Đi thẳng | Đi 1.5m theo 3 cách: 2 bánh cùng duty, PI tốc độ từng bánh, PI + bù lệch quãng đường 2 bánh; đo lệch ngang ở cuối | Cùng duty: lệch cả chục cm. PI từng bánh: đỡ hơn, vẫn lệch. Có bù lệch: còn vài cm. Hai motor không bao giờ giống hệt nhau |
+| 19.3 | Vị trí x, y, góc | Cộng dồn quãng 2 bánh ra (x, y, θ), trạm vẽ đường đi; quay tại chỗ 5 vòng để hiệu chuẩn khoảng cách bánh | `dθ = (d_phải − d_trái)/b`. Sai b 5% thì quay 5 vòng lệch 90°. Hiệu chuẩn: b mới = b cũ × 5 ÷ số vòng thật |
+| 19.4 | Trộn gyro vào góc | Gắn GY-521 lên robot (41/42), so 3 góc: chỉ encoder, chỉ gyro, đã trộn bằng bộ lọc bù; nhấc robot lên quay tay một bánh; để yên 1 phút | Quay bánh trên không: encoder tưởng robot quay, gyro không. Để yên: gyro trôi vài độ, encoder đứng yên. Bộ lọc bù lấy chỗ mạnh của cả hai |
+| 19.5 | Đi tới điểm | Mỗi 50ms tính khoảng cách + góc lệch tới đích ra (v, w); đi hình vuông 50cm ngược chiều kim đồng hồ rồi về chỗ cũ, đo lệch bằng thước | Robot về cách điểm xuất phát vài cm dù odometry nói đã về đúng (0, 0): sai số cộng dồn, đi càng xa càng lệch |
+
+## 20. Nhận biết xung quanh
+
+Cần thêm: TCRT5000 thứ 2, băng keo điện đen (vạch), tụ hoá 100µF cho nguồn servo.
+
+| # | Bài | Làm gì | Đo / thấy gì |
+|---|---|---|---|
+| 20.1 | Bám vạch | 2 TCRT5000 úp sát sàn, AO → GPIO4, 5 (đo AO trước, ≤ 3.3V); hiệu chuẩn mức sàn/vạch, rồi PD trên hiệu 2 mắt | Vạch lệch trái thì mắt trái đen hơn → quay trái. Chỉ P: lắc qua lại; thêm D: êm hơn. Chạy nhanh quá thì văng khỏi khúc cua |
+| 20.2 | Radar siêu âm | HC-SR04 gắn lên tay servo SG90 (GPIO15, nguồn 5V từ LM2596 + tụ 100µF), quét −60° → +60°; trạm vẽ các điểm | Tường thẳng hiện thành cung (búp sóng siêu âm rộng ~15°). Góc tường, chân ghế mảnh hay mất |
+| 20.3 | Vẽ bản đồ lưới | Lái robot quanh phòng, dừng lại quét; trạm ghép mỗi điểm radar với vị trí robot lúc đo thành lưới 5cm (trống / có vật) | Có hình phòng. Quay lại chỗ cũ thì tường vẽ lần 2 lệch lần 1: odometry trôi làm bản đồ nhoè |
+| 20.4 | Đi phủ kín kiểu robot hút bụi | Đi luống cày trong vùng 1.5m × 1m dán băng keo; trạm tô vệt robot đi qua | Vùng phủ gần kín ở luống đầu, hở dần về sau vì sai số góc cộng dồn. Robot hút bụi thật dùng LiDAR + SLAM để khỏi hở |
+
+## 21. ROS 2 + LiDAR
+
+Cần thêm: LiDAR LDROBOT LD19 (5V, UART 230400), máy Linux chạy Docker cùng mạng WiFi (mini PC, Raspberry Pi 5 hoặc laptop Ubuntu 24.04).
+Chương này soạn theo tài liệu của ROS 2 Jazzy, slam_toolbox, Nav2 và LD19. Phần giải gói LD19 đã được thử với gói mẫu của hãng, còn cả chuỗi ROS 2 thì **chưa chạy thử trên robot thật**: gặp lỗi thì đọc log của từng node trước.
+
+| # | Bài | Làm gì | Đo / thấy gì |
+|---|---|---|---|
+| 21.1 | ROS 2 lái robot | ROS 2 Jazzy chạy trong Docker trên máy Linux; cầu nối chuyển số liệu robot thành `/odom` + TF, và `/cmd_vel` thành lệnh bánh; lái bằng bàn phím, xem trên Foxglove | Robot trong Foxglove đi theo robot thật. Đóng cầu nối: robot tự dừng sau 0.5s. ROS 2 là "hệ điều hành" chung: đổi robot khác, phần trên giữ nguyên |
+| 21.2 | LiDAR LD19 | Nối LD19 vào robot (5V, GND, Tx → GPIO16, chân PWM nối GND), đo Tx trước; robot chuyển byte thô lên máy, cầu nối giải ra `/scan` | ~375 gói/s, 10 vòng/s, 450 điểm/vòng. Phòng hiện ra rõ đủ 360° chỉ sau 0.1s, so với cả phút quét siêu âm |
+| 21.3 | SLAM | slam_toolbox vừa vẽ bản đồ vừa định vị; lái chậm một vòng quanh phòng rồi lưu bản đồ | Đi hết vòng quay về chỗ cũ: bản đồ tự "khép vòng", tường lần 2 trùng lần 1, khác hẳn 20.3 |
+| 21.4 | Tự tìm đường (Nav2) | Nav2 trên bản đồ vừa vẽ: bấm một điểm trong Foxglove, robot tự lập đường, né vật, đi tới | Đặt thêm hộp chắn đường: robot vẽ lại đường vòng. Đây là cách robot hút bụi đời mới đi về đế sạc |
+
 ## Sách đọc kèm
 - *Lessons in Electric Circuits* (Tony Kuphaldt) — miễn phí, trên allaboutcircuits.com; tập I (DC) khớp chương 1–3.
 - *Make: Electronics* (Charles Platt) — học bằng cách ráp rồi đo, cùng kiểu với giáo trình này.

@@ -58,6 +58,13 @@
       khung: () => ({ ten: 'Khung robot 2WD', tim: 'khung 2WD', lk: 'khung-2wd', sl: 1 }),
       sac5v: () => ({ ten: 'Cục sạc điện thoại 5V ≥ 1A + cáp khớp cổng module', tim: 'cục sạc', sl: 1 }),
       moHan: () => ({ ten: 'Mỏ hàn + thiếc (đồ nghề đợt 1)', tim: 'mỏ hàn', lk: 'mo-han', sl: 1 }),
+      // Phần 4
+      robot17: () => ({ ten: 'Robot đã chạy được ở bài 17.1 (pack 2S, LM2596, DRV8833, cảm biến)', tim: 'khung 2WD', lk: 'khung-2wd', sl: 1 }),
+      wifi: () => ({ ten: 'Máy tính cùng mạng WiFi 2.4GHz với robot, có Python 3', tim: 'máy tính', sl: 1 }),
+      thuoc: () => ({ ten: 'Thước dây + băng keo giấy đánh dấu sàn', tim: 'thước dây', sl: 1 }),
+      bangKeoDen: () => ({ ten: 'Băng keo điện đen (vạch trên sàn sáng màu)', tim: 'băng keo điện', lk: 'co-nhiet', sl: 1 }),
+      ld19: () => ({ ten: 'LiDAR LDROBOT LD19 + dây 4 chân', tim: 'LD19', lk: 'ld19', sl: 1 }),
+      mayLinux: () => ({ ten: 'Máy Linux chạy Docker (mini PC, Raspberry Pi 5, laptop Ubuntu 24.04)', tim: 'máy Linux', sl: 1 }),
     },
     // Đồ luôn cần ở Phần 1 / Phần 2
     coBan: (soDay = 6) => [K.can.bb(), K.can.day(soDay), K.can.pin(), K.can.dh(), K.can.kep()],
@@ -111,6 +118,75 @@
     rutUsb: (lam, board) => ({
       ten: 'Rút USB', lam: ['Rút cáp USB trước khi rút hay cắm bất cứ dây nào.', ...(lam || [])],
       board: { ...(board || {}), sua: { esp: { usb: false }, ...((board || {}).sua || {}) } },
+    }),
+
+    // Phần 4: robot lúc xong bài 17.1 làm nền, vẽ như đồ cũ (không khung vàng). 3 mức áp như 17.1:
+    // T+ = pack 6–8.4V · B+ = 3V3 · cột 16 = 5V từ LM2596 (Phần 4 bắc 16e → 16f để có thêm 4 lỗ 5V ở nửa dưới).
+    // Motor, công tắc, LM2596 dời sang phải (x ≥ 740) chừa chỗ cho board ESP32 nhiều chân hơn.
+    robot17: () => {
+      const d = (id, tu, den, mau, cong) => K.day(id, tu, den, mau, cong);
+      return [
+        d('gn', 'T-:2', 'B-:2', 'den'),
+        { id: 'drv', loai: 'mod', ten: 'DRV8833', mau: 'do', chan: [['SLP', '4a'], ['IN1', '5a'], ['IN2', '6a'], ['IN3', '7a'], ['IN4', '8a'], ['OUT1', '9a'], ['OUT2', '10a'], ['OUT3', '11a'], ['OUT4', '12a'], ['VM', '13a'], ['GND', '14a']] },
+        d('slp', '4c', 'B+:4', 'do', 5), d('vm', 'T+:13', '13c', 'do', 3), d('gd', '14c', 'T-:14', 'den', 3),
+        // 2 motor gộp một hộp (T = trái, P = phải) cho hình đủ chỗ; nối y như 17.1
+        { id: 'mot', loai: 'ngoai', kieu: 'hop', chu: '2 motor', x: 790, chan: { T1: '9e', T2: '10e', P1: '11e', P2: '12e' }, mau: ['cam', 'tim', 'cam', 'tim'], nhan: 'trái · phải' },
+        { id: 'sr', loai: 'mod', ten: 'HC-SR04', mau: 'xanhduong', chan: [['VCC', '18a'], ['Trig', '19a'], ['Echo', '20a'], ['GND', '21a']] },
+        d('v5', '16d', '18d', 'do', 3), K.tro('e1', ['20c', '24c'], '10k'), K.tro('e2', ['24e', '24f'], '20k'), d('e3', '24j', 'B-:24', 'den'), d('sg', '21e', 'B-:21', 'den', 3),
+        { id: 'ir', loai: 'mod', ten: 'FC-51', mau: 'xanhduong', chan: [['VCC', '28a'], ['GND', '29a'], ['OUT', '30a']] },
+        d('iv', '28e', 'B+:28', 'do', 4), d('ig', '29e', 'B-:29', 'den', 3),
+        { id: 'sw', loai: 'ngoai', kieu: 'hop', chu: 'KW11', x: 890, chan: { COM: 'T-:34', NO: '34e' }, mau: ['den', 'vang'], nhan: 'va chạm' },
+        K.tro('p1', ['T+:38', '38a'], '20k'), K.tro('p2', ['38e', '38f'], '10k'), d('p3', '38j', 'B-:38', 'den'),
+        { id: 'buck', loai: 'ngoai', kieu: 'hop', chu: 'LM2596', x: 1000, chan: { 'IN+': 'T+:42', 'IN−': 'T-:42', 'OUT+': '16a', 'OUT−': 'B-:16' }, mau: ['do', 'den', 'cam', 'den'], nhan: 'ra 5.0V' },
+        d('pp', '44c', 'T+:44', 'do'),
+      ].map(i => ({ ...i, moi: false }));
+    },
+    // Mũi tên cho sơ đồ khối (cần SD.mui trong svg).
+    mt: (x1, y1, x2, y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="sd-net" marker-end="url(#sd-mui)"/>`,
+    // Đồ thêm của Phần 4, mỗi món một chỗ cố định để các bài sau vẽ lại đúng chỗ bài trước đã cắm.
+    // Cảm biến gắn trên khung nối dây đực–cái xuống nửa dưới board: tín hiệu ở hàng h, dây ESP32 ở hàng i cùng cột.
+    // Cột nửa dưới: 16 = 5V (sau cầu 16e → 16f), 46/48 khe quang, 50/52 TCRT, 54 servo, 56 LiDAR. GY-521 cắm nửa trên 53–60.
+    p4: {
+      enc: () => [
+        { id: 'enct', loai: 'ngoai', kieu: 'hop', chu: 'khe quang', x: 1115, chan: { VCC: 'B+:45', GND: 'B-:45', OUT: '46h' }, mau: ['do', 'den', 'vang'], nhan: 'bánh trái' },
+        { id: 'encp', loai: 'ngoai', kieu: 'hop', chu: 'khe quang', x: 1210, chan: { VCC: 'B+:47', GND: 'B-:47', OUT: '48h' }, mau: ['do', 'den', 'vang'], nhan: 'bánh phải' },
+      ],
+      encEsp: { G11: '46i', G13: '48i' },
+      imu: () => [
+        { id: 'imu', loai: 'mod', ten: 'GY-521', mau: 'xanhduong', chan: [['VCC', '53a'], ['GND', '54a'], ['SCL', '55a'], ['SDA', '56a'], ['XDA', '57a'], ['XCL', '58a'], ['AD0', '59a'], ['INT', '60a']] },
+        K.day('iv3', '53e', 'B+:53', 'do', 4), K.day('ig3', '54e', 'B-:54', 'den', 3),
+      ],
+      imuEsp: { G42: '55c', G41: '56c' },
+      tcrt: () => [
+        { id: 'tct', loai: 'ngoai', kieu: 'hop', chu: 'TCRT5000', x: 1115, chan: { VCC: 'B+:49', GND: 'B-:49', AO: '50h' }, mau: ['do', 'den', 'xanh'], nhan: 'mắt trái' },
+        { id: 'tcp', loai: 'ngoai', kieu: 'hop', chu: 'TCRT5000', x: 1210, chan: { VCC: 'B+:51', GND: 'B-:51', AO: '52h' }, mau: ['do', 'den', 'xanh'], nhan: 'mắt phải' },
+      ],
+      tcrtEsp: { G4: '50i', G5: '52i' },
+      // Cầu 5V sang nửa dưới + tụ 100µF chặn sụt áp lúc servo/LiDAR khởi động.
+      nguon5: () => [K.day('c5v', '16e', '16f', 'do'), { id: 'c100', loai: 'tu', p: ['16j', 'B-:17'], nhan: '100µF' }],
+      servo: () => [{ id: 'sv', loai: 'ngoai', kieu: 'hop', chu: 'SG90', x: 1115, chan: { S: '54h', '+': '16g', '−': 'B-:15' }, mau: ['cam', 'do', 'nau'], nhan: 'servo radar' }],
+      servoEsp: { G15: '54i' },
+      // HC-SR04 rời breadboard lên tay servo, 4 dây đực–cái cắm lại đúng 4 lỗ cũ 18a–21a.
+      srServo: () => [{ id: 'sr2', loai: 'ngoai', kieu: 'hop', chu: 'HC-SR04', x: 1210, chan: { VCC: '18a', Trig: '19a', Echo: '20a', GND: '21a' }, mau: ['do', 'vang', 'xanh', 'den'], nhan: 'trên tay servo' }],
+      lidar: () => [{ id: 'ld', loai: 'ngoai', kieu: 'hop', chu: 'LD19', x: 1210, chan: { Tx: '56h', PWM: 'B-:57', GND: 'B-:58', P5V: '16h' }, mau: ['vang', 'den', 'den', 'do'], nhan: 'LiDAR' }],
+      lidarEsp: { G16: '56i' },
+    },
+    // Chân ESP32 của robot 17.1 + chân thêm của bài (vd { G11: '46i' }).
+    espRobot: (them, o) => K.esp({ GND: 'B-:3', '3V3': 'B+:3', G9: '5c', G10: '6c', G14: '7c', G21: '8c', G17: '19c', G18: '24a', G8: '30c', G12: '34c', G1: '38c', '5V': '16c', ...them }, { x: 30, ...o }),
+    packRobot: () => ({ id: 'pack', loai: 'ngoai', kieu: 'hop', chu: 'pack 2S', x: 1300, chan: { 'P+': '44a', 'P−': 'T-:44' }, mau: ['do', 'den'], nhan: 'P+/P−' }),
+    // Bước chung Phần 4: cắm P+ khi board đang không có USB (thứ tự nạp code của 17.1).
+    camPack: (ten, lam, kiem, board) => ({ ten, cap_dien: true, lam: ['Cáp USB <b>đã rút</b> khỏi board. Cắm P+ vào <b>44a</b>.', ...lam], board: { ...(board || {}), them: [K.packRobot(), ...((board || {}).them || [])] }, kiem }),
+    rutPack: (lam) => ({ ten: 'Rút P+', lam: ['Rút P+ khỏi 44a trước khi rút hay cắm bất cứ dây nào, và trước khi cắm USB.', ...(lam || [])], board: { bo: ['pack'] } }),
+    // Đo trước khi cắm pack: 3 mức áp của robot không được chạm nhau.
+    buocOmRobot: (them, o = {}) => ({
+      ten: 'Đo trước khi cấp điện', kiem_truoc: true,
+      lam: ['P+ và USB đều <b>rút</b>. Núm <code>Ω 200k</code>, đo từng cặp, đợi số đứng (tụ trên board được đồng hồ nạp nên số chạy lên từ từ):',
+        '① Thanh + trên (pin) ↔ thanh − trên: ≈ 20–30kΩ (cầu đo pin 20k + 10k), <b>không dưới 1kΩ</b>.',
+        '② Thanh + dưới (3V3) ↔ thanh − dưới: gần mốc 3V3 của bài 8.1, <b>không dưới 100Ω</b>.',
+        '③ 16b (5V) ↔ thanh − dưới: <b>không dưới 100Ω</b>.',
+        '④ Thanh + trên ↔ thanh + dưới, và thanh + trên ↔ 16b: phải <b>rất lớn</b> (không nối nhau).', ...(them || [])],
+      board: { them: [K.dh('Ω 200k', o.do_ || 'T+:40', o.den || 'T-:40', '> 1k')] },
+      kiem: { thay: 'Đủ các số trên.', neu_khong: 'Cặp nào gần 0 hay dưới ngưỡng: <b>không cắm P+</b>. Rút từng dây mới cắm ở bài này ra, đo lại tới khi tìm ra chỗ chạm.' },
     }),
   };
   window.K = K;
