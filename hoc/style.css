@@ -360,6 +360,10 @@ pre.code{font-variant-ligatures:none;margin:0;padding:14px 16px;overflow-x:auto;
 .xz-day path{stroke:var(--accent);stroke-width:2;fill:none} .xz-mui{fill:var(--accent)}
 .khung+.cuon,.cuon+.mo{margin-top:12px}
 .xz-bang td{font-size:14px} .xz-bang td:first-child{min-width:150px}
+.xz-ml{margin-top:18px} .xz-ml ol{margin:0 0 8px;padding-left:22px;display:flex;flex-direction:column;gap:4px}
+.xz-ml a{font-weight:600}
+#xz-host h3{margin:22px 0 8px;font-size:16px}
+kbd{font-family:var(--mono);font-size:.82em;border:1px solid var(--line-dam);border-radius:2px;padding:0 4px}
 
 /* linh kiện mới trên breadboard (board.js) + phác thảo bo đục lỗ (PB) */
 .bb-ic{fill:#23282E} .bb-ic-khuyet{fill:var(--board)} .bb-ic-cham{fill:#5A626B} .bb-ic-chu{fill:#DDE3E8;font:600 9px var(--mono)}

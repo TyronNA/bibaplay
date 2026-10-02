@@ -383,6 +383,8 @@
       else if (h === 'en/xiaozhi') trangXiaozhi(XIAOZHI_EN);
       else if (window.TRANG_PHU && Object.hasOwn(TRANG_PHU, h)) trangPhu(h);
       else trangChu();
+      // Mở link có neo (/xiaozhi/#xz-host): nội dung vẽ sau khi trình duyệt đã tìm neo, phải tự cuộn.
+      if (location.hash.length > 1) document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView();
     } catch (e) {
       app.innerHTML = `<section class="alarm"><h2>Lỗi tải trang</h2><p>${esc(e.message || e)}</p></section>`;
     }
@@ -407,6 +409,8 @@
     if (!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target || a.hasAttribute('download')) return;
     const u = new URL(a.href, location.href);
     if (u.origin !== location.origin || !u.pathname.startsWith(LUU.goc) || !LA_ROUTE.test(routeCua(u.pathname))) return;
+    // Neo trong cùng trang (mục lục /xiaozhi/): để trình duyệt tự cuộn, dinhTuyen() sẽ vẽ lại và kéo về đầu trang.
+    if (u.pathname === location.pathname && u.hash) return;
     e.preventDefault();
     if (u.pathname !== location.pathname) history.pushState(null, '', u.pathname);
     dinhTuyen();

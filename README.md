@@ -22,7 +22,8 @@ Mỗi bài có hình breadboard từng bước (chân nào cắm lỗ nào), bư
 | `firmware/` | Board `ares-bread` cho [xiaozhi-esp32](https://github.com/78/xiaozhi-esp32) (clone riêng, không nằm trong repo) |
 | `server/` | Server thay xiaozhi.me: giao thức xiaozhi ↔ Gemini Live (`server/README.md`) |
 
-Robot AI (firmware + server + chỗ host) viết thành trang: https://bibaplay.com/xiaozhi/
+Robot AI viết thành trang https://bibaplay.com/xiaozhi/ (bản EN: /en/xiaozhi/): từng bước ráp → host server trong nhà → build firmware → nối chip,
+kèm prompt mẫu để nhờ Claude Code / Codex làm.
 
 ## Chạy web ở máy
 
