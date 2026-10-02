@@ -288,8 +288,10 @@ def chup(goc, tam, i_route):
     finally:
         try:
             os.killpg(pr.pid, signal.SIGKILL)
-        except ProcessLookupError:
+        # macOS trả EPERM (không phải ESRCH) khi cả nhóm chỉ còn zombie: Chrome đã tự thoát sau --dump-dom
+        except (ProcessLookupError, PermissionError):
             pass
+        pr.wait()
         pr.wait()
 
 
