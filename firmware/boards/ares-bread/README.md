@@ -22,6 +22,8 @@ idf.py -p /dev/cu.usbmodem* flash monitor
 
 ## Bẫy
 
+- **`setup.sh` báo lỗi `git apply`**: patch soạn trên xiaozhi-esp32 commit `64b57d0`. Bản upstream mới đổi đúng chỗ patch sửa
+  thì `cd xiaozhi-esp32 && git checkout 64b57d0` rồi chạy lại, hoặc sửa patch cho bản mới.
 - **`SERVER_IP` trong `config.json`** (`CONFIG_OTA_URL`): thay bằng IP LAN của máy chạy `server/app.py` trước khi build
   (repo không giữ IP thật — sửa xong đừng commit). DHCP đổi IP thì chip không gọi được server nữa: đặt IP tĩnh cho máy đó, hoặc build lại.
 - **Server trả 403**: chip chưa có trong `ARES_DEVICES` của server. Log server in MAC bị từ chối, chép vào đó.

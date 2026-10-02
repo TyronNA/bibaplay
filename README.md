@@ -24,6 +24,7 @@ Mỗi bài có hình breadboard từng bước (chân nào cắm lỗ nào), bư
 
 Robot AI viết thành trang https://bibaplay.com/xiaozhi/ (bản EN: /en/xiaozhi/): từng bước ráp → host server trong nhà → build firmware → nối chip,
 kèm prompt mẫu để nhờ Claude Code / Codex làm.
+Bài từng bước trong giáo trình: 8.0 (cài ESP-IDF) và chương 22 (22.1–22.6: server echo → key Gemini → firmware → nối chip → 24/7 → gỡ lỗi).
 
 ## Chạy web ở máy
 

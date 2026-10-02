@@ -188,6 +188,11 @@
       board: { them: [K.dh('Ω 200k', o.do_ || 'T+:40', o.den || 'T-:40', '> 1k')] },
       kiem: { thay: 'Đủ các số trên.', neu_khong: 'Cặp nào gần 0 hay dưới ngưỡng: <b>không cắm P+</b>. Rút từng dây mới cắm ở bài này ra, đo lại tới khi tìm ra chỗ chạm.' },
     }),
+    // Chương 22 + bài 8.0 (phần mềm, không breadboard): hình của bước là màn terminal mẫu — lệnh gõ + dòng phải thấy.
+    // dong: mảng chuỗi; dòng bắt đầu bằng "$ " là lệnh, còn lại là chữ máy in ra. Viết sẵn HTML-escape (không có < >).
+    term: (dong, chu) => `<div class="term" role="img" aria-label="${chu || 'Màn terminal mẫu'}">${dong.map(d => (d.startsWith('$ ') ? `<b>${d}</b>` : `<span>${d}</span>`)).join('')}</div>`,
+    // Ô "nhờ AI làm": prompt chép thẳng vào Claude Code / Codex, kèm luật an toàn chung.
+    nhoAI: prompt => `<div class="nho-ai"><p class="nhan-dan">Kẹt thì nhờ Claude Code / Codex</p><p>Mở terminal trong thư mục <code>bibaplay</code>, gõ <code>claude</code> hoặc <code>codex</code>, rồi dán:</p><pre class="code">${prompt}</pre><p class="mo">Đừng dán key Gemini vào khung chat. Đọc kỹ lệnh <code>sudo</code> trước khi cho chạy. Nó báo xong thì tự kiểm lại bằng dòng "Phải thấy" của từng bước.</p></div>`,
   };
   window.K = K;
 })();

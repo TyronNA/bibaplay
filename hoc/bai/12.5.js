@@ -71,13 +71,13 @@
         buoc: [
           { ten: '3 nút', lam: ['3 nút vắt qua rãnh ở cột 32/34, 36/38, 40/42 (hướng đã kiểm như 6.1). Cột 34, 38, 42: dây đen hàng j → thanh − dưới. <code>47</code> → 32b, <code>40</code> → 36b, <code>39</code> → 40b.'], board: { bo: BO, them: [...NUT, ESP] } },
           buocOm('Đo lần cuối, cả lúc nhấn từng nút', []),
-          { ...K.camUsb('Cắm USB, build + nạp firmware', ['Build firmware xiaozhi-esp32 từ source (ESP-IDF v6.0.1 trở lên) cho board <code>bread-compact-wifi-128x64</code>, rồi <code>idf.py -p /dev/cu.usbmodem… flash monitor</code>.', 'Board cần một server xiaozhi đang chạy để kết nối tới. Cách build firmware có mặt robot, chạy server riêng bằng key Gemini miễn phí và chọn chỗ host nằm ở trang <a href="xiaozhi/">Robot AI tự build</a>.'], {}, { thay: 'OLED hiện thanh trạng thái, nói vào mic thì nghe trả lời qua loa.', neu_khong: 'Từng module đã chạy ở 12.1–12.3 thì lỗi nằm ở phần ghép: so từng dây với bảng chân. OLED hoặc ampli ấm lên: rút USB.' }) },
+          { ...K.camUsb('Cắm USB, build + nạp firmware', ['Board cần một server xiaozhi đang chạy để kết nối tới. Làm theo chương 22: chạy server trên laptop (<a href="bai/22.1/">22.1</a>, <a href="bai/22.2/">22.2</a>), build và nạp firmware có mặt robot (<a href="bai/22.3/">22.3</a>), rồi cho chip vào server (<a href="bai/22.4/">22.4</a>).'], {}, { thay: 'OLED hiện thanh trạng thái, nói vào mic thì nghe trả lời qua loa.', neu_khong: 'Từng module đã chạy ở 12.1–12.3 thì lỗi nằm ở phần ghép: so từng dây với bảng chân. OLED hoặc ampli ấm lên: rút USB.' }) },
           K.rutUsb(),
         ],
       },
     ],
     bang_do: [{ ten: 'Ω 3V3–GND sau mỗi module', cot: ['Ω'], hang: [{ ten: 'Mốc 8.1', du_doan: [''] }, { ten: '+ OLED', du_doan: ['≤ mốc'] }, { ten: '+ mic', du_doan: ['≤ trên'] }, { ten: '+ ampli', du_doan: ['≤ trên'] }, { ten: '+ nút (nhấn từng nút)', du_doan: ['như trên'] }] }],
     bay: ['Cắm 5V vào thanh + (đang là 3V3): 2 nguồn đấu nhau, OLED và mic nhận 5V.', 'Cắm module đảo chiều (VCC ↔ GND): đo Ω sau từng module để bắt được ngay.', 'Nối nút vào thanh + thay vì GND: nhấn là cấp 3.3V vào chân đang bật pull-up. Không hỏng gì, nhưng nút không ăn.'],
-    robot: ['Bước tiếp theo: <a href="bai/17.2/">bài 17.2</a> thêm driver + 2 motor, xiaozhi nhận lệnh bằng giọng rồi chạy bánh xe.'],
+    robot: ['Bước tiếp theo: chương 22 (<a href="bai/22.1/">22.1</a>) cho mạch này nói chuyện qua server riêng. Sau đó <a href="bai/17.2/">bài 17.2</a> thêm driver + 2 motor, xiaozhi nhận lệnh bằng giọng rồi chạy bánh xe.'],
   });
 })();

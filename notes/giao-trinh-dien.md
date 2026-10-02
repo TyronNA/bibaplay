@@ -118,6 +118,7 @@ Chân của mic/ampli/OLED/nút lấy theo board `bread-compact-wifi` của xiao
 
 | # | Bài | Làm gì | Đo / thấy gì |
 |---|---|---|---|
+| 8.0 | Cài ESP-IDF, build chương trình đầu tiên | Chưa cần board: cài ESP-IDF v6.1 lên máy tính, build ví dụ hello_world và code các bài trong repo | `idf.py --version` ra v6.1, build in "Project build complete". Bài 8.1 nạp lên chip |
 | 8.1 | Nhận board ESP32-S3 | Chưa cắm gì: đọc chữ in cạnh từng chân (3V3, 5V, GND, số GPIO), chụp lại. Đo Ω 3V3–GND, 5V–GND. Cắm USB, đo DCV 5V–GND và 3V3–GND | 5V ≈ 4.8–5.1V (áp USB), 3V3 ≈ 3.3V: ổn áp trên board hạ 5V → 3.3V. Ghi lại làm mốc |
 | 8.2 | Ổn áp AMS1117 | Module AMS1117-3.3 cấp từ hộp 3×AAA, đo đầu ra; so khi pin mới và pin yếu | Cần áp vào ≳ 4.4V (sụt ~1.1V) mới ra đủ 3.3V → hộp 4.5V chỉ vừa sát ngưỡng: ổn áp tuyến tính cần "dư áp" |
 | 8.3 | GND chung | LED ở mạch hộp pin, bật bằng GPIO qua S8050. Thử chưa nối GND hộp pin với GND board, rồi nối | Chưa chung GND: LED không bật — áp chân B "so với cái gì" không xác định. Mọi nguồn trong một mạch phải chung GND |
@@ -165,6 +166,20 @@ Chỉ dùng chân ADC1 (GPIO1–10); ADC2 bị WiFi chiếm. Áp vào chân ADC 
 | 12.3 | I2S: ampli MAX98357A + loa | VIN = 5V, GND, DIN=7, BCLK=15, LRC=16; phát 1 tone | 2 đầu loa nối thẳng ampli, **không** nối đầu nào của loa xuống GND. Volume vừa phải, loa điện thoại yếu |
 | 12.4 | Nhìn bus bằng logic analyzer | Kẹp CH0/CH1 vào SCL/SDA, bắt 1 gói I2C | Thấy từng bit địa chỉ + ACK — chính là việc "i2c scan" làm |
 | 12.5 | Ráp xiaozhi | Ghép 2 breadboard, ráp đủ mic + ampli + OLED + nút theo `bread-compact-wifi-128x64` | Nói chuyện được qua server riêng — mục tiêu 1 của lộ trình |
+
+## 22. Robot AI xiaozhi: server riêng + firmware
+
+Làm sau 12.5 (đã ráp đủ mic, ampli, OLED, nút). 22.1, 22.2 và 22.5 không cần board, làm trước cũng được. Tổng quan cả dự án: trang Robot AI (`/xiaozhi/`).
+Server chỉ chạy trong mạng nhà, không mở cổng router ra Internet. Key Gemini là mật khẩu: không dán lên nhóm chat, không commit.
+
+| # | Bài | Làm gì | Đo / thấy gì |
+|---|---|---|---|
+| 22.1 | Server trên laptop, chip giả | Tải repo, cài Python + libopus, chạy `server/app.py` chế độ echo, `fake_device.py` giả làm chip | Log in OTA URL có IP LAN của máy; chip giả in PASS |
+| 22.2 | Key Gemini, câu trả lời đầu tiên | Lấy key miễn phí ở AI Studio, chạy server với key, gửi câu hỏi thu sẵn, nói bằng mic Mac | Log "chế độ: Gemini Live"; reply.wav có câu trả lời; đo độ trễ |
+| 22.3 | Build + nạp firmware ares-bread | Clone xiaozhi-esp32, điền IP server, `setup.sh`, build board `ares-bread`, nạp, cho chip vào Wi-Fi 2.4GHz | OLED hiện thanh trạng thái + mặt robot; chip vào được Wi-Fi nhà |
+| 22.4 | Nối chip vào server | Lấy MAC chip, thêm vào `ARES_DEVICES`, bấm nút nói câu đầu tiên | Log "OTA check" → "connect" → "Gemini Live sẵn sàng"; robot trả lời qua loa |
+| 22.5 | Server 24/7 trên mini PC / Pi | Giữ IP cố định trên router, `deploy.sh` cài systemd, key vào `gemini.env` | `systemctl is-active` ra active; rút điện máy rồi bật lại, robot vẫn nói được |
+| 22.6 | Gỡ lỗi kết nối | Cố tình gây 4 lỗi (sai IP, MAC chưa cho phép, Wi-Fi khách, key sai), đọc log hai đầu | Mỗi lỗi để lại dấu riêng trên OLED và log server: nhìn là biết lỗi nằm ở đâu |
 
 ## 13. Driver motor
 

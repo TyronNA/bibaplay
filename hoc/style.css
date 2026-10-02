@@ -343,6 +343,10 @@ tbody th{font-weight:600}
 .bb-motor{fill:#B8BEC4;stroke:#6E767E} .bb-truc{fill:#6E767E} .bb-motorchu{fill:#23282E;font:700 14px var(--mono)}
 .bb-loa{fill:#2A3038;stroke:#15191D} .bb-loa-giua{fill:#8A949E}
 .buoc figure .phac{padding:10px}
+/* màn terminal mẫu (K.term): lệnh đậm, chữ máy in ra mờ hơn; giữ khoảng trắng như terminal thật */
+.term{font:12.5px/1.55 var(--mono);background:var(--panel);border:1px solid var(--line-dam);padding:10px 12px;min-width:0}
+.term b,.term span{display:block;white-space:pre-wrap;overflow-wrap:anywhere} .term b{color:var(--ink)} .term span{color:var(--muted)}
+.nho-ai{margin-top:14px;padding:12px 14px;border:1px dashed var(--line-dam)} .nho-ai p{margin:0 0 8px} .nho-ai pre{white-space:pre-wrap;margin:0 0 8px}
 pre.code{font-variant-ligatures:none;margin:0;padding:14px 16px;overflow-x:auto;font:13px/1.5 var(--mono);background:var(--panel);border:1px solid var(--line-dam);white-space:pre}
 .bb-to92-chu-ngoai{fill:var(--ink);font:600 8.5px var(--mono);paint-order:stroke;stroke:var(--board);stroke-width:3px}
 

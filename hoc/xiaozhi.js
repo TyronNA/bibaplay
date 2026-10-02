@@ -33,7 +33,7 @@
         <span class="pill kiem">đã build</span> firmware, mặt robot, màn sensor panel (chạy giả lập trên máy tính)
         <span class="pill canh">chưa làm</span> nạp lên chip thật</p>
       <p class="mo">Code tải ở ${gh('', 'github.com/TyronNA/bibaplay')}: ${gh('server')} (server), ${gh('firmware')} (board riêng), ${gh('sandbox')} (giả lập màn hình). Giấy phép MIT. Code do AI soạn, chưa chạy trên phần cứng thật.</p>
-      <nav class="khung to xz-ml" aria-label="Mục lục"><p><b>Làm theo thứ tự</b>. Chưa có board vẫn làm được bước 3: máy tính giả làm chip.</p><ol>
+      <nav class="khung to xz-ml" aria-label="Mục lục"><p><b>Làm theo thứ tự</b>. Chưa có board vẫn làm được bước 3: máy tính giả làm chip.</p><p>Trang này là bản tóm tắt. Muốn làm từng bước, có hình terminal mẫu và nút đánh dấu đã xong: <a href="${R('bai/8.0')}">bài 8.0</a> (cài ESP-IDF) rồi <b>chương 22</b>, từ <a href="${R('bai/22.1')}">22.1</a> tới <a href="${R('bai/22.6')}">22.6</a>.</p><ol>
         <li><a href="#xz-luong">Hiểu luồng chạy</a>: chip, server, Gemini nói chuyện với nhau ra sao</li>
         <li><a href="#xz-phan-cung">Ráp phần cứng</a>: link sang bài 12.5</li>
         <li><a href="#xz-host">Host server trong nhà</a>: bài học từng bước, từ máy trắng tới chạy 24/7</li>
@@ -55,6 +55,7 @@
 
       <section id="xz-host"><h2><span class="so">3</span> Host server trong nhà · bài học</h2>
         <p class="mo">Server rất nhẹ, vì model chạy ở Google, server chỉ chuyển tiếp và nén/giải nén âm thanh. Nó chỉ cần <b>bật liên tục</b>, <b>cùng mạng Wi-Fi với robot</b> và giữ IP cố định. Không cần biết Python: chỉ chép lệnh vào Terminal.</p>
+        <p class="mo">Bài từng bước: <a href="${R('bai/22.1')}">22.1</a> chạy echo, <a href="${R('bai/22.2')}">22.2</a> key Gemini, <a href="${R('bai/22.5')}">22.5</a> chạy 24/7.</p>
 
         <h3>3.1 · Chọn máy</h3>
         <div class="cuon"><table class="xz-bang"><thead><tr><th>Chỗ chạy</th><th>Hợp khi</th><th>Lưu ý</th></tr></thead><tbody>
@@ -111,6 +112,7 @@ journalctl -u ares-server -f                          # xem log trực tiếp, C
       </section>
 
       <section id="xz-firmware"><h2><span class="so">4</span> Build và nạp firmware</h2>
+        <p class="mo">Bài từng bước: <a href="${R('bai/8.0')}">8.0</a> cài ESP-IDF, <a href="${R('bai/22.3')}">22.3</a> build, nạp, cài Wi-Fi cho chip.</p>
         <div class="khung to"><p>Cần <b>ESP-IDF v6.0.1 trở lên</b> (bộ công cụ build của Espressif; khuyên dùng v6.1, bản 5.x không build được xiaozhi hiện tại). Board riêng <code>ares-bread</code> là <code>bread-compact-wifi</code> 128×64, thêm mặt robot, tool bánh xe và địa chỉ server riêng. Đặt tên board riêng để tính năng tự cập nhật (OTA) của xiaozhi không bao giờ ghi đè firmware gốc lên.</p></div>
         ${LENH(`git clone https://github.com/TyronNA/bibaplay && cd bibaplay
 git clone https://github.com/78/xiaozhi-esp32        # nằm trong bibaplay/, đã gitignore
@@ -123,6 +125,7 @@ idf.py -p /dev/cu.usbmodem… flash monitor            # Linux: /dev/ttyACM0, Wi
       </section>
 
       <section id="xz-noi"><h2><span class="so">5</span> Nối chip vào server</h2>
+        <p class="mo">Bài từng bước: <a href="${R('bai/22.4')}">22.4</a> câu nói đầu tiên, <a href="${R('bai/22.6')}">22.6</a> đọc lỗi khi chip không vào được.</p>
         <div class="khung to"><p>Server chỉ nhận chip có địa chỉ MAC (mã riêng của mỗi chip Wi-Fi) nằm trong <code>ARES_DEVICES</code>. Lần đầu chưa biết MAC thì cứ để chip kết nối: server từ chối và in ra log dòng <code>từ chối Device-Id=aa:bb:…</code>. Chép MAC đó vào rồi chạy lại server. Nhiều chip thì cách nhau dấu phẩy. Kết nối từ chính máy chạy server (chip giả ở bước 3) luôn được nhận.</p></div>
         ${LENH(`GEMINI_API_KEY=… ARES_DEVICES=aa:bb:cc:dd:ee:ff .venv/bin/python app.py   # chạy tay
 # chạy bằng dịch vụ (3.6): thêm ARES_DEVICES=… vào ~/.config/ares/gemini.env, rồi

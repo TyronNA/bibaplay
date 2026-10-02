@@ -33,7 +33,7 @@
         <span class="pill kiem">built</span> firmware, robot face, sensor panel (running in a desktop simulator)
         <span class="pill canh">not yet</span> flashed to a real chip</p>
       <p class="mo">This page and the code were drafted by AI and have not run on real hardware yet. The rest of this site is a Vietnamese electronics course; lesson links below point to it. Code on ${gh('', 'github.com/TyronNA/bibaplay')}: ${gh('server')} (server), ${gh('firmware')} (custom board), ${gh('sandbox')} (display simulators). MIT license.</p>
-      <nav class="khung to xz-ml" aria-label="Contents"><p><b>Follow in order</b>. No board yet? Step 3 still works: your computer plays the chip.</p><ol>
+      <nav class="khung to xz-ml" aria-label="Contents"><p><b>Follow in order</b>. No board yet? Step 3 still works: your computer plays the chip.</p><p>This page is the summary. The step-by-step lessons with sample terminal output are <a href="${R('bai/8.0')}">lesson 8.0</a> (install ESP-IDF) and <b>chapter 22</b>, <a href="${R('bai/22.1')}">22.1</a> to <a href="${R('bai/22.6')}">22.6</a>${VI}.</p><ol>
         <li><a href="#xz-luong">How it works</a>: how the chip, the server and Gemini talk</li>
         <li><a href="#xz-phan-cung">Wire the hardware</a>: links to lesson 12.5</li>
         <li><a href="#xz-host">Host the server at home</a>: step-by-step lesson, from a blank machine to running 24/7</li>
